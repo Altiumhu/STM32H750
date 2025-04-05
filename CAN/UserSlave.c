@@ -146,41 +146,29 @@ void UserSlave_UpdateSlaveRec(void)
             index = 0;
             for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++) // 获取通道数据
             {
-
-                // uint8_t adc_c[4];
-                //     uint8_t adc_v[2];
-                //     uint8_t adc_temp[2];
-                //     //	uint8_t adc_av[2];
-                //     uint8_t step;
-                //     uint8_t status;
-                //     uint8_t c;
-                //     uint8_t loopSn;
-
                 // 电流
                 tempdata = (uint32_t)(g_Channelinfo[ch].current * 10000.0f);
-              
+                tempdata = 15000;
                 index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
                 // 电压
-						
+                g_Channelinfo[ch].voltage = 3.5164f;
                 index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage * 10000.0f), &canFrameData[index]);
                 // 温度
                 index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
-                // 工步索引号 运行的工步号
-                canFrameData[index++] = 0; // 
-				//canFrameData[index++] = 3; // 工步索引号
+                // 工步索引号 运行的工步号step
+                canFrameData[index++] = 0xFF; // 工步索引号
                 // 通道状态
-                canFrameData[index++] = 0; // 通道的工作在哪个工步中
-                // 错误状态---error
+                canFrameData[index++] = 0x53; // 通道的工作在哪个工步中
+                // 错误状态
                 canFrameData[index++] = 0;
-                // 当前运行工步循环号--loopSn
-              // canFrameData[index++] = 1;
-				 canFrameData[index++] = 0;
-                 memcpy(&(pSlave->sample.sampleData[ch]), &canFrameData[ch], index);
+                // 当前运行工步循环号
+                canFrameData[index++] = 0;
+                //                 memcpy(&(pSlave->sample.sampleData[ch]), &canFrameData[ch], index);
             }
 
             CanFr_SendData(BoardInfo_GetID(), EMTOSCMD_SampleQuest, canFrameData, index);
 
-           printf("\r\n 请求采样数据 =%d ", index);
+            printf("\r\n 请求采样数据 =%d ", index);
 
             break;
 
@@ -215,12 +203,12 @@ void UserSlave_UpdateSlaveRec(void)
                         tempdata = U8TOU32(g_WorkStepInfoStream[ch][setindex].currentStart);
                         g_Channelinfo[ch].RunningWorkSetup.currentStart = (float)tempdata;
                         g_Channelinfo[ch].RunningWorkSetup.currentStart = g_Channelinfo[ch].RunningWorkSetup.currentStart * 0.0001f; // 10000mA=10.0A
-                         printf("\r\nch=%d 启动电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
+                        printf("\r\nch=%d 启动电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
 
                         tempdata = U8TOU16(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_indx].voltLimit);
                         g_Channelinfo[ch].RunningWorkSetup.voltLimit = (float)tempdata;
                         g_Channelinfo[ch].RunningWorkSetup.voltLimit = g_Channelinfo[ch].RunningWorkSetup.voltLimit * 0.001f; // 1500mV=1.5V
-                         printf("\r\nch=%d 截止电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
+                        printf("\r\nch=%d 截止电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
 
                         // 设置工作截止电流
                         tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_indx].currentLimit);
@@ -230,7 +218,7 @@ void UserSlave_UpdateSlaveRec(void)
                         // 设置工作截止时间
                         tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_indx].timeLimit);
                         g_Channelinfo[ch].RunningWorkSetup.timeLimit = tempdata;
-                         printf("\r\nch=%d 设置工作截止时间=%d ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
+                        printf("\r\nch=%d 设置工作截止时间=%d ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
                     }
                 }
             }
@@ -291,10 +279,10 @@ void UserSlave_UpdateSlaveRec(void)
                     {
 
                         // 设置工作启动电流
-                       // printf("\r\nch=%d 启动电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
+                        // printf("\r\nch=%d 启动电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
 
                         g_Channelinfo[ch].RunningWorkSetup.voltLimit = g_Channelinfo[ch].RunningWorkSetup.voltLimit * 0.001f; // 1500mV=1.5V
-                        //printf("\r\nch=%d 截止电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
+                        // printf("\r\nch=%d 截止电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
 
                         // // 设置工作截止电流
                         // printf("\r\nch=%d currentLimit=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentLimit);
@@ -305,7 +293,7 @@ void UserSlave_UpdateSlaveRec(void)
                 }
             }
 
-            ch =0;
+            ch = 0;
             // 设置工作启动电流
             printf("\r\nch=%d 启动电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
 
@@ -348,38 +336,38 @@ void UserSlave_UpdateSlaveRec(void)
         case EMTOSCMD_StartSomeChannelWorkStep:
         case EMTOSCMD_ContinueWorkStep: // 继续工步
 
-//            uint16_t channelBitSelect;
-//            uint8_t indexWorkStep; // 续接的工步号
-//            uint8_t snLoop;
-//            uint32_t timeLeft; // 运行的通道剩余时间  单位：ms
+            //            uint16_t channelBitSelect;
+            //            uint8_t indexWorkStep; // 续接的工步号
+            //            uint8_t snLoop;
+            //            uint32_t timeLeft; // 运行的通道剩余时间  单位：ms
 
-//            tmep[0] = pFrame->data[0];
-//            tmep[1] = pFrame->data[1];
-//            indexWorkStep = pFrame->data[2];
+            //            tmep[0] = pFrame->data[0];
+            //            tmep[1] = pFrame->data[1];
+            //            indexWorkStep = pFrame->data[2];
 
-//            snLoop = pFrame->data[3]; // 续接的循环号
+            //            snLoop = pFrame->data[3]; // 续接的循环号
 
-//            timeLeft = U8TOU32(pFrame->data[4]);
+            //            timeLeft = U8TOU32(pFrame->data[4]);
 
-//            channelBitSelect = tmep[0] | (tmep[1] << 8); // 续接的通道号
+            //            channelBitSelect = tmep[0] | (tmep[1] << 8); // 续接的通道号
 
-//            printf("\r\n 续接的通道号 =%d ", channelBitSelect);
-//            printf("\r\n 续接的工步号 =%d ", indexWorkStep);
-//            printf("\r\n 续接的循环号=%d ", snLoop);
-//            printf("\r\n 运行的通道剩余时间 =%d ms", timeLeft);
-//            for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 判断哪个通道被续接
-//            {
-//                if ((channelBitSelect >> ch) & 0x0001)
-//                {
-//                    g_Channelinfo[ch].RunningWorkSetup.index = indexWorkStep; // 修改续接的工步号
-//                    //  g_SetChanneWorke.runWorke_indx =indexWorkStep;; // 续接的工步号
-//                    g_Channelinfo[ch].Run_Cyc_indx = snLoop; // 续接的循环号
-//                    g_Channelinfo[ch].RunningWorkSetup.timeLimit = timeLeft;
-//                    // printf("\r\n ch=%d ", ch);
-//                    g_Channelinfo[ch].WorkeStartup = 1; // 启动工步
-//                    g_Channelinfo[ch].fault.all = 0;    // 清除故障
-//                }
-//            }
+            //            printf("\r\n 续接的通道号 =%d ", channelBitSelect);
+            //            printf("\r\n 续接的工步号 =%d ", indexWorkStep);
+            //            printf("\r\n 续接的循环号=%d ", snLoop);
+            //            printf("\r\n 运行的通道剩余时间 =%d ms", timeLeft);
+            //            for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 判断哪个通道被续接
+            //            {
+            //                if ((channelBitSelect >> ch) & 0x0001)
+            //                {
+            //                    g_Channelinfo[ch].RunningWorkSetup.index = indexWorkStep; // 修改续接的工步号
+            //                    //  g_SetChanneWorke.runWorke_indx =indexWorkStep;; // 续接的工步号
+            //                    g_Channelinfo[ch].Run_Cyc_indx = snLoop; // 续接的循环号
+            //                    g_Channelinfo[ch].RunningWorkSetup.timeLimit = timeLeft;
+            //                    // printf("\r\n ch=%d ", ch);
+            //                    g_Channelinfo[ch].WorkeStartup = 1; // 启动工步
+            //                    g_Channelinfo[ch].fault.all = 0;    // 清除故障
+            //                }
+            //            }
 
             // 续接的工步号
 
@@ -390,7 +378,6 @@ void UserSlave_UpdateSlaveRec(void)
             break;
         case EMTOSCMD_StopWorkStepw: // 部分通道停止停止工步  托盘通道单点停止的命令。
 
-      
             tmep[0] = pFrame->data[0];
             tmep[1] = pFrame->data[1];
             SetCh_Activity = tmep[0] | (tmep[1] << 8);
@@ -410,15 +397,15 @@ void UserSlave_UpdateSlaveRec(void)
             break;
 
         case EMTOSCMD_SampleQuestAck: // // 发送采样数据确认
-            //printf("\r\n 发送采样数据确认 ");
+            // printf("\r\n 发送采样数据确认 ");
 
             break;
-        case EMTOSCMD_LEDControl: // // 
+        case EMTOSCMD_LEDControl: // //
             printf("\r\n 设置指示灯控制模式命令 ");
 
             break;
 
-        case EMTOSCMD_LEDStatus: // // 
+        case EMTOSCMD_LEDStatus: // //
             printf("\r\n 指示灯状态命令 ");
 
             break;
