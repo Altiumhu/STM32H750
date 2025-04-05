@@ -175,7 +175,7 @@ void System_CloseLoop_Status(void)
 
             // 电压环
             //  gHandle_PID[ch].v_ref = 2.5f;
-            gHandle_PID[ch].v_ref = g_Channelinfo[ch].Set_CV;
+            gHandle_PID[ch].v_ref =  g_Channelinfo[ch].voltage+0.1;
 
             // gHandle_PID[i].v_ref = gHandle_PID[i].v_ref + 0.001f;
             // 软启功率输出电容电压作为反馈值，电池端电压作为给定值

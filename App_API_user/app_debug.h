@@ -16,7 +16,7 @@ typedef struct
 
 
 
-#define DEBUG_STATR   0 //1--表示不打印  0表示打印
+#define DEBUG_STATR   1 //1--表示不打印  0表示打印
 
 #define DEBUG_TIME_GAP  180    //间隔时间ms
 

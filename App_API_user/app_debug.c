@@ -120,7 +120,7 @@ void AppDebug_vTask(void)
     // DBG_PRINTF("\r\ng_debugNUmer.debug1 %d \r\n",  g_debugNUmer.debug1);
     AppUser_Sample_Debug();
     Debug_HandlePID();
-    CAN1_Send_TEST();
+//    CAN1_Send_TEST();
     //     Debug_PWM();
     Debug_Loop();
 
