@@ -25,4 +25,15 @@ typedef enum {
 
 extern void ProcessCANMessage(uint8_t fc, uint16_t did, uint16_t sub, uint8_t* data, uint8_t size);
 
+
+
+extern void HandleSystemControl(uint16_t did, uint16_t sub, uint8_t* data, uint8_t size);
+
+extern void HandleDataTransfer(uint16_t did, uint16_t sub, uint8_t* data, uint8_t size);
+
+extern void HandleConfiguration(uint16_t did, uint16_t sub, uint8_t* data, uint8_t size);
+
+extern void HandleDiagnostics(uint16_t did, uint16_t sub, uint8_t* data, uint8_t size);
+
+extern void HandleBroadcast(uint16_t did, uint16_t sub, uint8_t* data, uint8_t size) ;
 #endif

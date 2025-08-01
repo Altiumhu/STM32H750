@@ -40,10 +40,11 @@ typedef enum {
 
 // 大数据帧结构
 typedef struct {
+
     uint16_t session_id;
     uint16_t packet_index;
     uint8_t  frame_type;
-    uint8_t  payload_length;
+	  uint8_t  payload_length;
     uint8_t  payload[60];
     uint16_t checksum;
 } LargeDataFrame;

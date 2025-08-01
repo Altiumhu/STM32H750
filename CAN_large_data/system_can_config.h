@@ -11,11 +11,22 @@
 #define BROADCAST_DEVICE_ID      0x7FF     // 广播地址
 
 // 功能码定义
-#define FC_SYSTEM_CONTROL        0x0
-#define FC_DATA_TRANSFER         0x1
-#define FC_CONFIGURATION         0x2
-#define FC_DIAGNOSTICS           0x3
-#define FC_BROADCAST             0xF
+#define FC_SYSTEM_CONTROL        0x0 //系统控制命令
+#define FC_DATA_TRANSFER         0x1 //数据传输
+#define FC_CONFIGURATION         0x2 //设备配置
+#define FC_DIAGNOSTICS           0x3 //诊断信息
+#define FC_BROADCAST             0xF //广播消息
+
+///*****************************************************
+
+
+//功能码	值	描述
+//FC_SYSTEM_CONTROL	0x0	系统控制命令
+//FC_DATA_TRANSFER	0x1	数据传输
+//FC_CONFIGURATION	0x2	设备配置
+//FC_DIAGNOSTICS	0x3	诊断信息
+//FC_BROADCAST	0xF	广播消息
+
 
 // ID位分配 (29位扩展ID)
 #define ID_FC_POS                25        // 功能码位置 [28:25]

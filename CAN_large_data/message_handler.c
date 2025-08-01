@@ -5,23 +5,23 @@
 void ProcessCANMessage(uint8_t fc, uint16_t did, uint16_t sub, uint8_t* data, uint8_t size) {
   switch(fc) {
     case FC_SYSTEM_CONTROL:
-      //HandleSystemControl(did, sub, data, size);
+      HandleSystemControl(did, sub, data, size);
       break;
       
     case FC_DATA_TRANSFER:
-      //HandleDataTransfer(did, sub, data, size);
+      HandleDataTransfer(did, sub, data, size);
       break;
       
     case FC_CONFIGURATION:
-     // HandleConfiguration(did, sub, data, size);
+      HandleConfiguration(did, sub, data, size);
       break;
       
     case FC_DIAGNOSTICS:
-     // HandleDiagnostics(did, sub, data, size);
+      HandleDiagnostics(did, sub, data, size);
       break;
       
     case FC_BROADCAST:
-     // HandleBroadcast(did, sub, data, size);
+     HandleBroadcast(did, sub, data, size);
       break;
       
     default:

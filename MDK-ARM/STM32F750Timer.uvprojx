@@ -1067,6 +1067,11 @@
               <FilePath>..\CAN_large_data\large_data_sender.c</FilePath>
             </File>
             <File>
+              <FileName>large_data_transfer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CAN_large_data\large_data_transfer.c</FilePath>
+            </File>
+            <File>
               <FileName>large_data_transfer.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CAN_large_data\large_data_transfer.h</FilePath>
@@ -1080,11 +1085,6 @@
               <FileName>crc.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CAN_large_data\crc.h</FilePath>
-            </File>
-            <File>
-              <FileName>large_data_transfer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CAN_large_data\large_data_transfer.c</FilePath>
             </File>
           </Files>
         </Group>

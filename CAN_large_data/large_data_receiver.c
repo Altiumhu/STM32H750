@@ -2,11 +2,7 @@
 #include "fdcan.h"
 #include "crc.h"
 #include <stdlib.h>
-
-
 #include <string.h>
-
-
 #include "message_handler.h"
 #include "system_can_config.h"
 
@@ -77,15 +73,15 @@ void LargeDataTransfer_HandleFrame(uint16_t src_did, LargeDataFrame *frame)
     // 根据帧类型处理
     switch (frame->frame_type)
     {
-    case START_FRAME:
+    case START_FRAME://起始帧
         HandleStartFrame(src_did, frame);
         break;
 
-    case DATA_FRAME:
+    case DATA_FRAME:// 数据帧
         HandleDataFrame(src_did, frame);
         break;
 
-    case END_FRAME:
+    case END_FRAME://END_FRAME
         HandleEndFrame(src_did, frame);
         break;
 

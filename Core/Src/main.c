@@ -128,7 +128,7 @@ int main(void)
     MX_TIM3_Init();
     MX_ADC1_Init();
     MX_FDCAN1_Init();
-    MX_FDCAN2_Init();
+//    MX_FDCAN2_Init();
     MX_USART2_UART_Init();
     MX_UART7_Init();
     /* USER CODE BEGIN 2 */
@@ -140,8 +140,10 @@ int main(void)
     HAL_UART_Transmit_DMA(&huart1, dma_msg, sizeof(dma_msg) -1);
 
     HAL_UART_Receive_IT(&huart1, &rx_data, 1);
+		
+		LargeDataFrame gLargeDataFrame;
 
-    printf("\r\nSTM32F750=%f", votlag);
+    printf("\r\nSTM32F750=%f LargeDataFrame=%d", votlag,sizeof(LargeDataFrame));
     HAL_TIM_Base_Start_IT(&htim3);
     HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adcBuffer, ADC_BUFFER_SIZE);
 
@@ -183,7 +185,7 @@ int main(void)
         LargeDataTransfer_SessionTimeoutHandler();
 #endif
 			
-			
+			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, 1);
         // 其他应用逻辑...
         HAL_Delay(10);
     }
