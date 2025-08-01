@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_PWR_LDO_SUPPLY,USE_HAL_DRIVER,STM32H750xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;..\CAN_large_data</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1030,6 +1030,61 @@
               <FileName>system_stm32h7xx.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/system_stm32h7xx.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>CAN_large_data</GroupName>
+          <Files>
+            <File>
+              <FileName>system_can_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CAN_large_data\system_can_config.h</FilePath>
+            </File>
+            <File>
+              <FileName>message_handler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CAN_large_data\message_handler.c</FilePath>
+            </File>
+            <File>
+              <FileName>message_handler.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CAN_large_data\message_handler.h</FilePath>
+            </File>
+            <File>
+              <FileName>新建文本文档.txt</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CAN_large_data\新建文本文档.txt</FilePath>
+            </File>
+            <File>
+              <FileName>large_data_receiver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CAN_large_data\large_data_receiver.c</FilePath>
+            </File>
+            <File>
+              <FileName>large_data_sender.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CAN_large_data\large_data_sender.c</FilePath>
+            </File>
+            <File>
+              <FileName>large_data_transfer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CAN_large_data\large_data_transfer.h</FilePath>
+            </File>
+            <File>
+              <FileName>crc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CAN_large_data\crc.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CAN_large_data\crc.h</FilePath>
+            </File>
+            <File>
+              <FileName>large_data_transfer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CAN_large_data\large_data_transfer.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -45,11 +45,17 @@ void MX_FDCAN2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 
-/* FDCAN1接收RX0中断使能 */
-#define FDCAN1_RX0_INT_ENABLE   1         /* 0,不使能;1,使能. */
+/* FDCAN1锟斤拷锟斤拷RX0锟叫讹拷使锟斤拷 */
+#define FDCAN1_RX0_INT_ENABLE   1         /* 0,锟斤拷使锟斤拷;1,使锟斤拷. */
 
-/* FDCAN1接收RX0中断使能 */
-#define FDCAN3_RX0_INT_ENABLE   1         /* 0,不使能;1,使能. */
+/* FDCAN1锟斤拷锟斤拷RX0锟叫讹拷使锟斤拷 */
+#define FDCAN3_RX0_INT_ENABLE   1         /* 0,锟斤拷使锟斤拷;1,使锟斤拷. */
+
+
+extern HAL_StatusTypeDef FDCAN_SendMessage(uint8_t fc, uint16_t dest_did, uint16_t sub, uint8_t* data, uint8_t size);
+
+
+
 
 /* USER CODE END Prototypes */
 
