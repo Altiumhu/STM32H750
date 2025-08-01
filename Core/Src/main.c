@@ -20,6 +20,7 @@
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
+#include "fdcan.h"
 #include "memorymap.h"
 #include "tim.h"
 #include "usart.h"
@@ -67,7 +68,7 @@ static void MPU_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 uint8_t rx_data;
-float votlag =3.1415962;
+float votlag = 3.1415962;
 /* USER CODE END 0 */
 
 /**
@@ -108,36 +109,40 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM3_Init();
   MX_ADC1_Init();
+  MX_FDCAN1_Init();
+  MX_FDCAN2_Init();
+  MX_USART2_UART_Init();
+  MX_UART7_Init();
   /* USER CODE BEGIN 2 */
-char msg[] = "Hello UART1!\r\n";
-HAL_UART_Transmit(&huart1, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
+    char msg[] = "Hello UART1!\r\n";
+    HAL_UART_Transmit(&huart1, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
 
 
-uint8_t dma_msg[] = "DMA Transfer!\r\n";
-HAL_UART_Transmit_DMA(&huart1, dma_msg, sizeof(dma_msg)-1);
+    uint8_t dma_msg[] = "DMA Transfer!\r\n";
+    HAL_UART_Transmit_DMA(&huart1, dma_msg, sizeof(dma_msg) -1);
 
-HAL_UART_Receive_IT(&huart1, &rx_data, 1);
+    HAL_UART_Receive_IT(&huart1, &rx_data, 1);
 
- 	printf("\r\nSTM32F750=%f",votlag);
-	HAL_TIM_Base_Start_IT(&htim3);  
-HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adcBuffer, ADC_BUFFER_SIZE);
+    printf("\r\nSTM32F750=%f", votlag);
+    HAL_TIM_Base_Start_IT(&htim3);
+    HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adcBuffer, ADC_BUFFER_SIZE);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
+    while (1)
+    {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		
-		
-	/* USER CODE BEGIN 5 */
-		
-   HAL_GPIO_WritePin(GPIOE,GPIO_PIN_2,1);
-  /* USER CODE END 5 */
-		
-  }
+
+
+        /* USER CODE BEGIN 5 */
+    
+        HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, 1);
+        /* USER CODE END 5 */
+
+    }
   /* USER CODE END 3 */
 }
 
@@ -170,7 +175,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLM = 5;
   RCC_OscInitStruct.PLL.PLLN = 192;
   RCC_OscInitStruct.PLL.PLLP = 2;
-  RCC_OscInitStruct.PLL.PLLQ = 2;
+  RCC_OscInitStruct.PLL.PLLQ = 8;
   RCC_OscInitStruct.PLL.PLLR = 2;
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
@@ -204,49 +209,56 @@ void SystemClock_Config(void)
 //HAL_UART_Receive_IT(&huart1, &rx_data, 1);
 
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-  if (huart->Instance == USART1) {
- 
-
-		    HAL_UART_Transmit(&huart1, &rx_data, 1, HAL_MAX_DELAY);
-		    HAL_UART_Receive_IT(&huart1, &rx_data, 1);
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART1)
+    {
 
 
-  }
+        HAL_UART_Transmit(&huart1, &rx_data, 1, HAL_MAX_DELAY);
+        HAL_UART_Receive_IT(&huart1, &rx_data, 1);
+
+
+    }
 }
 
-uint16_t   Timer3Cunt =0;
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-  if (htim->Instance == TIM3) {
-		
-		Timer3Cunt++;
-		if(Timer3Cunt<10)
-		{
-			HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,0);
-		}
-		else if(Timer3Cunt<20)
-		{
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,1);
-		}
-		else
-		{
-		Timer3Cunt =0;
-		}
-		
-		printf("\r\n  ADC1 %d  %d  %d  %d ",adcBuffer[0],adcBuffer[1],adcBuffer[2],adcBuffer[3]);
-       
-  }
+uint16_t   Timer3Cunt = 0;
+extern void CAN1_Send_TEST(void);
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    if (htim->Instance == TIM3)
+    {
+
+        Timer3Cunt++;
+        if (Timer3Cunt < 10)
+        {
+            HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, 0);
+        }
+        else if (Timer3Cunt < 20)
+        {
+            HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, 1);
+        }
+        else
+        {
+            Timer3Cunt = 0;
+        }
+         CAN1_Send_TEST();
+        printf("\r\n  ADC1 %d  %d  %d  %d ", adcBuffer[0], adcBuffer[1], adcBuffer[2], adcBuffer[3]);
+
+    }
 }
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
-    if(hadc->Instance == ADC1) {
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+    if (hadc->Instance == ADC1)
+    {
         // ??ADC??
         uint16_t ch0_value = adcBuffer[0];  // PA0???
         uint16_t ch1_value = adcBuffer[1];  // PA1???
         uint16_t ch4_value = adcBuffer[2];  // PA4???
-        
+
         // ??:??ADC?(???UART)
-//         printf("ADC: CH0=%u, CH1=%u, CH4=%u\n", 
+//         printf("ADC: CH0=%u, CH1=%u, CH4=%u\n",
 //               ch0_value, ch1_value, ch4_value);
     }
 }
@@ -288,11 +300,11 @@ void MPU_Config(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+    /* User can add his own implementation to report the HAL error return state */
+    __disable_irq();
+    while (1)
+    {
+    }
   /* USER CODE END Error_Handler_Debug */
 }
 
@@ -307,8 +319,8 @@ void Error_Handler(void)
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
