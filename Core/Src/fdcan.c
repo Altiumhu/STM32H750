@@ -381,6 +381,8 @@ uint8_t fdcan_send_msg(uint8_t *msg, uint32_t len)
     }
 
     return 0;
+		
+	
 }
 
 
@@ -439,7 +441,7 @@ uint8_t fdcan_receive_msg(uint8_t *buf)
  */
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {
-	    uint8_t i = 0;
+    uint8_t i = 0;
 #if  0
 
     uint8_t rxdata[8];
@@ -472,13 +474,13 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
                 uint8_t fc = (id >> ID_FC_POS) & 0x0F;        // 功能码位置 [28:25]
                 uint16_t did = (id >> ID_DID_POS) & 0x1FFF; //设备ID位置 [24:12]
                 uint16_t sub = id & 0x0FFF; //// 子地址位置 [11:0]
-							
-							  printf("\r\nDataLength= %d ",RxHeader.DataLength);
+
+                printf("\r\nDataLength= %d ", RxHeader.DataLength);
 
                 // 处理大数据传输
-                if ( (fc == FC_DATA_TRANSFER) && (RxHeader.DataLength == sizeof(LargeDataFrame)))
+                if ((fc == FC_DATA_TRANSFER) && (RxHeader.DataLength == sizeof(LargeDataFrame)))
                 {
-									printf(" big_code \r\n");
+                    printf(" big_code \r\n");
                     LargeDataFrame *frame = (LargeDataFrame *)RxData;
 
                     if (frame->frame_type == ACK_FRAME)
@@ -494,18 +496,18 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
                 }
                 else
                 {
-									 printf(" shortcode \r\n");
-									
-								for (i = 0; i < 8; i++)
-								{
-								printf("rxdata[%d]:%d\r\n", i, RxData[i]);
-								}
+                    printf(" shortcode \r\n");
+
+                    for (i = 0; i < 8; i++)
+                    {
+                        printf("rxdata[%d]:%d\r\n", i, RxData[i]);
+                    }
                     // 其他功能码处理
-                    ProcessCANMessage(fc, did, sub, RxData, RxHeader.DataLength );
+                    ProcessCANMessage(fc, did, sub, RxData, RxHeader.DataLength);
                 }
             }
         }
-				HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
+        HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
     }
 
 

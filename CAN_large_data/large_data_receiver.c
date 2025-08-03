@@ -19,7 +19,7 @@ typedef enum
 // 接收会话结构
 typedef struct
 {
-    uint16_t session_id;
+    uint16_t session_id;  // 会话ID (0-65535)
     uint16_t total_packets;
     uint16_t received_packets;
     uint8_t *buffer;
@@ -29,6 +29,8 @@ typedef struct
 } ReceiveSession;
 
 #define MAX_SESSIONS 3
+
+
 static ReceiveSession sessions[MAX_SESSIONS];
 static ReceiverState receiver_state = RECEIVER_IDLE;
 
