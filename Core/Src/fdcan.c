@@ -81,16 +81,16 @@ void MX_FDCAN1_Init(void)
   hfdcan1.Init.DataTimeSeg2 = 1;
   hfdcan1.Init.MessageRAMOffset = 0;
   hfdcan1.Init.StdFiltersNbr = 0;
-  hfdcan1.Init.ExtFiltersNbr = 1;
+  hfdcan1.Init.ExtFiltersNbr = 10;
   hfdcan1.Init.RxFifo0ElmtsNbr = 16;
   hfdcan1.Init.RxFifo0ElmtSize = FDCAN_DATA_BYTES_8;
   hfdcan1.Init.RxFifo1ElmtsNbr = 16;
   hfdcan1.Init.RxFifo1ElmtSize = FDCAN_DATA_BYTES_8;
   hfdcan1.Init.RxBuffersNbr = 8;
   hfdcan1.Init.RxBufferSize = FDCAN_DATA_BYTES_8;
-  hfdcan1.Init.TxEventsNbr = 1;
-  hfdcan1.Init.TxBuffersNbr = 1;
-  hfdcan1.Init.TxFifoQueueElmtsNbr = 1;
+  hfdcan1.Init.TxEventsNbr = 10;
+  hfdcan1.Init.TxBuffersNbr = 10;
+  hfdcan1.Init.TxFifoQueueElmtsNbr = 10;
   hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
   hfdcan1.Init.TxElmtSize = FDCAN_DATA_BYTES_8;
   if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
@@ -124,7 +124,7 @@ void MX_FDCAN1_Init(void)
 
     /* ʹ�ܽ���FIFO 1����Ϣ�ж� */
     HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
-
+    HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_TX_COMPLETE, 0);
   /* USER CODE END FDCAN1_Init 2 */
 
 }
@@ -199,6 +199,7 @@ void MX_FDCAN2_Init(void)
 
     /* ʹ�ܽ���FIFO 1����Ϣ�ж� */
     HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
+
 
   /* USER CODE END FDCAN2_Init 2 */
 
@@ -366,7 +367,7 @@ uint8_t fdcan_send_msg(uint8_t *msg, uint32_t len)
     g_fdcanx_txheade.DataLength = len;                               /* ���ݳ��� */
     g_fdcanx_txheade.ErrorStateIndicator = FDCAN_ESI_ACTIVE;         /* ����ڵ����Դ��� */
     g_fdcanx_txheade.BitRateSwitch = FDCAN_BRS_ON;                   /* ���������л� */
-    g_fdcanx_txheade.FDFormat = FDCAN_FD_CAN;                        /* FDCAN֡��ʽ */
+    g_fdcanx_txheade.FDFormat = FDCAN_CLASSIC_CAN;                        /* FDCAN֡��ʽ */
     g_fdcanx_txheade.TxEventFifoControl = FDCAN_NO_TX_EVENTS;        /* ���洢�����¼� */
     g_fdcanx_txheade.MessageMarker = 0;                              /* ��Ϣ���� */
 
@@ -533,7 +534,8 @@ HAL_StatusTypeDef FDCAN_SendMessage(uint8_t fc, uint16_t dest_did, uint16_t sub,
     TxHeader.Identifier = id;
     TxHeader.IdType = FDCAN_EXTENDED_ID;
     TxHeader.TxFrameType = FDCAN_DATA_FRAME;
-    TxHeader.DataLength = size << 16; // 转换为DLC
+   // TxHeader.DataLength = size << 16; // 转换为DLC
+	  TxHeader.DataLength = size; // 转换为DLC
     TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
     TxHeader.BitRateSwitch = (fc == FC_DATA_TRANSFER) ? FDCAN_BRS_ON : FDCAN_BRS_OFF;
     TxHeader.FDFormat = FDCAN_FD_CAN;
@@ -541,5 +543,36 @@ HAL_StatusTypeDef FDCAN_SendMessage(uint8_t fc, uint16_t dest_did, uint16_t sub,
     TxHeader.MessageMarker = 0;
 
     return HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, data);
+}
+
+
+// 用户实现示例（在自定义文件中）
+void HAL_FDCAN_TxFifoEmptyCallback(FDCAN_HandleTypeDef *hfdcan)
+{
+    // 1. 填充新数据到发送队列
+    // 2. 重启数据传输
+    // 3. 更新发送状态标志
+printf("\r\nFDCAN1=  ");
+    if (hfdcan->Instance == FDCAN1)
+    {
+      
+       
+    }
+}
+
+void HAL_FDCAN_TxBufferCompleteCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t BufferIndexes)
+{
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(hfdcan);
+    UNUSED(BufferIndexes);
+	     printf("\r\n123  FDCAN1=  ");
+    if (hfdcan->Instance == FDCAN1)
+    {
+
+  
+    }
+    /* NOTE: This function Should not be modified, when the callback is needed,
+              the HAL_FDCAN_TxBufferCompleteCallback could be implemented in the user file
+     */
 }
 /* USER CODE END 1 */
