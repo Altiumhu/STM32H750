@@ -1336,6 +1336,46 @@
               <FileType>5</FileType>
               <FilePath>..\Aapp_Diver\app_drive_adc.h</FilePath>
             </File>
+            <File>
+              <FileName>app_drive_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Aapp_Diver\app_drive_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_drive_gpio.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Aapp_Diver\app_drive_gpio.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_drive_timer1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Aapp_Diver\app_drive_timer1.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_drive_timer1.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Aapp_Diver\app_drive_timer1.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_drive_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Aapp_Diver\app_drive_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_drive_flash.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Aapp_Diver\app_drive_flash.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_drive_uasrt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Aapp_Diver\app_drive_uasrt.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_drive_uasrt.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Aapp_Diver\app_drive_uasrt.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

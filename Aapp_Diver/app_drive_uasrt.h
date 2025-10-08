@@ -7,7 +7,7 @@
 
 extern uint8_t uart_rx_flag;
 
-extern uint8_t rx_buffer[1];  // 单字节接收缓冲区
+extern uint8_t rx_buffer[1];  // 鍗曞瓧鑺傛帴鏀剁紦鍐插尯
 
 extern void App_Drive_UASRT_Init(void);
 

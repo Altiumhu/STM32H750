@@ -124,9 +124,9 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 
 #include "app_drive_adc.h"
 #include "app_drive_gpio.h"
-//#include "app_drive_timer1.h"
+#include "app_drive_timer1.h"
 //#include "app_drive_uasrt.h"
-//#include "app_drive_flash.h"
+#include "app_drive_flash.h"
 //#include "app_drive_apt.h"
 //#include "app_drive_fdcan.h"
 

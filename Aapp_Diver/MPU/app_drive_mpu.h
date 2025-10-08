@@ -2,11 +2,11 @@
  ****************************************************************************************************
  * @file        mpu.h
  * @version     V1.0
- * @brief       MPUÄÚ´æ±£»¤ Çı¶¯´úÂë
+ * @brief       MPUå†…å­˜ä¿æŠ¤ é©±åŠ¨ä»£ç 
  ****************************************************************************************************
- * @attention   Waiken-Smart »ÛÇÚÖÇÔ¶
+ * @attention   Waiken-Smart æ…§å‹¤æ™ºè¿œ
  *
- * ÊµÑéÆ½Ì¨:    STM32H723ZGT6Ğ¡ÏµÍ³°å
+ * å®éªŒå¹³å°:    STM32H723ZGT6å°ç³»ç»Ÿæ¿
  *
  ****************************************************************************************************
  */
@@ -14,13 +14,13 @@
 #ifndef __MPU_H
 #define __MPU_H
 
-#include "./SYSTEM/sys/sys.h"
+#include "sys.h"
 
 
 /******************************************************************************************/
 
-uint8_t mpu_set_protection(uint32_t baseaddr, uint32_t size, uint32_t rnum, uint8_t de, uint8_t ap, uint8_t sen, uint8_t cen, uint8_t ben);   /* ÉèÖÃÄ³¸öÇøÓòµÄMPU±£»¤ */
-void mpu_memory_protection(void);   /* ÉèÖÃĞèÒª±£»¤µÄ´æ´¢¿é */
+uint8_t mpu_set_protection(uint32_t baseaddr, uint32_t size, uint32_t rnum, uint8_t de, uint8_t ap, uint8_t sen, uint8_t cen, uint8_t ben);   /* è®¾ç½®æŸä¸ªåŒºåŸŸçš„MPUä¿æŠ¤ */
+void mpu_memory_protection(void);   /* è®¾ç½®éœ€è¦ä¿æŠ¤çš„å­˜å‚¨å— */
 
 #endif
 

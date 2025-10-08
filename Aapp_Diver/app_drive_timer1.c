@@ -11,15 +11,14 @@ volatile uint8_t led_state = 0;
 void App_Drive_InitTimer_7(void)
 {
   // 启动TIM7中断
-  HAL_TIM_Base_Start_IT(&htim7);
-  HAL_TIM_Base_Start_IT(&htim6);
+//  HAL_TIM_Base_Start_IT(&htim7);
+//  HAL_TIM_Base_Start_IT(&htim6);
 }
 
 #if 1
 /* TIM7中断回调函数 */
 
-#include "w5500_conf.h"
-#include "tcp_demo.h"
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 
@@ -31,7 +30,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if (timer7_1000ms_counter > 10) // 1秒钟
     {  
        Sys_Run_Led();   
-       UserSet_RGB_Led(1); //三灯显示控制
+
       timer7_1000ms_counter = 0;
     }
     Debug_Timer_1ms();
@@ -49,7 +48,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if (timer7_counter > 100) // 10秒钟
     {
       timer7_counter = 0;
-     UserUpMachine_CheckTcpLink();  /// 记录断开时间中位机与主机
+   
       temp = adc3_get_temperature(); /* 得到温度值 */
       if (temp < 0)
       {
@@ -65,16 +64,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   if (htim->Instance == TIM6)
   {
 
-    W5500_TIM_Callback();
 
-    ms++;
-    if (ms >= 200)
-    {
 
-      ms = 0;
-      // printf("Tx:%d Rx%d\n\r", TxNum, RxNum);
-      RxNum = TxNum = 0;
-    }
+
+    
   }
 }
 

@@ -90,8 +90,8 @@ void OnTransferFailed(uint16_t session_id, TransferStatus reason);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint8_t rx_data;
-float votlag = 3.1415962;
+//uint8_t rx_data;
+//float votlag = 3.1415962;
 /* USER CODE END 0 */
 
 /**
@@ -152,11 +152,11 @@ int main(void)
     uint8_t dma_msg[] = "DMA Transfer!\r\n";
     HAL_UART_Transmit_DMA(&huart1, dma_msg, sizeof(dma_msg) -1);
 
-    HAL_UART_Receive_IT(&huart1, &rx_data, 1);
+   // HAL_UART_Receive_IT(&huart1, &rx_data, 1);
 		
 		LargeDataFrame gLargeDataFrame;
 
-    printf("\r\nSTM32F750=%f LargeDataFrame=%d", votlag,sizeof(LargeDataFrame));
+    //printf("\r\nSTM32F750=%f LargeDataFrame=%d", votlag,sizeof(LargeDataFrame));
     HAL_TIM_Base_Start_IT(&htim3);
     HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adcBuffer, ADC_BUFFER_SIZE);
 
@@ -313,7 +313,7 @@ void PeriphCommonClock_Config(void)
 //uint8_t rx_data;
 //HAL_UART_Receive_IT(&huart1, &rx_data, 1);
 
-
+#if 0
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == USART1)
@@ -352,7 +352,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     }
 }
-
+#endif
 //void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 //{
 //    if (hadc->Instance == ADC1)

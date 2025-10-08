@@ -2,40 +2,40 @@
 #define USRE_APP_DRIVE_TIMER1_H_
 
 
-#include "./SYSTEM/sys/sys.h"
+#include "sys.h"
 
 
 /****************************************************************************************************/
-/* ¶¨Ê±Æ÷ ¶¨Òå */
+/* å®šæ—¶å™¨ å®šä¹‰ */
 
-/* TIMX PWMÊä³ö¶¨Òå 
- * ÕâÀïÊä³öµÄPWM¿ØÖÆLED0µÄÁÁ¶È
+/* TIMX PWMè¾“å‡ºå®šä¹‰ 
+ * è¿™é‡Œè¾“å‡ºçš„PWMæŽ§åˆ¶LED0çš„äº®åº¦
  */
 #define TIMX_PWM_CHY_GPIO_PORT         GPIOC
 #define TIMX_PWM_CHY_GPIO_PIN          GPIO_PIN_6
-#define TIMX_PWM_CHY_GPIO_AF           GPIO_AF3_TIM3                              /* AF¹¦ÄÜÑ¡Ôñ */
-#define TIMX_PWM_CHY_GPIO_CLK_ENABLE() do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)  /* PB¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define TIMX_PWM_CHY_GPIO_AF           GPIO_AF3_TIM3                              /* AFåŠŸèƒ½é€‰æ‹© */
+#define TIMX_PWM_CHY_GPIO_CLK_ENABLE() do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)  /* PBå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define TIMX_PWM                       TIM3                                         /* TIM3 */
-#define TIMX_PWM_CHY                   TIM_CHANNEL_1                                /* Í¨µÀY,  1<= Y <=4 */
-#define TIMX_PWM_CHY_CLK_ENABLE()      do{ __HAL_RCC_TIM3_CLK_ENABLE(); }while(0)   /* TIM3 Ê±ÖÓÊ¹ÄÜ */
+#define TIMX_PWM_CHY                   TIM_CHANNEL_1                                /* é€šé“Y,  1<= Y <=4 */
+#define TIMX_PWM_CHY_CLK_ENABLE()      do{ __HAL_RCC_TIM3_CLK_ENABLE(); }while(0)   /* TIM3 æ—¶é’Ÿä½¿èƒ½ */
 
 
 #define TIMX_PWM_CH2_GPIO_PORT         GPIOC
 #define TIMX_PWM_CH2_GPIO_PIN          GPIO_PIN_7
-#define TIMX_PWM_CH2_GPIO_AF           GPIO_AF3_TIM3                              /* AF¹¦ÄÜÑ¡Ôñ */
-#define TIMX_PWM_CH2_GPIO_CLK_ENABLE() do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)  /* PB¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define TIMX_PWM_CH2_GPIO_AF           GPIO_AF3_TIM3                              /* AFåŠŸèƒ½é€‰æ‹© */
+#define TIMX_PWM_CH2_GPIO_CLK_ENABLE() do{ __HAL_RCC_GPIOC_CLK_ENABLE(); }while(0)  /* PBå£æ—¶é’Ÿä½¿èƒ½ */
 
 
-#define TIM8_PWM_CH2                   TIM_CHANNEL_2                                /* Í¨µÀY,  1<= Y <=4 */
-#define TIM8_PWM_CH2_CLK_ENABLE()      do{ __HAL_RCC_TIM3_CLK_ENABLE(); }while(0)   /* TIM3 Ê±ÖÓÊ¹ÄÜ */
+#define TIM8_PWM_CH2                   TIM_CHANNEL_2                                /* é€šé“Y,  1<= Y <=4 */
+#define TIM8_PWM_CH2_CLK_ENABLE()      do{ __HAL_RCC_TIM3_CLK_ENABLE(); }while(0)   /* TIM3 æ—¶é’Ÿä½¿èƒ½ */
 
 
 
 
 /****************************************************************************************************/
 
-void timx_pwm_chy_init(uint32_t arr, uint16_t psc);                                 /* ¶¨Ê±Æ÷TIMX Í¨µÀY PWMÊä³ö³õÊ¼»¯º¯Êý */
+void timx_pwm_chy_init(uint32_t arr, uint16_t psc);                                 /* å®šæ—¶å™¨TIMX é€šé“Y PWMè¾“å‡ºåˆå§‹åŒ–å‡½æ•° */
 
 
 extern void App_Drive_InitTimer_7(void);
