@@ -66,17 +66,13 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <stdint.h>
+#include <stdlib.h>
 
 #include "stdio.h"
 #include "math.h"
 #include "string.h"
 #include <stdarg.h>
-
-#include <stdint.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 
 #include "sys.h"
@@ -112,20 +108,13 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 
 
 
-//#include "w5500.h"
-//#include "W5500_conf.h"
-//#include "socket.h"
-//#include "utility.h"
-//#include "dhcp.h"
-//#include "tcp_demo.h"
-//#include "tcp_client_task.h"
-//#include "tcp_client_msg.h"
+
 
 
 #include "app_drive_adc.h"
 #include "app_drive_gpio.h"
 #include "app_drive_timer1.h"
-//#include "app_drive_uasrt.h"
+#include "app_drive_uasrt.h"
 #include "app_drive_flash.h"
 //#include "app_drive_apt.h"
 //#include "app_drive_fdcan.h"

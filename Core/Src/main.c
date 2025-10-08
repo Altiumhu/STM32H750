@@ -142,6 +142,9 @@ int main(void)
   MX_TIM4_Init();
   MX_UART7_Init();
   MX_I2C4_Init();
+  MX_TIM5_Init();
+  MX_TIM6_Init();
+  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
 	
 	AppUser_prvSetupHardware();

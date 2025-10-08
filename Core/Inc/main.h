@@ -59,12 +59,46 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define LED_G_Pin GPIO_PIN_2
 #define LED_G_GPIO_Port GPIOE
-#define SYS_LED_Pin GPIO_PIN_5
-#define SYS_LED_GPIO_Port GPIOE
+#define FAN_GPIO_Pin GPIO_PIN_3
+#define FAN_GPIO_GPIO_Port GPIOE
+#define LED_595_LD_Pin GPIO_PIN_4
+#define LED_595_LD_GPIO_Port GPIOE
+#define LED_595_CLK_Pin GPIO_PIN_5
+#define LED_595_CLK_GPIO_Port GPIOE
+#define LED_595_DATA_Pin GPIO_PIN_6
+#define LED_595_DATA_GPIO_Port GPIOE
 #define SYS_LED1_Pin GPIO_PIN_14
 #define SYS_LED1_GPIO_Port GPIOC
-#define SYS_LED1C15_Pin GPIO_PIN_15
-#define SYS_LED1C15_GPIO_Port GPIOC
+#define SYS_LED2_Pin GPIO_PIN_15
+#define SYS_LED2_GPIO_Port GPIOC
+#define EXIO_165_LD_Pin GPIO_PIN_10
+#define EXIO_165_LD_GPIO_Port GPIOE
+#define EXIO_165_CLK_Pin GPIO_PIN_12
+#define EXIO_165_CLK_GPIO_Port GPIOE
+#define EXIO_165_DATA_Pin GPIO_PIN_15
+#define EXIO_165_DATA_GPIO_Port GPIOE
+#define EXIO_595_LD_Pin GPIO_PIN_8
+#define EXIO_595_LD_GPIO_Port GPIOA
+#define EXIO_595_CLK_Pin GPIO_PIN_11
+#define EXIO_595_CLK_GPIO_Port GPIOA
+#define EXIO_595_DATA_Pin GPIO_PIN_12
+#define EXIO_595_DATA_GPIO_Port GPIOA
+#define ADD1_Pin GPIO_PIN_2
+#define ADD1_GPIO_Port GPIOD
+#define ADD2_Pin GPIO_PIN_3
+#define ADD2_GPIO_Port GPIOD
+#define ADD3_Pin GPIO_PIN_4
+#define ADD3_GPIO_Port GPIOD
+#define ADD4_Pin GPIO_PIN_5
+#define ADD4_GPIO_Port GPIOD
+#define ADD5_Pin GPIO_PIN_6
+#define ADD5_GPIO_Port GPIOD
+#define ADD6_Pin GPIO_PIN_7
+#define ADD6_GPIO_Port GPIOD
+#define UN_OVP_Pin GPIO_PIN_0
+#define UN_OVP_GPIO_Port GPIOE
+#define UN_OCP_Pin GPIO_PIN_1
+#define UN_OCP_GPIO_Port GPIOE
 
 /* USER CODE BEGIN Private defines */
 
