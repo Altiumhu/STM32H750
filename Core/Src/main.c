@@ -44,6 +44,10 @@
 #include "message_handler.h"
 #include "system_can_config.h"
 
+
+#include "head.h"
+
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -64,7 +68,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-#define ADC_BUFFER_SIZE 4  // ??????
+//#define ADC_BUFFER_SIZE 4  // ??????
 uint16_t adcBuffer[ADC_BUFFER_SIZE];  // ADC???????
 /* USER CODE END PV */
 
@@ -139,6 +143,8 @@ int main(void)
   MX_UART7_Init();
   MX_I2C4_Init();
   /* USER CODE BEGIN 2 */
+	
+	AppUser_prvSetupHardware();
     char msg[] = "Hello UART1!\r\n";
     HAL_UART_Transmit(&huart1, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
 
@@ -347,20 +353,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     }
 }
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
-{
-    if (hadc->Instance == ADC1)
-    {
-        // ??ADC??
-        uint16_t ch0_value = adcBuffer[0];  // PA0???
-        uint16_t ch1_value = adcBuffer[1];  // PA1???
-        uint16_t ch4_value = adcBuffer[2];  // PA4???
+//void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+//{
+//    if (hadc->Instance == ADC1)
+//    {
+//        // ??ADC??
+//        uint16_t ch0_value = adcBuffer[0];  // PA0???
+//        uint16_t ch1_value = adcBuffer[1];  // PA1???
+//        uint16_t ch4_value = adcBuffer[2];  // PA4???
 
-        // ??:??ADC?(???UART)
-//         printf("ADC: CH0=%u, CH1=%u, CH4=%u\n",
-//               ch0_value, ch1_value, ch4_value);
-    }
-}
+//        // ??:??ADC?(???UART)
+////         printf("ADC: CH0=%u, CH1=%u, CH4=%u\n",
+////               ch0_value, ch1_value, ch4_value);
+//    }
+//}
 
 // 传输完成回调
 void OnTransferComplete(TransferStatus status)

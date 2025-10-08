@@ -21,7 +21,11 @@
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
+#include "head.h"
+ADC_HandleTypeDef hadc1;
+DMA_HandleTypeDef hdma_adc1;
 
+volatile uint16_t adc_values[9] = {0};
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc1;
@@ -339,5 +343,52 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 }
 
 /* USER CODE BEGIN 1 */
+
+// adc.c
+
+// 启动ADC转换
+void ADC_StartConversion(void)
+{
+//			// DMA传输前清理缓存
+//SCB_CleanDCache_by_Addr((uint32_t*)adc_values, sizeof(adc_values));
+  // 启动ADC DMA传输
+  HAL_ADC_Start_DMA(&hadc1, 
+                   (uint32_t*)adc_values, 
+                   sizeof(adc_values)/sizeof(uint16_t));
+}
+
+// 获取ADC值（通道1-9）
+uint16_t ADC_GetValue(uint8_t channel)
+{
+  if(channel < 1 || channel > 9) return 0;
+  return adc_values[channel - 1];
+}
+
+// ADC转换完成回调
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+  // 每次转换完成时调用
+  // 可以在这里处理数据或设置标志
+	
+//			// DMA传输前清理缓存
+//SCB_CleanDCache_by_Addr((uint32_t*)adc_values, sizeof(adc_values));
+}
+
+// ADC错误回调
+void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc)
+{
+  // 处理ADC错误
+  uint32_t error = HAL_ADC_GetError(hadc);
+  
+  if(error & HAL_ADC_ERROR_OVR) {
+    // 处理溢出错误
+    printf("\r\n ADC error");
+  }
+  
+  if(error & HAL_ADC_ERROR_DMA) {
+    // 处理DMA错误
+     printf("\r\n DMA ADC error");
+  }
+}
 
 /* USER CODE END 1 */
