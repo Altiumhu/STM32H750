@@ -1,0 +1,447 @@
+/*****************************************************************************
+ *
+ *  All rights reserved.
+ *
+ *  @file     app_power_Loop.h
+ *  @brief    环路控制
+ *
+ *  @author
+ *  @email
+ *  @version  1.0.0.1
+ *  @date      2025-1-13
+ *  @license  GNU General Public License (
+ *****************************************************************************/
+/*--------------------------------- Includes -------------------------------*/
+
+#include "head.h"
+#include "app_power_Loop.h"
+
+void TIMER0CallbackFunction(void *handle);
+void APT0TimerCallback(void *aptHandle);
+void System_CloseLoop_Status(void);
+
+static volatile uint32_t Mos_L_PreChareg = 0, Mos_L_PreCharegTimer = 0;
+
+
+volatile uint16_t burst_ctrl = 200;
+
+
+
+#define SOTC_PULSE_CNT 16
+volatile uint16_t gPWM_SOTC_CNT = 0;
+volatile uint16_t gPWM_Burst_CNT = 0;
+volatile uint16_t gPWM_Burst_StartTimer = 0;
+#if SS_START_MODE
+// 轨迹
+const uint32_t DotArefDotValue[SOTC_PULSE_CNT] = {1, 1, 1, 20, 20},
+               DotBrefDotValue[SOTC_PULSE_CNT] = {1, 1, 1, 296, 675}, //
+    DotCrefDotValue[SOTC_PULSE_CNT] = {20, 20, 20, 336, 715},
+               DotDrefDotValue[SOTC_PULSE_CNT] = {982, 982, 982, 1336, 1484},
+               ATP0_TimerPeriod[SOTC_PULSE_CNT] = {APT_0_RRE_10KHZ, APT_0_RRE_10KHZ, APT_0_RRE_10KHZ, 1356, 1504}; // 0，1是预充，2，3是启动脉冲
+
+#else
+// 高频软启动参数
+// const uint32_t DotArefDotValue[SOTC_PULSE_CNT] = {1, 1, 1, 20, 20},
+//                DotBrefDotValue[SOTC_PULSE_CNT] = {1, 1, 1, 296, 655},
+//                DotCrefDotValue[SOTC_PULSE_CNT] = {1, 1, 2, 336, 675},
+//                DotDrefDotValue[SOTC_PULSE_CNT] = {50, 50, 50, 1336, 1444},
+//                ATP0_TimerPeriod[SOTC_PULSE_CNT] = {APT_0_RRE_10KHZ, APT_0_RRE_10KHZ, APT_0_RRE_10KHZ, APT_0_RRE_200KHZ, APT_0_RRE_200KHZ}; // 0，1是预充，2，3是启动脉冲
+
+
+
+#endif
+
+
+/**********************************************************************
+ * Function: 	 System_CloseLoop_Status
+ * Description:   环路状态机
+ * Input: 	      void
+ * Output:
+ * Return: 	    void
+ * Others:
+ * Modify Date:    Version:    Author:	      Modification:
+ * -----------------------------------------------
+ * 2025-06-05	  V1.0	      Hu Weiping
+ **********************************************************************/
+
+ void System_CloseLoop_Status(void)
+{
+    uint16_t i = 0;
+
+    for (i = 0; i < BOARD_CHANNEL_NUM; i++)
+    {
+        g_Channelinfo[0].fault.all = g_Channelinfo[0].fault.all; // 工作模式
+
+        if (g_Channelinfo[0].fault.all) // 判断故障
+        {
+            g_Channelinfo[0].workMode = POWER_FAULT;
+        }
+
+        switch (g_Channelinfo[0].workMode)
+        {
+        case POWER_OFF:   // 关闭驱动
+        case POWER_FAULT: // 关闭驱动
+        {
+            if (g_Channelinfo[0].fault.all == 0) // 判断故障  没有故障进入正常启动程序
+            //  if (g_Channelinfo[i].fault.all == 0 && g_Boost_handle.Boost_EN ==1 ) // 判断故障  没有故障进入正常启动程序
+            {
+                if (g_DEVICE_Information.workMode == POWER_SET_CHARGE)
+                {
+                }
+                g_Channelinfo[0].workMode = POWER_INIT;
+            }
+            else
+            { // 说明有故障，关闭 PRT管 输出低关闭
+            }
+//            g_epwmHandle[0].High_MOS_Timer_TBPRD = APT_0_RRE_200KHZ;
+
+        }
+        break;
+        case POWER_INIT: //
+        {
+//            DebugLED_LOW_LEVEL;
+//            PIDInit(0);
+//            HAL_EPWM_Config(0);
+//            Set_Ref_5ms_lowpass(g_Handle_REC_Device.V_Ref_REC_Vaule, 1);
+//            Set_Ref_100ms_lowpass(g_Handle_REC_Device.V_Ref_REC_Vaule, 1);
+//            g_Handle_REC_Device.V_Ref_REC_Vaule = 8.0f;
+//            g_Handle_REC_Device.I_Ref_REC_Vaule = 0.5f;
+//            g_Channelinfo[0].workMode = POWER_PRECHARGE;
+//             g_epwmHandle[0].Low_MOS_DUTY = PWM_LOW_SR_MIN_TIME;
+//            g_Channelinfo[0].run =0x0;
+//            gPWM_Burst_StartTimer =0;
+        }
+        break;
+        case POWER_PRECHARGE: // 预充电
+        {
+        }
+        break;
+        case POWER_SoftStart: // 软启动
+        {
+//            // 电压环环PID参数缓慢加到 kp=5.0  ki=1.0
+//            gHandle_PID[0].v_kp = gHandle_PID[0].v_kp + 0.1;
+//            if (gHandle_PID[0].v_kp >= 5.0f)
+//                gHandle_PID[0].v_kp = 5.0f;
+//            gHandle_PID[0].v_ki = gHandle_PID[0].v_ki + 0.01;
+//            if (gHandle_PID[0].v_ki >= 1.0f)
+//                gHandle_PID[0].v_ki = 1.0f;
+#if CLOOS_LOOP_MODE // 闭环开启保护
+
+            if (g_Channelinfo[0].Cap_voltage >= (BOARD_OUT_VOLT * 0.90f))
+            {
+                g_epwmHandle[0].High_MOS_Timer_TBPRD_MAX = APT_0_RRE_35KHZ;
+                gHandle_PID[0].v_up = (APT_0_RRE_35KHZ); //
+                gHandle_PID[0].v_max_out_value = gHandle_PID[0].v_up;
+
+                DebugLED_LOW_LEVEL;
+                g_apt0.tmrInterrupt.tmrInterruptScale = 1;
+                USER_API_APT_SetTimerInterrupt(&g_apt0);
+                g_Handle_REC_Device.V_Ref_REC_Vaule = BOARD_OUT_VOLT;
+                g_Protect_handle[0].SR_Current = 5.0f;
+                g_Channelinfo[0].workMode = POWER_RUN_CHARGE;
+
+                // if (gHandle_PID[0].loop == I_LOOP)
+                //     gHandle_PID[0].v_err_sum = gHandle_PID[0].i_pid_out;
+            }
+
+#if DBUG_EN // 调试使能
+
+            Set_Ref_100ms_lowpass(g_Handle_REC_Device.V_Ref_REC_Vaule, 0);
+#else
+            // 电压环
+            g_Handle_REC_Device.V_Ref_REC_Vaule = g_Handle_REC_Device.V_Ref_REC_Vaule + 0.1f;
+            if (g_Handle_REC_Device.V_Ref_REC_Vaule = g_Handle_REC_Device.V_Ref_REC_Vaule >= BOARD_OUT_VOLT)
+                g_Handle_REC_Device.V_Ref_REC_Vaule = BOARD_OUT_VOLT;
+
+            Power_PID_Updata(g_Channelinfo[0].Cap_voltage, Set_Ref_5ms_lowpass(12.0f, 0));
+            // Power_PID_Updata(g_Channelinfo[0].Cap_voltage,  12.0f);
+
+            g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].v_pid_out;
+#if 0
+            /// 电流环
+            g_Handle_REC_Device.I_Ref_REC_Vaule = g_Handle_REC_Device.I_Ref_REC_Vaule + 0.1f;
+            if (g_Handle_REC_Device.I_Ref_REC_Vaule >= 70.0f)
+                g_Handle_REC_Device.I_Ref_REC_Vaule = 70.0f;
+
+            gHandle_PID[0].i_ref = g_Handle_REC_Device.I_Ref_REC_Vaule;
+            gHandle_PID[0].i_fdb = g_Channelinfo[0].current; // 设置反馈值
+            pid_I_Loop_calc(&gHandle_PID[0]);
+
+            if (g_Channelinfo[0].voltage > (BOARD_OUT_VOLT * 0.90f)) // 大于0.9
+            {
+                   g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].v_pid_out;
+                // if (gHandle_PID[0].v_pid_out <= gHandle_PID[0].i_pid_out)
+                // {
+                //       DebugLED_LOW_LEVEL;
+                //     gHandle_PID[0].loop = V_LOOP;
+                //     g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].v_pid_out;
+                // }
+                // else
+                // {
+                //        DebugLED_HIGH_LEVEL;
+                //     gHandle_PID[0].loop = I_LOOP;
+                //     g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].i_pid_out;
+                // }
+            }
+            else // 低于0.90使用的时候电流环
+            {
+                DebugLED_HIGH_LEVEL;
+                gHandle_PID[0].loop = I_LOOP;
+              ///  g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].i_pid_out;
+            }
+#endif
+            if (g_Channelinfo[0].voltage > (5.0f)) // 软启动9.0V开始降低频率
+            {
+                g_Handle_REC_Device.I_Ref_REC_Vaule = 70.0f;
+                gHandle_PID[0].v_ui = gHandle_PID[0].v_ui + 80.0f;
+
+                if (gHandle_PID[0].v_ui >= APT_0_RRE_RUN_LOOP_KHZ) /// 稳态
+                {
+                    gHandle_PID[0].v_ui = APT_0_RRE_RUN_LOOP_KHZ;
+                }
+
+                gHandle_PID[0].i_ui = gHandle_PID[0].v_ui;
+            }
+
+#endif
+ 
+#else
+            //   OpenLoopDebugPwm();
+          // g_Channelinfo[0].workMode = POWER_TEST;
+
+             g_Channelinfo[0].workMode = POWER_BURST;
+#endif
+        }
+        break;
+
+        case POWER_RUN_CHARGE: // 06
+        {
+					
+					#if 0
+            // 电压环
+            Power_PID_Updata(g_Channelinfo[0].Cap_voltage, BOARD_OUT_VOLT);
+            g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].v_pid_out;
+
+            gHandle_PID[0].v_ui = gHandle_PID[0].v_ui + 5.0f;
+            if (gHandle_PID[0].v_ui >= APT_0_RRE_RUN_LOOP_KHZ) /// 稳态
+            {
+                gHandle_PID[0].v_ui = APT_0_RRE_RUN_LOOP_KHZ;
+            }
+
+            // 进入打嗝的条件
+            static uint16_t cnt_burst_in = 0U;
+            if ((g_Channelinfo[0].voltage > 12.1f) && (gHandle_PID[0].v_pid_out <= (APT_0_RRE_RUN_LOOP_KHZ + 15.0f)))
+            {
+                gPWM_Burst_StartTimer =0;
+                cnt_burst_in++;
+                // if (cnt_burst_in > 2U) // 20*20us=400us
+                {
+                    g_Channelinfo[0].workMode = POWER_BURST;
+                    cnt_burst_in = 0U;
+                    g_Channelinfo[0].run =0;
+//                    DebugLED_LOW_LEVEL;
+                }
+            }
+            else
+            {
+                cnt_burst_in = 0U;
+            }
+#endif						
+#if 0
+            //电流环
+            gHandle_PID[0].i_ref = g_Handle_REC_Device.I_Ref_REC_Vaule;
+            gHandle_PID[0].v_fdb = g_Channelinfo[0].current2; // 设置反馈值
+            pid_I_Loop_calc(&gHandle_PID[0]);
+
+
+            if( gHandle_PID[0].v_pid_out< gHandle_PID[0].i_pid_out)//双环竞争
+            {
+              g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].v_pid_out;
+            }
+            else
+            {
+            g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].i_pid_out;
+            }
+
+#endif
+        }
+        break;
+        case POWER_RUN_DISCHARGE: // 放电模式
+        {
+        }
+        break;
+     
+
+        case POWER_TEST: // 开环测试
+        {
+            // g_epwmHandle[i].Low_MOS_DUTY+=1;
+            //  if(g_epwmHandle[i].Low_MOS_DUTY>g_epwmHandle[i].Low_MOS_Timer_TBPRD) g_epwmHandle[i].Low_MOS_DUTY =g_epwmHandle[i].Low_MOS_Timer_TBPRD;
+        }
+        break;
+        
+    }
+	}
+}
+
+
+/**********************************************************************
+ * Function: 	 APT0TimerCallback
+ * Description:   APT周期中断
+ * Input: 	      void
+ * Output:
+ * Return: 	    void
+ * Others:
+ * Modify Date:    Version:    Author:	      Modification:
+ * -----------------------------------------------
+ * 2025-06-05	  V1.0	      Hu Weiping
+ **********************************************************************/
+ void APT0TimerCallback(void *aptHandle)
+{
+//    BASE_FUNC_UNUSED(aptHandle);
+    /* USER CODE BEGIN APT0_TIMER_INTERRUPT */
+  //  APT_Handle *handle = (APT_Handle *)aptHandle;
+
+    if (g_Channelinfo[0].workMode == POWER_PRECHARGE)
+    {
+
+
+    }
+
+     
+
+#if 0
+
+    USER_API_GLOBAL_LOAD(&g_apt0);
+    USER_API_GLOBAL_LOAD(&g_apt1);
+    USER_API_GLOBAL_LOAD(&g_apt2);
+
+    if (g_Channelinfo[0].fault.all == 0 && g_epwmHandle[0].High_MOS_STA == 1) // 判断无故障，可以启动pwm
+    {
+        if (g_epwmHandle[0].High_MOS_OpenFlag == 0)
+        {
+            g_epwmHandle[0].High_MOS_OpenFlag = 1;
+            pwm_start(0, 0);
+        }
+    }
+    else
+    {
+        if (g_epwmHandle[0].High_MOS_OpenFlag == 1)
+        {
+            g_epwmHandle[0].High_MOS_OpenFlag = 0;
+            pwm_stop(0);
+            pwm_stop(1);
+        }
+    }
+
+    // 同步整流
+    if (g_epwmHandle[0].Low_MOS_STA == 1) //
+    {
+        if (g_epwmHandle[0].Low_MOS_OpenFlag == 0)
+        {
+            g_epwmHandle[0].Low_MOS_OpenFlag = 1;
+            pwm_start(1, 0); //  同步整流打开
+        }
+    }
+    else
+    {
+        if (g_epwmHandle[0].Low_MOS_OpenFlag == 1)
+        {
+            g_epwmHandle[0].Low_MOS_OpenFlag = 0;
+
+            pwm_stop(1); //  同步整流关闭
+        }
+    }
+
+#endif
+
+    /* USER CODE END APT0_TIMER_INTERRUPT */
+}
+
+
+/**********************************************************************
+ * Function: 	 TIMER0CallbackFunction
+ * Description:  定时器0中断 20us
+ * Input: 	      void
+ * Output:
+ * Return: 	    void
+ * Others:
+ * Modify Date:    Version:    Author:	      Modification:
+ * -----------------------------------------------
+ * 2025-06-05	  V1.0	      Hu Weiping
+ **********************************************************************/
+
+void TIMER0CallbackFunction(void *handle)
+{
+    
+
+//    System_LED_HIGH_LEVEL;
+
+//    GetADC_Driver_Result();
+//    sample_irq_handler(); // 采集数据转换
+
+#if CLOOS_LOOP_MODE // 闭环开启保护
+     Scan_System_Fault(); // 保护
+#else
+     //  OpenLoopDebugPwm();
+#endif
+
+    // ZPK_Handle_Update(12.0f,8.0f);
+    // g_epwmHandle->High_MOS_Timer_TBPRD=  g_ZPK_Handle.OUT ;
+//    System_CloseLoop_Status();
+
+//   // if (POWER_TEST == g_Channelinfo[0].workMode || (POWER_RUN_CHARGE == g_Channelinfo[0].workMode || POWER_SoftStart == g_Channelinfo[0].workMode) || POWER_BURST == g_Channelinfo[0].workMode)
+//   if (POWER_TEST == g_Channelinfo[0].workMode || (POWER_RUN_CHARGE == g_Channelinfo[0].workMode || POWER_SoftStart == g_Channelinfo[0].workMode) )
+//    {
+//        Updata_EPWM_Handle();
+//    }
+
+//    System_LED_LOW_LEVEL;
+    /* USER CODE END TIMER1 ITCallBackFunc */
+}
+/**********************************************************************
+ * Function: 	 Power_PID_Updata
+ * Description:  电压环路计算
+ * Input: 	      void
+ * Output:
+ * Return: 	    void
+ * Others:
+ * Modify Date:    Version:    Author:	      Modification:
+ * -----------------------------------------------
+ * 2025-06-05	  V1.0	      Hu Weiping
+ **********************************************************************/
+// void Power_PID_Updata(float FB, float REF)
+//{
+//    /// 电压环
+//    gHandle_PID[0].v_ref = REF;
+//    gHandle_PID[0].v_fdb = FB; // 设置反馈值
+
+//    pid_V_Loop_calc(&gHandle_PID[0]);
+//}
+/**********************************************************************
+ * Function: 	 Power_PID_Updata
+ * Description:  调试pid参数
+ * Input: 	      void
+ * Output:
+ * Return: 	    void
+ * Others:
+ * Modify Date:    Version:    Author:	      Modification:
+ * -----------------------------------------------
+ * 2025-06-05	  V1.0	      Hu Weiping
+ **********************************************************************/
+void Debug_Loop(void)
+{
+//    DBG_PRINTF("\r\nworkMode= %d", g_Channelinfo[0].workMode);
+//    DBG_PRINTF("\r\nFAULT= 0x%X", g_Channelinfo[0].fault.all);
+//    DBG_PRINTF("\r\nSR_STA= 0x%d  LowFlag%d", g_epwmHandle[0].Low_MOS_STA, g_epwmHandle[0].Low_MOS_OpenFlag);
+
+//    DBG_PRINTF("\r\nloop=%d", gHandle_PID[0].loop);
+//    DBG_PRINTF("\r\nlBurstout=%f", gHandle_Burst_PID[0].v_pid_out);
+
+    // DBG_PRINTF("\r\nHigh_MOS_STA= 0x%d  High_MOS_OpenFlag=%d", g_epwmHandle[0].High_MOS_STA, g_epwmHandle[0].High_MOS_OpenFlag);
+}
+
+
+
+
+
+
