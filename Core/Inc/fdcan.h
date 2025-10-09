@@ -88,7 +88,7 @@ uint8_t fdcan3_send_msg(uint8_t *msg, uint32_t len);                            
 uint8_t fdcan3_receive_msg(uint8_t *buf);                                                           /* FDCAN接收数据 */
 
 
-void CAN3_Send_TEST(void);//初始化测试CAN 不知道为啥需要发送，才能发送 后续解决
+void CAN1_Send_TEST(void);//初始化测试CAN 不知道为啥需要发送，才能发送 后续解决
 
 
 

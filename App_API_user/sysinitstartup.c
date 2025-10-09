@@ -31,8 +31,8 @@ void AppUser_Device_InitData(void)
 
   //    Initdata_g_DEVICE_Information();
 
-//  AppUuser_InitTempData(); // 温度采集数据初始化
-//  debug_init();
+  AppUuser_InitTempData(); // 温度采集数据初始化
+ debug_init();
 //  Init_Master_Hand();
 
 //  Smoke_Init_Data();

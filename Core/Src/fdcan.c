@@ -97,15 +97,15 @@ void MX_FDCAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN FDCAN1_Init 2 */
-    /* ���������� */
-    fdcan_filterconfig.IdType = FDCAN_EXTENDED_ID;                   /* ��׼ID */
-    fdcan_filterconfig.FilterIndex = 0;                              /* �˲������� */
-    fdcan_filterconfig.FilterType = FDCAN_FILTER_MASK;               /* �˲������ͣ���ͳλ���� */
-    fdcan_filterconfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;       /* �������ã�������ƥ���Ժ�洢��Rx FIFO0�� */
-    fdcan_filterconfig.FilterID1 = 0x123;                            /* ����ID1��11λ��׼ID */
-    fdcan_filterconfig.FilterID2 = 0x0;                            /* ����ID2������Ϊ��ͳλ���ˣ�ID2��11λ����
-                                                                      * �����ʾ���˽��պ�FilterID1��ȫһ������ϢID
-                                                                      */
+     /* 过滤器配置 */
+    fdcan_filterconfig.IdType = FDCAN_EXTENDED_ID;                   /* 标准ID */
+    fdcan_filterconfig.FilterIndex = 0;                              //* 滤波器索引 */
+    fdcan_filterconfig.FilterType = FDCAN_FILTER_MASK;               /* 滤波器类型：传统位过滤 */
+    fdcan_filterconfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;       /* 过滤配置：当过滤匹配以后存储在Rx FIFO0中 */
+    fdcan_filterconfig.FilterID1 = 0x123;                            /* 过滤ID1：29位标准ID */
+    fdcan_filterconfig.FilterID2 = 0x00000000;                        /* 过滤ID2：配置为传统位过滤，ID2是29位掩码
+                                                                  *   这里表示过滤接收和FilterID1完全一样的消息ID
+                                                                */
 
     if (HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan_filterconfig) != HAL_OK)
     {
@@ -424,4 +424,6 @@ void HAL_FDCAN_TxBufferCompleteCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t Bu
               the HAL_FDCAN_TxBufferCompleteCallback could be implemented in the user file
      */
 }
+
+
 /* USER CODE END 1 */

@@ -156,7 +156,7 @@ int main(void)
 
 
     RS485_ModbusCmdTask("CmdTask"); // RS485通讯解初始化
-		
+
     AppUser_Device_InitData();
 
     log_init(&huart1, LOG_OUTPUT_UART); // 初始化日志系统 (使用UART1输出)
@@ -170,7 +170,7 @@ int main(void)
     printf("\r\nV 50 ");
     // TEST_Flash();
 
-//    CAN3_Send_TEST();
+
     Set_FAN_Duty(TIM_CHANNEL_1, 2);
     Set_FAN_Duty(TIM_CHANNEL_2, 2);
 
@@ -179,7 +179,7 @@ int main(void)
 // 发送初始消息 (设备上线通知)
     uint8_t init_msg[4] = {0xAA, 0x55, 0x01, 0x23};
     FDCAN_SendMessage(FC_BROADCAST, BROADCAST_DEVICE_ID, 0x000, init_msg, sizeof(init_msg));
-
+    CAN1_Send_TEST();
     LargeDataTransfer_InitSender();
     LargeDataTransfer_InitReceiver();
 
@@ -198,7 +198,7 @@ int main(void)
 
         AppDebug_vTask();
 //        AppUser_temp_sample();
-			
+
 #if 0
         // 主循环 - 发送定期状态更新
         static uint32_t last_tick = 0;
@@ -337,20 +337,9 @@ void PeriphCommonClock_Config(void)
 //HAL_UART_Receive_IT(&huart1, &rx_data, 1);
 
 #if 0
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-    if (huart->Instance == USART1)
-    {
 
 
-        HAL_UART_Transmit(&huart1, &rx_data, 1, HAL_MAX_DELAY);
-        HAL_UART_Receive_IT(&huart1, &rx_data, 1);
 
-
-    }
-}
-
-uint16_t   Timer3Cunt = 0;
 extern void CAN1_Send_TEST(void);
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {

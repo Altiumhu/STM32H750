@@ -45,10 +45,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     // Read_GPIO_vTask(); // 读取IO状态
     timer7_counter++;
-    if (timer7_counter > 100) // 10秒钟
+    if (timer7_counter > 10) // 10秒钟
     {
       timer7_counter = 0;
-   
+
       temp = adc3_get_temperature(); /* 得到温度值 */
       if (temp < 0)
       {
