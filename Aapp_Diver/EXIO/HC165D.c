@@ -14,9 +14,9 @@
 
  
 
-#define EXIO_HC165_CLK(x)		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5,(GPIO_PinState)x)   //时钟	上升沿	
-#define EXIO_HC165_LD(x)		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_4,(GPIO_PinState)x)	//锁存	
-#define EXIO_HC165_DATA		  HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3)					//数据
+#define EXIO_HC165_CLK(x)		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_12,(GPIO_PinState)x)   //时钟	上升沿	
+#define EXIO_HC165_LD(x)		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_10,(GPIO_PinState)x)	//锁存	
+#define EXIO_HC165_DATA		  HAL_GPIO_ReadPin(GPIOE,GPIO_PIN_15)					//数据
 
 
 //#define EXIO_HC165_CLK(x)		GPIO_WritePins(GPIO_PORT_B,GPIO_PIN_03,(en_pin_state_t)x)   //时钟	上升沿	
@@ -220,20 +220,20 @@ void EXTIO_HC165_Init(void)
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 	  
-  GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_4;
+  GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_12;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 	
 	
 	GPIO_InitTypeDef gpio_init_struct;                      /* GPIO配置参数存储变量 */
 
-	gpio_init_struct.Pin = GPIO_PIN_3;                   /* KEY0引脚 */
+	gpio_init_struct.Pin = GPIO_PIN_15;                   /* KEY0引脚 */
 	gpio_init_struct.Mode = GPIO_MODE_INPUT;                /* 输入 */
 	gpio_init_struct.Pull = GPIO_NOPULL;                  /* 上拉 */
 	gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;          /* 高速 */
-	HAL_GPIO_Init(GPIOB, &gpio_init_struct);       /* KEY0引脚模式设置,下拉输入 */
+	HAL_GPIO_Init(GPIOE, &gpio_init_struct);       /* KEY0引脚模式设置,下拉输入 */
 	
   
 }

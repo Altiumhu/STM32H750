@@ -11,7 +11,7 @@ volatile uint8_t led_state = 0;
 void App_Drive_InitTimer_7(void)
 {
   // 启动TIM7中断
-//  HAL_TIM_Base_Start_IT(&htim7);
+  HAL_TIM_Base_Start_IT(&htim7);
 //  HAL_TIM_Base_Start_IT(&htim6);
 }
 
@@ -29,17 +29,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     timer7_1000ms_counter++;
     if (timer7_1000ms_counter > 10) // 1秒钟
     {  
-       Sys_Run_Led();   
+//       Sys_Run_Led();   
 
       timer7_1000ms_counter = 0;
     }
     Debug_Timer_1ms();
 
-    sample_irq_handler();
-  //
-    Read_GPIO_vTask(); // 读取IO状态
+//    sample_irq_handler();
+//  //
+//    Read_GPIO_vTask(); // 读取IO状态
 
-    Smoke_vTask();
+//    Smoke_vTask();
 
 
 
@@ -63,11 +63,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   if (htim->Instance == TIM6)
   {
-
-
-
-
-    
   }
 }
 

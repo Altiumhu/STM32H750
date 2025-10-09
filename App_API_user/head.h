@@ -167,9 +167,9 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 
 //#include "./MALLOC/malloc.h"
 
-//#include "log_system.h"
-//#include "cli_system.h"
-//#include "cli_cfg.h"
+#include "log_system.h"
+#include "cli_system.h"
+#include "cli_cfg.h"
 
 
 //#include "large_data_transfer.h"

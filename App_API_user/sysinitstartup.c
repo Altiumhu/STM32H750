@@ -71,7 +71,7 @@ void AppUser_prvSetupHardware(void)
 //  MX_TIM6_Init();
 //  MX_TIM8_Init();
 //  MX_ADC1_Init();
-//  EXTIO_HC165_Init();
+  EXTIO_HC165_Init();
 //  norflash_init(); /* 初始化W25Q128 */
 //  printf("\r\n prvSetupHardware_Init");
 //  mpu_memory_protection();                               /* 保护相关存储区域 */
@@ -80,11 +80,11 @@ void AppUser_prvSetupHardware(void)
 //  MCU_IO_OUT_Init();                                     /* 输出IO初始化 */
 //  fdcan_init(1, 8, 31, 8,   FDCAN_MODE_NORMAL); /* FDCAN初始化， 普通模式,波特率500kbps  */
 //  fdcan3_init(10, 8, 16, 5, FDCAN_MODE_NORMAL);          /* FDCAN初始化，普通模式,波特率500kbps */
-//  App_Drive_UASRT_Init();
+  App_Drive_UASRT_Init();
 
 //  HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1); // 关键启动代码
 //  HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_2); // 关键启动代码
-//  App_Drive_InitTimer_7();                  // 100ms
+     App_Drive_InitTimer_7();                  // 100ms
 }
 void Display_PeriphCLKFreq(void)
 {

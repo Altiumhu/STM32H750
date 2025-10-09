@@ -112,16 +112,16 @@ void MX_FDCAN1_Init(void)
         return ;
     }
 
-    /* ����ȫ�ֹ��������������в�ƥ���֡ */
+     /* 配置全局过滤器，拒收所有不匹配的帧和远程帧 */
     HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_FILTER_REMOTE, FDCAN_FILTER_REMOTE);
 
-    /* ����FDCAN */
+  /* 开启FDCAN */
     if (HAL_FDCAN_Start(&hfdcan1) != HAL_OK)
     {
         return ;
     }
 
-    /* ʹ�ܽ���FIFO 1����Ϣ�ж� */
+   /* 使能接收FIFO 0新消息中断 */
     HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
     HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_TX_COMPLETE, 0);
   /* USER CODE END FDCAN1_Init 2 */
