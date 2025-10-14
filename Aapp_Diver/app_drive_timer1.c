@@ -30,17 +30,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if (timer7_1000ms_counter > 10) // 1秒钟
     {  
 //       Sys_Run_Led();   
-
       timer7_1000ms_counter = 0;
     }
     Debug_Timer_1ms();
 
-//    sample_irq_handler();
-//  //
 //    Read_GPIO_vTask(); // 读取IO状态
-
 //    Smoke_vTask();
-    // Read_GPIO_vTask(); // 读取IO状态
     timer7_counter++;
     if (timer7_counter > 10) // 10秒钟
     {

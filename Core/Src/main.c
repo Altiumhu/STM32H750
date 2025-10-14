@@ -183,7 +183,6 @@ int main(void)
 
     //        User_Update();
     AppUser_PortocolRecv(); // MCU通讯协议包
-  GetADC_Driver_Result();
     AppDebug_vTask();
     //        AppUser_temp_sample();
 

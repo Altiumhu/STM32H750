@@ -366,7 +366,7 @@ void TIMER0CallbackFunction(void *handle)
 //    System_LED_HIGH_LEVEL;
 
 //    GetADC_Driver_Result();
-//    sample_irq_handler(); // 采集数据转换
+   sample_irq_handler(); // 采集数据转换
 
 #if CLOOS_LOOP_MODE // 闭环开启保护
      Scan_System_Fault(); // 保护
