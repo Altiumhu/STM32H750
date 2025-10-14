@@ -66,8 +66,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-// #define ADC_BUFFER_SIZE 4  // ??????
-uint16_t adcBuffer[ADC_BUFFER_SIZE]; // ADC???????
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -150,7 +150,6 @@ int main(void)
 
   // printf("\r\nSTM32F750=%f LargeDataFrame=%d", votlag,sizeof(LargeDataFrame));
   HAL_TIM_Base_Start_IT(&htim3);
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adcBuffer, ADC_BUFFER_SIZE);
 
   RS485_ModbusCmdTask("CmdTask"); // RS485通讯解初始化
 
@@ -184,7 +183,7 @@ int main(void)
 
     //        User_Update();
     AppUser_PortocolRecv(); // MCU通讯协议包
-
+  GetADC_Driver_Result();
     AppDebug_vTask();
     //        AppUser_temp_sample();
 

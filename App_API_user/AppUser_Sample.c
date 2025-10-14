@@ -61,7 +61,7 @@ void ADC_Convert_Vaule(void)
 
 void sample_irq_handler(void)
 {
-//    GetADC_Driver_Result();
+    GetADC_Driver_Result();
     ADC_Filter();        // ADC滤波
     ADC_Convert_Vaule(); // ADC转换化实际数据
 }
@@ -74,18 +74,21 @@ void AppUser_Sample_Debug(void)
      printf("ADC1_A2=%d\r\n", adc1Result[ADC1_A2]);
      printf("ADC1_A3=%d\r\n", adc1Result[ADC1_A3]);
 
-    // DBG_PRINTF("ADC1_A5=%d\r\n", adc1Result[ADC1_A5]);
-    // DBG_PRINTF("ADC1_A6=%d\r\n", adc1Result[ADC1_A6]);
+     printf("ADC1_A4=%d\r\n", adc1Result[ADC1_A4]);
+     printf("ADC1_A5=%d\r\n", adc1Result[ADC1_A5]);
 
-    // DBG_PRINTF("ADC1_A11=%d\r\n", adc1Result[ADC1_A11]);
-    // DBG_PRINTF("ADC1_A12=%d\r\n", adc1Result[ADC1_A12]);
-    // DBG_PRINTF("ADC1_A13=%d\r\n", adc1Result[ADC1_A13]);
+     printf("ADC1_A6=%d\r\n", adc1Result[ADC1_A6]);
+     printf("ADC1_A7=%d\r\n", adc1Result[ADC1_A7]);
+     printf("PC4 =%d\r\n", adc1Result[ADC1_A8]);
 
-    // DBG_PRINTF("ADC2_A7=%d\r\n", adc2Result[ADC2_A7]);
+     printf("PC5 =%d\r\n", adc1Result[9]);
 
-    // DBG_PRINTF("ADC2_A5=%d\r\n", adc2Result[ADC2_A5]);
-    // DBG_PRINTF("ADC2_B2=%d\r\n", adc2Result[ADC2_B2]);
-
+     printf("PB0 %d\r\n", adc1Result[10]);
+     printf("PB1=%d\r\n", adc1Result[11]);
+	
+	
+     printf("PC0 %d\r\n", adc1Result[12]);
+     printf("PC1=%d\r\n", adc1Result[13]);
     AppUser_ChannelInfo_Debug();
 }
 

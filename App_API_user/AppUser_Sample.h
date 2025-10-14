@@ -52,7 +52,7 @@ extern void AppUser_Sample_Debug(void);
 extern  void sample_irq_handler(void);
 
 extern void Get_Send_dev_Data(void);
-extern void sample_irq_handler(void);
+
 
 
 

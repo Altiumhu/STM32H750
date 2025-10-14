@@ -104,7 +104,7 @@ void AppDebug_vTask(void)
  //     AppUserDebug_TempVaule();
     // DebugLED_LOW_LEVEL ;
     // DBG_PRINTF("\r\ng_debugNUmer.debug1 %d \r\n",  g_debugNUmer.debug1);
-   // AppUser_Sample_Debug();
+    AppUser_Sample_Debug();
 //    Debug_HandlePID();
 
 //     Debug_PWM();

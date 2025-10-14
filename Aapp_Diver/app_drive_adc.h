@@ -23,8 +23,6 @@
 #define ADC_2_CH_NUM_MAX 16 // ADC_A通道数量最大数量
 
 
-#define ADC_BUFFER_SIZE 9  //
-extern uint16_t adcBuffer[ADC_BUFFER_SIZE];  // 
 
 #define FILTER_NUM 3   //滤波数据 2^4=16次
 

@@ -86,17 +86,6 @@ void PIDInit(uint16_t ch)
     gHandle_PID[ch].i_pid_out = 200;
 
 
-    gHandle_Burst_PID[ch].v_fdb = 0;                              // 反馈值
-    gHandle_Burst_PID[ch].v_err = 0.0f;                           // 误差
-    gHandle_Burst_PID[ch].v_kp =  10.0f;                            // 比例系数
-    gHandle_Burst_PID[ch].v_ki  =1.1f;                          // 积分系数
-    gHandle_Burst_PID[ch].v_ref = 0.0f;                          // 电压环基准复位，进行软起动
-    gHandle_Burst_PID[ch].v_err_sum = (25.0f);         //
-    gHandle_Burst_PID[ch].v_up = (250.0f);               //
-    gHandle_Burst_PID[ch].v_ui = (20.0f);              //
-    gHandle_Burst_PID[ch].v_max_out_value = gHandle_PID[ch].v_up; /* 最大脉宽*/
-    gHandle_Burst_PID[ch].v_min_out_value = gHandle_PID[ch].v_ui; /* 最小脉宽*/
-    gHandle_Burst_PID[ch].v_pid_out =25.1f;
 
 
     // LLCPIDCtrl.V_loop_calc      = (void (*)(long))pid_V_Loop_calc;
@@ -412,3 +401,5 @@ float LV_100us_lowpass(float input, uint32_t reinitialize)
     }
     return LV_lowpass.y;
 }
+
+

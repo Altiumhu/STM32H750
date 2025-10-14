@@ -12,3 +12,8 @@ extern inline float Set_Ref_10us_lowpass(float input,uint32_t reinitialize);//10
 extern float Set_Ref_100ms_lowpass(float input,uint32_t reinitialize);//5ms;
 
 #endif
+
+
+
+
+

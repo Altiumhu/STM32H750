@@ -34,6 +34,11 @@ void  GetADC_Driver_Result(void)
     adc1Result[7] = ADC_GetValue(8); // PA7
     adc1Result[8] = ADC_GetValue(9); // PC0
 
+    adc1Result[9] = ADC_GetValue(10); // PA5
+    adc1Result[10] = ADC_GetValue(11); // PA6
+    adc1Result[11] = ADC_GetValue(12); // PA7
+    adc1Result[12] = ADC_GetValue(13); // PC0
+    adc1Result[13] = ADC_GetValue(14); // PC0
     // 读取后使Cache无效
     SCB_InvalidateDCache_by_Addr((uint32_t *)adc_values, sizeof(adc_values));
 }
