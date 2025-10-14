@@ -1376,6 +1376,16 @@
               <FileType>5</FileType>
               <FilePath>..\Aapp_Diver\app_drive_uasrt.h</FilePath>
             </File>
+            <File>
+              <FileName>bsp_595.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Aapp_Diver\EXIO\bsp_595.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_595.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Aapp_Diver\EXIO\bsp_595.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

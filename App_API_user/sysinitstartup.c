@@ -119,7 +119,8 @@ void AppUser_prvSetupHardware(void)
 //  MX_TIM6_Init();
 //  MX_TIM8_Init();
 //  MX_ADC1_Init();
-  EXTIO_HC165_Init();
+    EXTIO_HC165_Init();
+	  ex_595_init();
 //  norflash_init(); /* 初始化W25Q128 */
 //  printf("\r\n prvSetupHardware_Init");
 //  mpu_memory_protection();                               /* 保护相关存储区域 */

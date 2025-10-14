@@ -15,7 +15,7 @@
 #define EX_595_RESET 			0	//清除引脚
 #define EX_595_SET   			1  	//设置引脚
 
-#define EX_595_CHIP_NUM			10		//片数量
+#define EX_595_CHIP_NUM			4		//片数量
 #define	EX_595_PIN_0			0x01	//EXIO pin 0 
 #define	EX_595_PIN_1			0x02	//EXIO pin 1 
 #define	EX_595_PIN_2			0x04	//EXIO pin 2 
@@ -35,9 +35,6 @@
 #define EX_595_MODE_DATA	    EX_595_MODE_MSB		//先发送高位数据
 
 
-#define EX_595_SRCLK(x)		GPIO_WritePins(GPIO_PORT_B,GPIO_PIN_00,(en_pin_state_t)x)   //时钟	上升沿	
-#define EX_595_RCLK(x)		GPIO_WritePins(GPIO_PORT_B,GPIO_PIN_01,(en_pin_state_t)x) 	//锁存	上升沿	
-#define EX_595_SER(x)		GPIO_WritePins(GPIO_PORT_B,GPIO_PIN_02,(en_pin_state_t)x) 	//数据
 
 void ex_595_init(void);
 void ex_595_cache_up(void);

@@ -1,5 +1,11 @@
 #include "bsp_595.h"
 
+
+#define EX_595_SRCLK(x)		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_11,(GPIO_PinState)x)   //时钟	上升沿	
+#define EX_595_RCLK(x)		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,(GPIO_PinState)x) 	//锁存	上升沿	
+#define EX_595_SER(x)		  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_12,(GPIO_PinState)x) 	//数据
+
+
 uint8_t ex_595_cache[EX_595_CHIP_NUM];
 
 
@@ -16,16 +22,19 @@ uint8_t ex_595_cache[EX_595_CHIP_NUM];
 //==================================================================
 void ex_595_init(void)
 {
-    stc_gpio_init_t stcGpioInit;
+//    stc_gpio_init_t stcGpioInit;
 
-    (void)GPIO_StructInit(&stcGpioInit);
-    stcGpioInit.u16PinState = PIN_STAT_RST; //配置默认:0电平
-    stcGpioInit.u16PinDir = PIN_DIR_OUT;  //配置IO方向:输出模式
+//    (void)GPIO_StructInit(&stcGpioInit);
+//    stcGpioInit.u16PinState = PIN_STAT_RST; //配置默认:0电平
+//    stcGpioInit.u16PinDir = PIN_DIR_OUT;  //配置IO方向:输出模式
+//	
+//    (void)GPIO_Init(GPIO_PORT_B, GPIO_PIN_00, &stcGpioInit);
+//    (void)GPIO_Init(GPIO_PORT_B, GPIO_PIN_01, &stcGpioInit);
+//    (void)GPIO_Init(GPIO_PORT_B, GPIO_PIN_02, &stcGpioInit);
 	
-    (void)GPIO_Init(GPIO_PORT_B, GPIO_PIN_00, &stcGpioInit);
-    (void)GPIO_Init(GPIO_PORT_B, GPIO_PIN_01, &stcGpioInit);
-    (void)GPIO_Init(GPIO_PORT_B, GPIO_PIN_02, &stcGpioInit);
-	
+  /*Configure GPIO pin Output Level */
+//  HAL_GPIO_WritePin(GPIOA, EXIO_595_LD_Pin|EXIO_595_CLK_Pin|EXIO_595_DATA_Pin, GPIO_PIN_RESET);
+//	
 	memset(ex_595_cache, 0, sizeof(ex_595_cache));
 	ex_595_cache_up();
 

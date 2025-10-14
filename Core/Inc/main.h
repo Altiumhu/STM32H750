@@ -77,6 +77,10 @@ void Error_Handler(void);
 #define EXIO_165_CLK_GPIO_Port GPIOE
 #define EXIO_165_DATA_Pin GPIO_PIN_15
 #define EXIO_165_DATA_GPIO_Port GPIOE
+#define CD4052_A_Pin GPIO_PIN_12
+#define CD4052_A_GPIO_Port GPIOB
+#define CD4052_B_Pin GPIO_PIN_15
+#define CD4052_B_GPIO_Port GPIOB
 #define EXIO_595_LD_Pin GPIO_PIN_8
 #define EXIO_595_LD_GPIO_Port GPIOA
 #define EXIO_595_CLK_Pin GPIO_PIN_11
