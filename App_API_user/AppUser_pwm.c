@@ -19,8 +19,9 @@ void HAL_EPWM_Config(uint16_t ch)
 	}
 }
 // PWM更新寄存器值
-inline void Updata_EPWM_Handle(void)
+void Updata_EPWM_Handle(void)
 {
+	
 }
 
 inline void pwm_stop(uint16_t channel)
@@ -29,11 +30,55 @@ inline void pwm_stop(uint16_t channel)
 	switch (channel)
 	{
 	case 0:
-
+         	__HAL_TIM_SET_COMPARE (&htim1, TIM_CHANNEL_1 , 0);
 		break;
 	case 1:
-
+         	__HAL_TIM_SET_COMPARE ( &htim1, TIM_CHANNEL_2, 0);  
 		break;
+	case 2:
+         	__HAL_TIM_SET_COMPARE (&htim1, TIM_CHANNEL_3 , 0);
+		break;
+	case 3:
+         	__HAL_TIM_SET_COMPARE ( &htim1, TIM_CHANNEL_4, 0);  
+		break;
+	case 4:
+         	__HAL_TIM_SET_COMPARE (&htim2, TIM_CHANNEL_1 , 0);
+		break;
+	case 5:
+         	__HAL_TIM_SET_COMPARE ( &htim2, TIM_CHANNEL_2, 0);  
+		break;
+	case 6:
+         	__HAL_TIM_SET_COMPARE (&htim2, TIM_CHANNEL_3 , 0);
+		break;
+	case 7:
+         	__HAL_TIM_SET_COMPARE ( &htim2, TIM_CHANNEL_4, 0);  
+		break;
+	
+	case 8:
+         	__HAL_TIM_SET_COMPARE (&htim3, TIM_CHANNEL_1 , 0);
+		break;
+	case 9:
+         	__HAL_TIM_SET_COMPARE ( &htim3, TIM_CHANNEL_2, 0);  
+		break;
+	case 10:
+         	__HAL_TIM_SET_COMPARE (&htim4, TIM_CHANNEL_3 , 0);
+		break;
+	case 11:
+         	__HAL_TIM_SET_COMPARE ( &htim4, TIM_CHANNEL_4, 0);  
+		break;
+	case 12:
+         	__HAL_TIM_SET_COMPARE (&htim8, TIM_CHANNEL_1 , 0);
+		break;
+	case 13:
+         	__HAL_TIM_SET_COMPARE ( &htim8, TIM_CHANNEL_2, 0);  
+		break;
+	case 14:
+         	__HAL_TIM_SET_COMPARE (&htim8, TIM_CHANNEL_3 , 0);
+		break;
+	case 15:
+         	__HAL_TIM_SET_COMPARE ( &htim8, TIM_CHANNEL_4, 0);  
+		break;
+	
 	}
 }
 
@@ -43,107 +88,66 @@ inline void pwm_start(uint16_t channel, uint16_t mode)
 	switch (channel)
 	{
 	case 0:
-
+         HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 		break;
 	case 1:
+         HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2); 
+		break;
+	case 2:
+         HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+		break;
+	case 3:
+         HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4); 
+		break;
+	
+	case 4:
+         HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+		break;
+	case 5:
+         HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2); 
+		break;
+	case 6:
+         HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
+		break;
+	case 7:
+         HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4); 
+		break;
+	
 
+	case 8:
+         HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+		break;
+	case 9:
+         HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2); 
+		break;
+	case 10:
+         HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
+		break;
+	case 11:
+         HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4); 
+		break;
+	
+	case 12:
+         HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1);
+		break;
+	case 13:
+         HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_2); 
+		break;
+	case 14:
+         HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_3);
+		break;
+	case 15:
+         HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_4); 
 		break;
 	}
+	
+	
 }
 
 void Debug_PWM(void)
 {
 }
-void Set_FAN_Duty(uint32_t channel, uint8_t FAN_Num)
-{
 
-	switch (channel)
-	{
-	case TIM_CHANNEL_1:
-		switch (FAN_Num)
-		{
-		case 0:
-			Set_TIM8_PWM_Duty(channel, 0);
-			break;
-		case 1:
-			Set_TIM8_PWM_Duty(channel, 0.2f);
-			break;
-		case 2:
-			Set_TIM8_PWM_Duty(channel, 0.5f);
-			break;
-		case 3:
-			Set_TIM8_PWM_Duty(channel, 0.75f);
-			break;
-		case 4:
-			Set_TIM8_PWM_Duty(channel, 0.99f);
-			break;
-		}
-		break;
-	case TIM_CHANNEL_2:
-		switch (FAN_Num)
-		{
-		case 0:
-			Set_TIM8_PWM_Duty(channel, 0);
-			break;
-		case 1:
-			Set_TIM8_PWM_Duty(channel, 0.2f);
-			break;
-		case 2:
-			Set_TIM8_PWM_Duty(channel, 0.5f);
-			break;
-		case 3:
-			Set_TIM8_PWM_Duty(channel, 0.75f);
-			break;
-		case 4:
-			Set_TIM8_PWM_Duty(channel, 0.99f);
-			break;
-		}
-		break;
-		break;
-
-	case TIM_CHANNEL_3:
-		switch (FAN_Num)
-		{
-		case 0:
-			Set_TIM8_PWM_Duty(channel, 0);
-			break;
-		case 1:
-			Set_TIM8_PWM_Duty(channel, 0.2f);
-			break;
-		case 2:
-			Set_TIM8_PWM_Duty(channel, 0.5f);
-			break;
-		case 3:
-			Set_TIM8_PWM_Duty(channel, 0.75f);
-			break;
-		case 4:
-			Set_TIM8_PWM_Duty(channel, 0.99f);
-			break;
-		}
-		break;
-	case TIM_CHANNEL_4:
-		switch (FAN_Num)
-		{
-		case 0:
-			Set_TIM8_PWM_Duty(channel, 0);
-			break;
-		case 1:
-			Set_TIM8_PWM_Duty(channel, 0.2f);
-			break;
-		case 2:
-			Set_TIM8_PWM_Duty(channel, 0.5f);
-			break;
-		case 3:
-			Set_TIM8_PWM_Duty(channel, 0.75f);
-			break;
-		case 4:
-			Set_TIM8_PWM_Duty(channel, 0.99f);
-			break;
-		}
-		break;
-		break;
-	}
-}
 
 /**
  * @brief  设置TIM8 PWM占空比

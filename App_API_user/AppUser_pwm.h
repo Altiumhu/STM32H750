@@ -57,11 +57,7 @@ extern inline void pwm_start(uint16_t channel, uint16_t mode);
 extern inline void pwm_stop(uint16_t channel);
 
 
-void Set_TIM8_PWM_Duty(uint32_t channel, float duty);
-
-
-
-void Set_FAN_Duty(uint32_t channel ,uint8_t FAN_Num);
+void HAL_EPWM_Config(uint16_t ch);
 
 void Debug_PWM(void);
 

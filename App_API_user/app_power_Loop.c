@@ -31,25 +31,7 @@ volatile uint16_t burst_ctrl = 200;
 volatile uint16_t gPWM_SOTC_CNT = 0;
 volatile uint16_t gPWM_Burst_CNT = 0;
 volatile uint16_t gPWM_Burst_StartTimer = 0;
-#if SS_START_MODE
-// 轨迹
-const uint32_t DotArefDotValue[SOTC_PULSE_CNT] = {1, 1, 1, 20, 20},
-               DotBrefDotValue[SOTC_PULSE_CNT] = {1, 1, 1, 296, 675}, //
-    DotCrefDotValue[SOTC_PULSE_CNT] = {20, 20, 20, 336, 715},
-               DotDrefDotValue[SOTC_PULSE_CNT] = {982, 982, 982, 1336, 1484},
-               ATP0_TimerPeriod[SOTC_PULSE_CNT] = {APT_0_RRE_10KHZ, APT_0_RRE_10KHZ, APT_0_RRE_10KHZ, 1356, 1504}; // 0，1是预充，2，3是启动脉冲
 
-#else
-// 高频软启动参数
-// const uint32_t DotArefDotValue[SOTC_PULSE_CNT] = {1, 1, 1, 20, 20},
-//                DotBrefDotValue[SOTC_PULSE_CNT] = {1, 1, 1, 296, 655},
-//                DotCrefDotValue[SOTC_PULSE_CNT] = {1, 1, 2, 336, 675},
-//                DotDrefDotValue[SOTC_PULSE_CNT] = {50, 50, 50, 1336, 1444},
-//                ATP0_TimerPeriod[SOTC_PULSE_CNT] = {APT_0_RRE_10KHZ, APT_0_RRE_10KHZ, APT_0_RRE_10KHZ, APT_0_RRE_200KHZ, APT_0_RRE_200KHZ}; // 0，1是预充，2，3是启动脉冲
-
-
-
-#endif
 
 
 /**********************************************************************
@@ -70,50 +52,59 @@ const uint32_t DotArefDotValue[SOTC_PULSE_CNT] = {1, 1, 1, 20, 20},
 
     for (i = 0; i < BOARD_CHANNEL_NUM; i++)
     {
-        g_Channelinfo[0].fault.all = g_Channelinfo[0].fault.all; // 工作模式
+        g_Channelinfo[i].fault.all = g_Channelinfo[i].fault.all; // 工作模式
 
-        if (g_Channelinfo[0].fault.all) // 判断故障
+        if (g_Channelinfo[i].fault.all) // 判断故障
         {
-            g_Channelinfo[0].workMode = POWER_FAULT;
+            g_Channelinfo[i].workMode = POWER_FAULT;
         }
 
-        switch (g_Channelinfo[0].workMode)
+        switch (g_Channelinfo[i].workMode)
         {
         case POWER_OFF:   // 关闭驱动
         case POWER_FAULT: // 关闭驱动
         {
-            if (g_Channelinfo[0].fault.all == 0) // 判断故障  没有故障进入正常启动程序
-            //  if (g_Channelinfo[i].fault.all == 0 && g_Boost_handle.Boost_EN ==1 ) // 判断故障  没有故障进入正常启动程序
+            if (g_Channelinfo[i].fault.all == 0) // 判断故障  没有故障进入正常启动程序
             {
                 if (g_DEVICE_Information.workMode == POWER_SET_CHARGE)
                 {
                 }
-                g_Channelinfo[0].workMode = POWER_INIT;
+                g_Channelinfo[i].workMode = POWER_INIT;
             }
             else
             { // 说明有故障，关闭 PRT管 输出低关闭
             }
-//            g_epwmHandle[0].High_MOS_Timer_TBPRD = APT_0_RRE_200KHZ;
+
 
         }
         break;
         case POWER_INIT: //
         {
-//            DebugLED_LOW_LEVEL;
-//            PIDInit(0);
-//            HAL_EPWM_Config(0);
-//            Set_Ref_5ms_lowpass(g_Handle_REC_Device.V_Ref_REC_Vaule, 1);
-//            Set_Ref_100ms_lowpass(g_Handle_REC_Device.V_Ref_REC_Vaule, 1);
-//            g_Handle_REC_Device.V_Ref_REC_Vaule = 8.0f;
-//            g_Handle_REC_Device.I_Ref_REC_Vaule = 0.5f;
-//            g_Channelinfo[0].workMode = POWER_PRECHARGE;
-//             g_epwmHandle[0].Low_MOS_DUTY = PWM_LOW_SR_MIN_TIME;
-//            g_Channelinfo[0].run =0x0;
-//            gPWM_Burst_StartTimer =0;
+
+           PIDInit(i);
+           HAL_EPWM_Config(i);
+           Set_Ref_5ms_lowpass(g_Handle_REC_Device.V_Ref_REC_Vaule, 1);
+           Set_Ref_5ms_lowpass(g_Handle_REC_Device.V_Ref_REC_Vaule, 1);
+           g_Handle_REC_Device.V_Ref_REC_Vaule = 5.0f;
+           g_Handle_REC_Device.I_Ref_REC_Vaule = 0.5f;
+           g_Channelinfo[i].workMode = POWER_PRECHARGE;
+            if ((g_Channelinfo[i].voltage_port - g_Channelinfo[i].Cap_voltage) >= -0.05f) //端口电压-电容电压》=0.05V 防止开机电容有电
+                   
+            {
+                g_Channelinfo[i].workMode = POWER_PRECHARGE;
+            }
+            else
+            {
+                g_Channelinfo[i].fault.bit.CAP_BAT = 1; //容压大于电池电压
+            }
+           g_Channelinfo[i].run =0x0;
+           gPWM_Burst_StartTimer =0;
         }
         break;
         case POWER_PRECHARGE: // 预充电
         {
+					
+					
         }
         break;
         case POWER_SoftStart: // 软启动
@@ -387,7 +378,7 @@ void TIMER0CallbackFunction(void *handle)
 
     // ZPK_Handle_Update(12.0f,8.0f);
     // g_epwmHandle->High_MOS_Timer_TBPRD=  g_ZPK_Handle.OUT ;
-//    System_CloseLoop_Status();
+    System_CloseLoop_Status();
 
 //   // if (POWER_TEST == g_Channelinfo[0].workMode || (POWER_RUN_CHARGE == g_Channelinfo[0].workMode || POWER_SoftStart == g_Channelinfo[0].workMode) || POWER_BURST == g_Channelinfo[0].workMode)
 //   if (POWER_TEST == g_Channelinfo[0].workMode || (POWER_RUN_CHARGE == g_Channelinfo[0].workMode || POWER_SoftStart == g_Channelinfo[0].workMode) )

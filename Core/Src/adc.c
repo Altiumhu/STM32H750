@@ -372,6 +372,18 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 	
 //			// DMA传输前清理缓存
 //SCB_CleanDCache_by_Addr((uint32_t*)adc_values, sizeof(adc_values));
+	
+	//     if (hadc->Instance == ADC1)
+//     {
+//         // ??ADC??
+//         uint16_t ch0_value = adcBuffer[0];  // PA0???
+//         uint16_t ch1_value = adcBuffer[1];  // PA1???
+//         uint16_t ch4_value = adcBuffer[2];  // PA4???
+
+//        // ??:??ADC?(???UART)
+////         printf("ADC: CH0=%u, CH1=%u, CH4=%u\n",
+////               ch0_value, ch1_value, ch4_value);
+//    }
 }
 
 // ADC错误回调

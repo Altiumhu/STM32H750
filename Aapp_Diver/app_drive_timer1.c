@@ -12,7 +12,7 @@ void App_Drive_InitTimer_7(void)
 {
   // 启动TIM7中断
   HAL_TIM_Base_Start_IT(&htim7);
-//  HAL_TIM_Base_Start_IT(&htim6);
+  HAL_TIM_Base_Start_IT(&htim6);
 }
 
 #if 1
@@ -40,9 +40,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //    Read_GPIO_vTask(); // 读取IO状态
 
 //    Smoke_vTask();
-
-
-
     // Read_GPIO_vTask(); // 读取IO状态
     timer7_counter++;
     if (timer7_counter > 10) // 10秒钟
@@ -59,10 +56,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     }
   }
 
-  static uint16_t ms = 0;
 
   if (htim->Instance == TIM6)
   {
+		TIMER0CallbackFunction("10khz");
   }
 }
 

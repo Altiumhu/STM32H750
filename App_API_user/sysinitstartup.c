@@ -25,7 +25,7 @@ void Initdata_g_DEVICE_Information(void)
  **********************************************************************/
 void AppUser_Device_InitData(void)
 {
-  volatile uint16_t ch;
+     uint16_t ch, type;
   //  memset( &g_Handle_Fault,0,sizeof(power_fault_define));
   //   g_Handle_Fault[0].all = 0x0;
 
@@ -45,6 +45,54 @@ void AppUser_Device_InitData(void)
   //  Init_Calibration_Device();
 
   //    Init_Protect_handle();
+
+
+ 
+
+//    for(type =0;type<5;type++)
+//    {
+//        memset( &g_Calibration_Device[type],0,sizeof(Calibration_Device));
+//    }
+
+//   memset( &g_Handle_Fault,0,sizeof(power_fault_define));
+//   memset( &g_DEVICE_Information,0,sizeof(DEVICE_State_Information));
+//   memset( &g_Sys_State,0,sizeof(DEVICE_State));
+//   memset( &g_HandleFilter,0,sizeof(ChannelInfoFilter));
+//   memset( &g_HandleFilter[1],0,sizeof(ChannelInfoFilter));
+//   memset( &g_Channelinfo,0,sizeof(ChannelInfo));
+//   memset( &g_Channelinfo[1],0,sizeof(ChannelInfo));
+
+//   Init_DEVICE_Information();
+
+   //device_data_init();
+//   Init_Calibration_Device();
+
+//   Init_Protect_handle();
+
+
+
+   for(ch =0 ;ch<BOARD_CHANNEL_NUM;ch++)
+   {
+       g_Channelinfo[ch].fault.all= 1;
+       g_epwmHandle[ch].High_MOS_STA = 0;
+
+       g_Channelinfo[ch].run =Worke_OFF;
+
+       g_Channelinfo[ch].Set_PreCC = 5.0f ;//5.0A设置CC电5.0A
+
+//       g_Channelinfo[ch].Set_PreDC = -5.0f; //设置放电5.0A
+
+//       g_Channelinfo[ch].Set_PreCV =  0.55f ;//5.0V 电压值
+
+//       g_Channelinfo[ch].Set_CC = SetRef_ConvertCurrent(ch,Caltype_CC, g_Channelinfo[ch].Set_PreCC);
+
+//       g_Channelinfo[ch].Set_DC = g_Channelinfo[ch].Set_CC*(-1.0f);
+//       g_Channelinfo[ch].Set_CV = g_Channelinfo[ch].Set_PreCV;
+
+       HAL_EPWM_Config(ch);
+       PIDInit(ch);
+
+   }
 }
 
 /**********************************************************************
