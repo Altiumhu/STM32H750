@@ -21,10 +21,68 @@ void HAL_EPWM_Config(uint16_t ch)
 // PWM更新寄存器值
 void Updata_EPWM_Handle(void)
 {
+  uint32_t channel;
 	
+	
+  for(channel=0;channel<16;channel++)
+	{
+			switch (channel)
+			{
+			case 0:
+							__HAL_TIM_SET_COMPARE (&htim1, TIM_CHANNEL_1 , 	g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 1:
+							__HAL_TIM_SET_COMPARE ( &htim1, TIM_CHANNEL_2, g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 2:
+							__HAL_TIM_SET_COMPARE (&htim1, TIM_CHANNEL_3 , g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 3:
+							__HAL_TIM_SET_COMPARE ( &htim1, TIM_CHANNEL_4, g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 4:
+							__HAL_TIM_SET_COMPARE (&htim2, TIM_CHANNEL_1 , g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 5:
+							__HAL_TIM_SET_COMPARE ( &htim2, TIM_CHANNEL_2, g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 6:
+							__HAL_TIM_SET_COMPARE (&htim2, TIM_CHANNEL_3 , g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 7:
+							__HAL_TIM_SET_COMPARE ( &htim2, TIM_CHANNEL_4, g_epwmHandle[channel].High_MOS_DUTY); 
+				break;
+			
+			case 8:
+							__HAL_TIM_SET_COMPARE (&htim3, TIM_CHANNEL_1 , g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 9:
+							__HAL_TIM_SET_COMPARE ( &htim3, TIM_CHANNEL_2,g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 10:
+							__HAL_TIM_SET_COMPARE (&htim4, TIM_CHANNEL_3 , g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 11:
+							__HAL_TIM_SET_COMPARE ( &htim4, TIM_CHANNEL_4, g_epwmHandle[channel].High_MOS_DUTY); 
+				break;
+			case 12:
+							__HAL_TIM_SET_COMPARE (&htim8, TIM_CHANNEL_1 ,g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 13:
+							__HAL_TIM_SET_COMPARE ( &htim8, TIM_CHANNEL_2, g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 14:
+							__HAL_TIM_SET_COMPARE (&htim8, TIM_CHANNEL_3 , g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			case 15:
+							__HAL_TIM_SET_COMPARE ( &htim8, TIM_CHANNEL_4, g_epwmHandle[channel].High_MOS_DUTY);
+				break;
+			
+			}
+			}
 }
 
-inline void pwm_stop(uint16_t channel)
+ void pwm_stop(uint16_t channel)
 {
 
 	switch (channel)

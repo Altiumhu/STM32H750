@@ -89,7 +89,6 @@ void pid_I_Loop_calc(power_pid_define *I);
 
 extern volatile power_pid_define gHandle_PID[BOARD_CELL_NUM];
 
-extern volatile power_pid_define gHandle_Burst_PID[BOARD_CELL_NUM];
 
 extern void Debug_HandlePID(void);
 

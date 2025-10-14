@@ -10,7 +10,7 @@
 #include "head.h"
 
 
-#define EPWM_CH_NUM 2
+#define EPWM_CH_NUM 16
 
 // 电源闭环控制控制状态机状态定义枚举
 typedef enum EPWM_Num_define
@@ -61,6 +61,6 @@ void HAL_EPWM_Config(uint16_t ch);
 
 void Debug_PWM(void);
 
-
+void Updata_EPWM_Handle(void);
 
 #endif /* APPAPI_APPUSER_PWM_H_ */

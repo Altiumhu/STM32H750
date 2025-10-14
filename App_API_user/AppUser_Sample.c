@@ -69,10 +69,10 @@ void sample_irq_handler(void)
 void AppUser_Sample_Debug(void)
 {
 
-//     printf("ADC1_A0=%d\r\n", adc1Result[ADC1_A0]);
-//     printf("ADC1_A1=%d\r\n", adc1Result[ADC1_A1]);
-//     printf("ADC1_A2=%d\r\n", adc1Result[ADC1_A2]);
-//     printf("ADC1_A3=%d\r\n", adc1Result[ADC1_A3]);
+     printf("ADC1_A0=%d\r\n", adc1Result[ADC1_A0]);
+     printf("ADC1_A1=%d\r\n", adc1Result[ADC1_A1]);
+     printf("ADC1_A2=%d\r\n", adc1Result[ADC1_A2]);
+     printf("ADC1_A3=%d\r\n", adc1Result[ADC1_A3]);
 
     // DBG_PRINTF("ADC1_A5=%d\r\n", adc1Result[ADC1_A5]);
     // DBG_PRINTF("ADC1_A6=%d\r\n", adc1Result[ADC1_A6]);

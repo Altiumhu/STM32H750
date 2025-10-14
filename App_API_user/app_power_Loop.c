@@ -83,10 +83,8 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
 
            PIDInit(i);
            HAL_EPWM_Config(i);
-           Set_Ref_5ms_lowpass(g_Handle_REC_Device.V_Ref_REC_Vaule, 1);
-           Set_Ref_5ms_lowpass(g_Handle_REC_Device.V_Ref_REC_Vaule, 1);
-           g_Handle_REC_Device.V_Ref_REC_Vaule = 5.0f;
-           g_Handle_REC_Device.I_Ref_REC_Vaule = 0.5f;
+
+
            g_Channelinfo[i].workMode = POWER_PRECHARGE;
             if ((g_Channelinfo[i].voltage_port - g_Channelinfo[i].Cap_voltage) >= -0.05f) //端口电压-电容电压》=0.05V 防止开机电容有电
                    
@@ -383,7 +381,7 @@ void TIMER0CallbackFunction(void *handle)
 //   // if (POWER_TEST == g_Channelinfo[0].workMode || (POWER_RUN_CHARGE == g_Channelinfo[0].workMode || POWER_SoftStart == g_Channelinfo[0].workMode) || POWER_BURST == g_Channelinfo[0].workMode)
 //   if (POWER_TEST == g_Channelinfo[0].workMode || (POWER_RUN_CHARGE == g_Channelinfo[0].workMode || POWER_SoftStart == g_Channelinfo[0].workMode) )
 //    {
-//        Updata_EPWM_Handle();
+        Updata_EPWM_Handle();
 //    }
 
 //    System_LED_LOW_LEVEL;

@@ -26,7 +26,7 @@
 
 /*************主板配置*************/
 #define BOARD_CHANNEL_NUM               16           //主板通道数
-#define BOARD_CELL_NUM                  2          //主板电池数
+#define BOARD_CELL_NUM                  16          //主板电池数
 #define BOARD_TEMP_NUM                  1           //主板温度数
 
 

@@ -10,7 +10,7 @@
 volatile float First_v_err_sum;
 
 volatile power_pid_define gHandle_PID[BOARD_CELL_NUM];
-volatile power_pid_define gHandle_Burst_PID[BOARD_CELL_NUM];
+
 
 volatile ZPK_Controller g_ZPK_Handle;
 
@@ -55,9 +55,8 @@ void PIDInit(uint16_t ch)
     volatile float init_Duty;
 
     ZPK_Handle_Init(ch);
-#if 0
+#if 1
     // 初始化占空比前馈
-    // init_Duty = __divf32(fabsf( g_Channelinfo[ch].Cap_voltage*48.0f),fabsf (g_DEVICE_Information.VBUS));
 
     // 电压环的参数初始化通道1
     gHandle_PID[ch].v_fdb = 0;                              // 反馈值
@@ -65,12 +64,12 @@ void PIDInit(uint16_t ch)
     gHandle_PID[ch].v_kp =0.5f;                            // 比例系数
     gHandle_PID[ch].v_ki = 0.2f;                            // 积分系数
     gHandle_PID[ch].v_ref = 5.0f;                          // 电压环基准复位，进行软起动
-    gHandle_PID[ch].v_err_sum = (APT_0_RRE_200KHZ);         //
-    gHandle_PID[ch].v_up = (APT_0_RRE_40KHZ);               //
-    gHandle_PID[ch].v_ui = (APT_0_RRE_200KHZ);              //
+    gHandle_PID[ch].v_err_sum = (200);         //
+    gHandle_PID[ch].v_up = (6000);               //
+    gHandle_PID[ch].v_ui = (0);              //
     gHandle_PID[ch].v_max_out_value = gHandle_PID[ch].v_up; /* 最大脉宽*/
     gHandle_PID[ch].v_min_out_value = gHandle_PID[ch].v_ui; /* 最小脉宽*/
-    gHandle_PID[ch].v_pid_out = (APT_0_RRE_200KHZ);
+    gHandle_PID[ch].v_pid_out = (200);
 
     First_v_err_sum = gHandle_PID[ch].v_err_sum;
 
@@ -79,12 +78,12 @@ void PIDInit(uint16_t ch)
     gHandle_PID[ch].i_kp = 10.0f;               // 比例系数500
     gHandle_PID[ch].i_ki = 0.5f;               // 积分系数100-30a
     gHandle_PID[ch].i_ref = 0.5f;              // 电压环基准复位，进行软起动
-    gHandle_PID[ch].i_up = (APT_0_RRE_40KHZ);  //
-    gHandle_PID[ch].i_ui = (APT_0_RRE_200KHZ); //
-    gHandle_PID[ch].i_err_sum = APT_0_RRE_200KHZ;
+    gHandle_PID[ch].i_up = (6000);  //
+    gHandle_PID[ch].i_ui = (0); //
+    gHandle_PID[ch].i_err_sum = 200;
     gHandle_PID[ch].i_max_out_value = gHandle_PID[ch].i_up; /* 最大脉宽*/
     gHandle_PID[ch].i_min_out_value = gHandle_PID[ch].i_ui; /* 最小脉宽*/
-    gHandle_PID[ch].i_pid_out = APT_0_RRE_200KHZ;
+    gHandle_PID[ch].i_pid_out = 200;
 
 
     gHandle_Burst_PID[ch].v_fdb = 0;                              // 反馈值
