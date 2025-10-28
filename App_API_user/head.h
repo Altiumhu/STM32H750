@@ -175,7 +175,8 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 //#include "UserNorFlash_data.h"
 //#include "UserFATFS_data.h"
 
-
+#include "message_queue.h"
+#include "modbus_config.h"
 #define  fmin(a,b) ((a)<(b)?(a):(b))
 #define  fmax(a,b) ((a)>(b)?(a):(b))
 
