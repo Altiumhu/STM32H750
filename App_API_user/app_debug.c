@@ -86,7 +86,7 @@ void debug_show(void)
     printf("\r\n********第%d次****************\r\n", poll_time++);
 
 }
-extern void CAN3_Send_TEST(void);
+extern void CAN1_Send_TEST(void);
 
 extern void UserFlash_WriteUserData(void);
 void AppDebug_vTask(void)
@@ -99,18 +99,18 @@ void AppDebug_vTask(void)
     printf("\r\nDebug Run=%d\r\n", poll_time++);
 
 
-       //  UserSlave_SendLink();
+    //  UserSlave_SendLink();
 //         UserFlash_WriteUserData();
- //     AppUserDebug_TempVaule();
+//     AppUserDebug_TempVaule();
     // DebugLED_LOW_LEVEL ;
     // DBG_PRINTF("\r\ng_debugNUmer.debug1 %d \r\n",  g_debugNUmer.debug1);
     AppUser_Sample_Debug();
 //    Debug_HandlePID();
-
+    CAN1_Send_TEST();
 //     Debug_PWM();
 
 //    AppUserDebug_TempVaule();
-		//  CAN3_Send_TEST();
+
     Debug_Clear_Msg();
 // DebugLED_HIGH_LEVEL ;
 

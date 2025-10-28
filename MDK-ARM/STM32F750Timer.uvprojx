@@ -10,7 +10,7 @@
       <TargetName>STM32F750Timer</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -185,7 +185,6 @@
             <uocXRam>0</uocXRam>
             <RvdsVP>3</RvdsVP>
             <RvdsMve>0</RvdsMve>
-            <RvdsCdeCp>0</RvdsCdeCp>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -352,7 +351,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -1252,6 +1251,11 @@
           <GroupName>Drivers/CMSIS</GroupName>
           <Files>
             <File>
+              <FileName>新建文本文档.txt</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CAN_large_data\新建文本文档.txt</FilePath>
+            </File>
+            <File>
               <FileName>system_stm32h7xx.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/system_stm32h7xx.c</FilePath>
@@ -1272,14 +1276,14 @@
               <FilePath>..\CAN_large_data\message_handler.c</FilePath>
             </File>
             <File>
+              <FileName>crc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CAN_large_data\crc.h</FilePath>
+            </File>
+            <File>
               <FileName>message_handler.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CAN_large_data\message_handler.h</FilePath>
-            </File>
-            <File>
-              <FileName>新建文本文档.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CAN_large_data\新建文本文档.txt</FilePath>
             </File>
             <File>
               <FileName>large_data_receiver.c</FileName>
@@ -1287,14 +1291,14 @@
               <FilePath>..\CAN_large_data\large_data_receiver.c</FilePath>
             </File>
             <File>
-              <FileName>large_data_sender.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CAN_large_data\large_data_sender.c</FilePath>
-            </File>
-            <File>
               <FileName>large_data_transfer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CAN_large_data\large_data_transfer.c</FilePath>
+            </File>
+            <File>
+              <FileName>large_data_sender.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CAN_large_data\large_data_sender.c</FilePath>
             </File>
             <File>
               <FileName>large_data_transfer.h</FileName>
@@ -1305,11 +1309,6 @@
               <FileName>crc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CAN_large_data\crc.c</FilePath>
-            </File>
-            <File>
-              <FileName>crc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CAN_large_data\crc.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1637,14 +1636,5 @@
     </components>
     <files/>
   </RTE>
-
-  <LayerInfo>
-    <Layers>
-      <Layer>
-        <LayName>STM32F750Timer</LayName>
-        <LayPrjMark>1</LayPrjMark>
-      </Layer>
-    </Layers>
-  </LayerInfo>
 
 </Project>
