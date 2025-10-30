@@ -108,6 +108,8 @@ void UserRead_MasterState_pAck(tcpProtocol *frameRec)
     printf("\r\n  PC_Read Stat=%d", Timer++);
 }
 #endif
+
+#if  0
 /**********************************************************************
  * Function:     Modbus_ReadHoldingRegisters
  * Description: 03 (0x03) 读取保持寄存器（Read Holding Registers
@@ -164,7 +166,7 @@ INT32S Modbus_ReadHoldingRegisters(Protocol *pmodbusProtocol)
     }
     return 0;
 }
-
+#endif
 /**********************************************************************
  * Function:     Modbus_ReadInputRegisters
  * Description: ////读取输入寄存器（功能码04）
@@ -307,6 +309,7 @@ INT32S Modbus_ReadInputRegisters(Protocol *pmodbusProtocol)
 
     return 0;
 }
+#if 0
 /**********************************************************************
  * Function:     Modbus_WriteSingleRegister
  * Description: //6 预置单寄存器（功能码06）
@@ -476,7 +479,7 @@ INT32S Modbus_WriteSingleRegister(Protocol *pmodbusProtocol)
 
     return 1;
 }
-
+#endif
 /**********************************************************************
  * Function:     Modbus_WriteMultipleCoils
  * Description:  //0x10 预置单寄存器（功能码0x10）
@@ -674,7 +677,7 @@ INT32S AppUser_Msg_CmdAnalys(Protocol *pmodbusProtocol)
     break;
     case CMD_0x03: //
     {
-        Modbus_ReadHoldingRegisters(pmodbusProtocol);
+       // Modbus_ReadHoldingRegisters(pmodbusProtocol);
     }
     break;
     case CMD_0x04: //
@@ -688,7 +691,7 @@ INT32S AppUser_Msg_CmdAnalys(Protocol *pmodbusProtocol)
     break;
     case CMD_0x06: //
     {
-        uRstFalg = Modbus_WriteSingleRegister(pmodbusProtocol);
+       // uRstFalg = Modbus_WriteSingleRegister(pmodbusProtocol);
     }
     break;
 

@@ -108,7 +108,7 @@ void AppUser_Device_InitData(void)
  **********************************************************************/
 void AppUser_prvSetupHardware(void)
 {
-
+    App_GPIO_Init();
 //  MX_GPIO_Init();
 //  MX_DMA_Init();
 //  MX_TIM7_Init();

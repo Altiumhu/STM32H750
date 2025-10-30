@@ -6,6 +6,10 @@
 void USART1_RX_EN(void);
 
 void USART1_TX_EN(void);
+
+
+void App_GPIO_Init(void);
+
 #endif
 
 

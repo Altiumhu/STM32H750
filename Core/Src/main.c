@@ -178,6 +178,8 @@ int main(void)
   LargeDataTransfer_SetCompleteCallback(OnTransferComplete);
   LargeDataTransfer_SetReceivedCallback(OnDataReceived);
   LargeDataTransfer_SetFailedCallback(OnTransferFailed);
+	
+	modbus_main();
 
   while (1)
   {
@@ -186,6 +188,7 @@ int main(void)
     AppUser_PortocolRecv(); // MCU通讯协议包
     AppDebug_vTask();
     //        AppUser_temp_sample();
+		ModbusMaster_Task();
 
 #if 0
         // 主循环 - 发送定期状态更新

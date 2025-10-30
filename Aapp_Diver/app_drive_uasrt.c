@@ -3,7 +3,7 @@
 #include "head.h"
 #include "app_drive_uasrt.h"
 
-uint8_t rx_buffer[1];		   // 单字节接收缓冲区
+uint8_t huart1_rx_buffer[1];		   // 单字节接收缓冲区
 uint8_t huart3_rx_buffer[1];   // 单字节接收缓冲区
 uint8_t huart7_rx_buffer[1];   // 单字节接收缓冲区
 uint8_t hlpuart1_rx_buffer[1]; // 单字节接收缓冲区
@@ -26,7 +26,7 @@ __attribute__((aligned(32))) uint8_t txData[] = "huart1 DMA TEST\r\n";
 void App_Drive_UASRT_Init(void)
 {
 
-	HAL_UART_Receive_IT(&huart1, rx_buffer, 1); // 启动串口接收中断
+	HAL_UART_Receive_IT(&huart1, huart1_rx_buffer, 1); // 启动串口接收中断
 
 	//HAL_UART_Receive_IT(&huart3, huart3_rx_buffer, 1); // 启动串口接收中断
 	HAL_UART_Receive_IT(&huart7, huart7_rx_buffer, 1); // 启动串口接收中断
@@ -59,18 +59,19 @@ void App_Drive_UASRT_Init(void)
  * -----------------------------------------------
  * 2022-05-31      V1.0        Hu Weiping
  **********************************************************************/
+extern void UART_RxByteHandler(uint8_t received_byte);
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if (huart->Instance == USART1)
 	{
 		// 处理接收到的数据（示例：回传数据）
 		// HAL_UART_Transmit(&huart1, rx_buffer, 1, 100);
-
-		cli_process_char(rx_buffer[0]);
+    UART_RxByteHandler(huart1_rx_buffer[0]);
+		cli_process_char(huart1_rx_buffer[0]);
 		///AppUser_ReceivingDataInterface(rx_buffer[0]);
 
 		// 重新使能中断以接收下一字节
-		HAL_UART_Receive_IT(&huart1, rx_buffer, 1);
+		HAL_UART_Receive_IT(&huart1, huart1_rx_buffer, 1);
 	
 
 		//        HAL_UART_Transmit(&huart1, &rx_data, 1, HAL_MAX_DELAY);

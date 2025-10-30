@@ -2,10 +2,24 @@
 #include "rs485_driver.h"
 #include <string.h>
 
-static ModbusMaster g_modbus_master;
+ ModbusMaster g_modbus_master;
 static uint8_t tx_buffer[MODBUS_TX_BUFFER_SIZE];
 static uint8_t rx_buffer[MODBUS_RX_BUFFER_SIZE];
 static uint16_t rx_index = 0;
+
+
+static uint8_t rx_dma_buffer[MODBUS_RX_BUFFER_SIZE];
+static volatile uint8_t frame_complete = 0;
+static volatile uint16_t frame_length = 0;
+
+
+void RS485_Init(UART_HandleTypeDef *huart)
+{
+
+
+
+}
+
 
 void ModbusMaster_Init(ModbusMaster *master, UART_HandleTypeDef *huart)
 {
@@ -212,6 +226,16 @@ static Modbus_Status ParseModbusResponse(ModbusMessage *req, uint8_t *data, uint
 void ModbusMaster_Process(ModbusMaster *master)
 {
     ModbusMessage msg;
+	
+	  // 检查字节超时（用于中断接收模式）
+    if (master->is_busy && rx_index > 0)
+			{
+        if ((HAL_GetTick() - master->last_byte_time) > MODBUS_BYTE_TIMEOUT) {
+            // 字节间超时，认为帧接收完成
+            ModbusMaster_RxCompleteCallback(master);
+        }
+    }
+	
 
     // 如果当前不忙且队列中有消息，发送下一条
     if (!master->is_busy && !MessageQueue_IsEmpty(&master->tx_queue))
@@ -241,8 +265,16 @@ void ModbusMaster_RxCompleteCallback(ModbusMaster *master)
     // 获取等待响应的消息
     if (MessageQueue_Dequeue(&master->rx_queue, &req_msg) == MODBUS_OK)
     {
-        status = ParseModbusResponse(&req_msg, rx_buffer, rx_index);
+//        status = ParseModbusResponse(&req_msg, rx_buffer, rx_index);
 
+			
+			     // 验证接收到的数据长度
+        if (rx_index >= 5) { // Modbus RTU最小帧长为5字节
+            status = ParseModbusResponse(&req_msg, rx_buffer, rx_index);
+        } else {
+            status = MODBUS_ERR_INVALID_RESPONSE;
+        }
+			
         // 调用回调函数
         if (req_msg.callback)
         {
@@ -252,6 +284,8 @@ void ModbusMaster_RxCompleteCallback(ModbusMaster *master)
 
     master->is_busy = 0;
     rx_index = 0;
+		
+		memset(rx_buffer, 0, MODBUS_RX_BUFFER_SIZE);
 }
 
 void ModbusMaster_TimeoutHandler(ModbusMaster *master)
@@ -276,16 +310,88 @@ void ModbusMaster_TimeoutHandler(ModbusMaster *master)
 }
 
 // UART接收中断回调
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+//{
+//    if (huart->Instance == RS485_USART)
+//    {
+//        g_modbus_master.last_byte_time = HAL_GetTick();
+
+//        // 这里需要实现数据接收逻辑
+//        // 通常使用DMA或中断接收
+
+//        // 检查是否收到完整帧（通过帧间超时）
+//        // 如果收到完整帧，调用 ModbusMaster_RxCompleteCallback(&g_modbus_master);
+//    }
+//}
+
+// 添加UART空闲中断回调函数 - 这是检测完整帧的关键
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
-    if (huart->Instance == RS485_USART)
-    {
-        g_modbus_master.last_byte_time = HAL_GetTick();
-
-        // 这里需要实现数据接收逻辑
-        // 通常使用DMA或中断接收
-
-        // 检查是否收到完整帧（通过帧间超时）
-        // 如果收到完整帧，调用 ModbusMaster_RxCompleteCallback(&g_modbus_master);
+    if (huart->Instance == RS485_USART) {
+        frame_length = Size;
+        frame_complete = 1;
+        
+        // 重新启动DMA接收
+        HAL_UARTEx_ReceiveToIdle_DMA(huart, rx_dma_buffer, MODBUS_RX_BUFFER_SIZE);
     }
+}
+
+// 替代方案：如果使用接收中断而非DMA
+//void UART_RxByteHandler(UART_HandleTypeDef *huart)
+//{
+//    static uint32_t last_rx_time = 0;
+//    uint32_t current_time = HAL_GetTick();
+//    uint8_t received_byte;
+//    
+//    if (huart->Instance == RS485_USART) {
+//        // 读取接收到的字节
+//        if (HAL_UART_Receive(huart, &received_byte, 1, 0) == HAL_OK) {
+//            g_modbus_master.last_byte_time = current_time;
+//            
+//            // 检查帧间间隔，判断是否为新帧开始
+//            if ((current_time - last_rx_time) > MODBUS_FRAME_DELIMITER) {
+//                // 新帧开始，重置索引
+//                rx_index = 0;
+//            }
+//            last_rx_time = current_time;
+//            
+//            // 存储接收到的字节
+//            if (rx_index < MODBUS_RX_BUFFER_SIZE) {
+//                rx_buffer[rx_index++] = received_byte;
+//            }
+//            
+//            // 重新启动单字节接收
+//            HAL_UART_Receive_IT(huart, &received_byte, 1);
+//        }
+//    }
+//}
+
+void UART_RxByteHandler(uint8_t received_byte)
+{
+    static uint32_t last_rx_time = 0;
+    uint32_t current_time = HAL_GetTick();
+
+    
+
+        // 读取接收到的字节
+
+            g_modbus_master.last_byte_time = current_time;
+            
+            // 检查帧间间隔，判断是否为新帧开始
+            if ((current_time - last_rx_time) > MODBUS_FRAME_DELIMITER) 
+						{
+                // 新帧开始，重置索引
+                rx_index = 0;
+            }
+            last_rx_time = current_time;
+            
+            // 存储接收到的字节
+            if (rx_index < MODBUS_RX_BUFFER_SIZE)
+						{
+                rx_buffer[rx_index++] = received_byte;
+            }
+            
+
+        
+    
 }

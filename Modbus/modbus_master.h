@@ -3,16 +3,31 @@
 
 #include "message_queue.h"
 
+
+
+
 // Modbus主站结构
+//typedef struct {
+//    MessageQueue tx_queue;
+//    MessageQueue rx_queue;
+//    UART_HandleTypeDef *huart;
+//    uint8_t is_busy;
+//    uint32_t last_byte_time;
+//    uint16_t timeout_counter;
+//} ModbusMaster;
+
 typedef struct {
     MessageQueue tx_queue;
     MessageQueue rx_queue;
     UART_HandleTypeDef *huart;
+    TIM_HandleTypeDef *htim;  // 超时定时器句柄
     uint8_t is_busy;
     uint32_t last_byte_time;
     uint16_t timeout_counter;
+    uint8_t rx_frame_complete; // 帧接收完成标志
 } ModbusMaster;
 
+extern ModbusMaster g_modbus_master;
 // 函数声明
 void ModbusMaster_Init(ModbusMaster *master, UART_HandleTypeDef *huart);
 Modbus_Status Modbus_ReadHoldingRegisters(ModbusMaster *master, uint8_t slave_addr, 
@@ -31,4 +46,9 @@ void ModbusMaster_Process(ModbusMaster *master);
 void ModbusMaster_RxCompleteCallback(ModbusMaster *master);
 void ModbusMaster_TimeoutHandler(ModbusMaster *master);
 
+
+void ModbusMaster_Task(void);
+
+int modbus_main(void);
+ 
 #endif

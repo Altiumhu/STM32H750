@@ -1,5 +1,5 @@
 #include "rs485_driver.h"
-#include "stm32f1xx_hal.h"
+#include "head.h"
 
 // RS485方向控制引脚初始化在main.c中完成
 
@@ -47,3 +47,4 @@ uint16_t Modbus_CRC16(uint8_t *data, uint16_t length)
     
     return crc;
 }
+

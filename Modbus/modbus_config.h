@@ -13,7 +13,7 @@
 
 // RS485配置
 #define RS485_USART                USART1
-#define RS485_DE_PORT              GPIOA
+#define RS485_DE_PORT              GPIOD
 #define RS485_DE_PIN               GPIO_PIN_8
 
 // 缓冲区大小
@@ -24,6 +24,10 @@
 // 超时设置
 #define MODBUS_RESPONSE_TIMEOUT    1000    // 响应超时(ms)
 #define MODBUS_BYTE_TIMEOUT        5       // 字节间超时(ms)
+
+
+#define MODBUS_FRAME_DELIMITER     3       // 帧间最小间隔(ms)
+#define MODBUS_MAX_FRAME_LENGTH    256     // 最大帧长度
 
 // 错误码
 typedef enum {
