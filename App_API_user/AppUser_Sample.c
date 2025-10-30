@@ -23,7 +23,7 @@ void ADC_Filter(void);
 
 void ADC_Filter(void)
 {
-#if 0
+#if 1
     uint16_t ch;
 
     //ADC_A 通道滤波

@@ -66,7 +66,7 @@ extern uint32_t flip_bit(uint32_t value, int position);
 
 extern uint8_t Get_INPUT_GPIO_Bit(uint8_t IOtype);
 
-extern void SetParGPIO(uint8_t IO);
+extern void SetCD4052(uint8_t IO);
 
 
 
