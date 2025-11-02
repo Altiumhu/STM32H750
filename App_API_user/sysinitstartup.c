@@ -11,6 +11,27 @@ void Initdata_g_DEVICE_Information(void)
   //   g_DEVICE_Information.Err_State = 0;
   //   g_DEVICE_Information.workMode = POWER_SET_CHARGE;
 }
+/**
+  * Enable DMA controller clock
+  */
+void BSP_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 1, 1);
+  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
+  /* DMA1_Stream2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 3, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
+  /* DMA1_Stream7_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
+
+}
 
 /**********************************************************************
  * Function:     AppUser_InitData
@@ -110,7 +131,7 @@ void AppUser_prvSetupHardware(void)
 {
     App_GPIO_Init();
 //  MX_GPIO_Init();
-//  MX_DMA_Init();
+   BSP_DMA_Init();
 //  MX_TIM7_Init();
 //  MX_USART1_UART_Init();
 //  MX_USART3_UART_Init();
@@ -133,7 +154,7 @@ void AppUser_prvSetupHardware(void)
 
 //  HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1); // 关键启动代码
 //  HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_2); // 关键启动代码
-     App_Drive_InitTimer_7();                  // 100ms
+
 }
 void Display_PeriphCLKFreq(void)
 {

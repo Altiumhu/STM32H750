@@ -42,11 +42,11 @@ void App_Drive_UASRT_Init(void)
 	HAL_UART_Transmit(&huart7, (uint8_t *)hlpuart1msg, strlen(hlpuart1msg), HAL_MAX_DELAY);
 
 	printf("\r\n STM32F750=%f", votlag);
-	SCB_CleanDCache_by_Addr((uint32_t *)txData, sizeof(txData));
+//	SCB_CleanDCache_by_Addr((uint32_t *)txData, sizeof(txData));
 
-	HAL_UART_Transmit_DMA(&huart1, txData, sizeof(txData) - 1);
+//	HAL_UART_Transmit_DMA(&huart1, txData, sizeof(txData) - 1);
 
-	HAL_UART_Transmit_DMA(&huart7, txData, sizeof(txData) - 1);
+//	HAL_UART_Transmit_DMA(&huart7, txData, sizeof(txData) - 1);
 }
 /**********************************************************************
  * Function:      HAL_UART_RxCpltCallback

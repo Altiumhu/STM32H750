@@ -98,7 +98,9 @@ void AppDebug_vTask(void)
 
     printf("\r\nDebug Run=%d\r\n", poll_time++);
 
-
+//		
+		 ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
+		 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
     //  UserSlave_SendLink();
 //         UserFlash_WriteUserData();
 //     AppUserDebug_TempVaule();

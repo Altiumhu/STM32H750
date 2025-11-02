@@ -62,8 +62,8 @@ void ADC_Convert_Vaule(void)
 void sample_irq_handler(void)
 {
     GetADC_Driver_Result();
-    ADC_Filter();        // ADC滤波
-    ADC_Convert_Vaule(); // ADC转换化实际数据
+//    ADC_Filter();        // ADC滤波
+//    ADC_Convert_Vaule(); // ADC转换化实际数据
 }
 
 void AppUser_Sample_Debug(void)

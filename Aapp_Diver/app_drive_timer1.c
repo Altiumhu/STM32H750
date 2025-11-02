@@ -25,27 +25,26 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   short temp;
   if (htim->Instance == TIM7)
   {
-
+//     Updata_EPWM_Handle();
     timer7_1000ms_counter++;
     if (timer7_1000ms_counter > 10) // 1秒钟
     {  
-//       Sys_Run_Led();   
+       Sys_Run_Led();   
       timer7_1000ms_counter = 0;
     }
     Debug_Timer_1ms();
 
-//    Read_GPIO_vTask(); // 读取IO状态
-//    Smoke_vTask();
+
     timer7_counter++;
     if (timer7_counter > 10) // 10秒钟
     {
       timer7_counter = 0;
 
-      temp = adc3_get_temperature(); /* 得到温度值 */
-      if (temp < 0)
-      {
-        temp = -temp;
-      }
+//      temp = adc3_get_temperature(); /* 得到温度值 */
+//      if (temp < 0)
+//      {
+//        temp = -temp;
+//      }
 
       // printf(" the temperature data is %2d.%2d degrees Celsius\r\n", temp /100, temp % 100);
     }
@@ -54,6 +53,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   if (htim->Instance == TIM6)
   {
+		//Updata_EPWM_Handle();
 		TIMER0CallbackFunction("10khz");
   }
 }

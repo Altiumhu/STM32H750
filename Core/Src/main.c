@@ -122,7 +122,9 @@ int main(void)
   PeriphCommonClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  /* 设置NVIC优先级分组 */
+  HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+  // 分组4：4位抢占优先级，0位子优先级（推荐用于STM32H7）
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -150,7 +152,7 @@ int main(void)
   Display_PeriphCLKFreq();
 
   // printf("\r\nSTM32F750=%f LargeDataFrame=%d", votlag,sizeof(LargeDataFrame));
-  HAL_TIM_Base_Start_IT(&htim3);
+
 
   RS485_ModbusCmdTask("CmdTask"); // RS485通讯解初始化
 
@@ -164,10 +166,9 @@ int main(void)
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
   // 启动ADC转换
   ADC_StartConversion();
-  printf("\r\nV 50 ");
   // TEST_Flash();
-
-  // 发送初始消息 (设备上线通知)
+#if 1
+  // 发送初始消息 (设备上线通知)   ad failed with erro
   uint8_t init_msg[4] = {0xAA, 0x55, 0x01, 0x23};
   FDCAN_SendMessage(FC_BROADCAST, BROADCAST_DEVICE_ID, 0x000, init_msg, sizeof(init_msg));
   CAN1_Send_TEST();
@@ -178,17 +179,26 @@ int main(void)
   LargeDataTransfer_SetCompleteCallback(OnTransferComplete);
   LargeDataTransfer_SetReceivedCallback(OnDataReceived);
   LargeDataTransfer_SetFailedCallback(OnTransferFailed);
-	
-	modbus_main();
 
+
+#endif
+	modbus_main();
+ 	App_Drive_InitTimer_7();                  // 100ms
+
+  printf("\r\nV 50 ");
+   pwm_start(0, 0);
   while (1)
   {
-
+		Updata_EPWM_Handle();
     //        User_Update();
     AppUser_PortocolRecv(); // MCU通讯协议包
     AppDebug_vTask();
     //        AppUser_temp_sample();
 		ModbusMaster_Task();
+//		sample_irq_handler(); // 采集数据转换
+	//	Updata_EPWM_Handle();
+		
+
 
 #if 0
         // 主循环 - 发送定期状态更新
@@ -204,11 +214,11 @@ int main(void)
         }
 #else
 
-    // 处理发送超时
-    LargeDataTransfer_TimeoutHandler();
+//    // 处理发送超时
+//    LargeDataTransfer_TimeoutHandler();
 
-    // 处理接收会话超时
-    LargeDataTransfer_SessionTimeoutHandler();
+//    // 处理接收会话超时
+//    LargeDataTransfer_SessionTimeoutHandler();
 #endif
 
     //        // 其他应用逻辑...

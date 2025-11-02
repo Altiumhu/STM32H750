@@ -366,7 +366,7 @@ void TIMER0CallbackFunction(void *handle)
 //    System_LED_HIGH_LEVEL;
 
 //    GetADC_Driver_Result();
-   sample_irq_handler(); // 采集数据转换
+  // sample_irq_handler(); // 采集数据转换
 
 #if CLOOS_LOOP_MODE // 闭环开启保护
      Scan_System_Fault(); // 保护
@@ -376,12 +376,12 @@ void TIMER0CallbackFunction(void *handle)
 
     // ZPK_Handle_Update(12.0f,8.0f);
     // g_epwmHandle->High_MOS_Timer_TBPRD=  g_ZPK_Handle.OUT ;
-    System_CloseLoop_Status();
+//    System_CloseLoop_Status();
 
 //   // if (POWER_TEST == g_Channelinfo[0].workMode || (POWER_RUN_CHARGE == g_Channelinfo[0].workMode || POWER_SoftStart == g_Channelinfo[0].workMode) || POWER_BURST == g_Channelinfo[0].workMode)
 //   if (POWER_TEST == g_Channelinfo[0].workMode || (POWER_RUN_CHARGE == g_Channelinfo[0].workMode || POWER_SoftStart == g_Channelinfo[0].workMode) )
 //    {
-        Updata_EPWM_Handle();
+        
 //    }
 
 //    System_LED_LOW_LEVEL;
