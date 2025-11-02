@@ -187,15 +187,16 @@ int main(void)
 
   printf("\r\nV 50 ");
    pwm_start(0, 0);
+
   while (1)
   {
-		Updata_EPWM_Handle();
+	 
     //        User_Update();
     AppUser_PortocolRecv(); // MCU通讯协议包
     AppDebug_vTask();
     //        AppUser_temp_sample();
-		ModbusMaster_Task();
-//		sample_irq_handler(); // 采集数据转换
+//		ModbusMaster_Task();
+		sample_irq_handler(); // 采集数据转换
 	//	Updata_EPWM_Handle();
 		
 

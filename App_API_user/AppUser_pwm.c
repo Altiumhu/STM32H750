@@ -28,7 +28,7 @@ void Updata_EPWM_Handle(void)
 	
   for(channel=0;channel<16;channel++)
 	{
-			g_epwmHandle[channel].High_MOS_DUTY =1800;
+			g_epwmHandle[channel].High_MOS_DUTY =2300;
 		
 			switch (channel)
 			{

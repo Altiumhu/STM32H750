@@ -26,7 +26,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
-
+#include "head.h"     // head.h Í·ÎÄ¼þ
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
@@ -214,7 +214,7 @@ void DMA1_Stream0_IRQHandler(void)
   /* USER CODE END DMA1_Stream0_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_adc1);
   /* USER CODE BEGIN DMA1_Stream0_IRQn 1 */
-
+ GetADC_Driver_Result();
   /* USER CODE END DMA1_Stream0_IRQn 1 */
 }
 

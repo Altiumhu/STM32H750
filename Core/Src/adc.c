@@ -449,7 +449,7 @@ void ADC_StartConversion(void)
 }
 
 // 获取ADC值（通道1-9）
-uint16_t ADC_GetValue(uint8_t channel)
+inline uint16_t ADC_GetValue(uint8_t channel)
 {
   if(channel < 1 || channel > 14) return 0;
   return adc_values[channel - 1];
