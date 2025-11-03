@@ -195,7 +195,7 @@ int main(void)
     AppUser_PortocolRecv(); // MCU通讯协议包
     AppDebug_vTask();
     //        AppUser_temp_sample();
-//		ModbusMaster_Task();
+		ModbusMaster_Task();
 		sample_irq_handler(); // 采集数据转换
 	//	Updata_EPWM_Handle();
 		

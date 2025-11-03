@@ -32,7 +32,7 @@ void WriteRegisterCallback(uint8_t slave_addr, Modbus_Status status, uint16_t *d
 
 int modbus_main(void)
 {
-#if 0	
+#if 1	
 //    HAL_Init();
 //    SystemClock_Config();
 //    MX_GPIO_Init();
