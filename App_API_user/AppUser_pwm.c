@@ -208,6 +208,18 @@ inline void pwm_start(uint16_t channel, uint16_t mode)
 
 void Debug_PWM(void)
 {
+	uint32_t channel;
+	
+	
+	 HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1);
+	__HAL_TIM_SET_COMPARE (&htim12, TIM_CHANNEL_1 , 4000);
+	for(channel =0;channel<16;channel++)
+	{
+	   pwm_start(channel, 0);
+	}
+
+
+
 }
 
 

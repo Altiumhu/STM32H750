@@ -7,18 +7,18 @@
 #include "head.h"
 #include "power_pid.h"
 
-volatile float First_v_err_sum;
+ float First_v_err_sum;
 
-volatile power_pid_define gHandle_PID[BOARD_CELL_NUM];
+ power_pid_define gHandle_PID[BOARD_CELL_NUM];
 
 
-volatile ZPK_Controller g_ZPK_Handle;
+ ZPK_Controller g_ZPK_Handle;
 
-volatile float ZPK_A[5] = {1, 1.4586f, -0.4586f, 0.0f}; // A1      A2       A3
-volatile float ZPK_B[5] = {0.0f, 601.03f, -548.4399f};  // B0   B1      B2       B3
+ float ZPK_A[5] = {1, 1.4586f, -0.4586f, 0.0f}; // A1      A2       A3
+ float ZPK_B[5] = {0.0f, 601.03f, -548.4399f};  // B0   B1      B2       B3
 
-volatile float ZPK_Y[5] = {2000.0f, 2000.0f, 2000.0f, 2000.0f};
-volatile float ZPK_U[5] = {0.0f, 0.0f, 0.0f, 0.0f};
+ float ZPK_Y[5] = {2000.0f, 2000.0f, 2000.0f, 2000.0f};
+ float ZPK_U[5] = {0.0f, 0.0f, 0.0f, 0.0f};
 
 void pid_V_Loop_calc(power_pid_define *v);
 void pid_I_Loop_calc(power_pid_define *I);

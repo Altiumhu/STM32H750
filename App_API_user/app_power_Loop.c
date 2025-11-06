@@ -86,22 +86,22 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
 
 
            g_Channelinfo[i].workMode = POWER_PRECHARGE;
-            if ((g_Channelinfo[i].voltage_port - g_Channelinfo[i].Cap_voltage) >= -0.05f) //端口电压-电容电压》=0.05V 防止开机电容有电
-                   
-            {
-                g_Channelinfo[i].workMode = POWER_PRECHARGE;
-            }
-            else
-            {
-                g_Channelinfo[i].fault.bit.CAP_BAT = 1; //容压大于电池电压
-            }
+//            if ((g_Channelinfo[i].voltage_port - g_Channelinfo[i].Cap_voltage) >= -0.05f) //端口电压-电容电压》=0.05V 防止开机电容有电
+//                   
+//            {
+//                g_Channelinfo[i].workMode = POWER_PRECHARGE;
+//            }
+//            else
+//            {
+//                g_Channelinfo[i].fault.bit.CAP_BAT = 1; //容压大于电池电压
+//            }
            g_Channelinfo[i].run =0x0;
            gPWM_Burst_StartTimer =0;
         }
         break;
         case POWER_PRECHARGE: // 预充电
         {
-					
+					 g_Channelinfo[i].workMode = POWER_SoftStart;
 					
         }
         break;
@@ -206,40 +206,20 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
         case POWER_RUN_CHARGE: // 06
         {
 					
-					#if 0
+
             // 电压环
             Power_PID_Updata(g_Channelinfo[0].Cap_voltage, BOARD_OUT_VOLT);
             g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].v_pid_out;
 
             gHandle_PID[0].v_ui = gHandle_PID[0].v_ui + 5.0f;
-            if (gHandle_PID[0].v_ui >= APT_0_RRE_RUN_LOOP_KHZ) /// 稳态
+            if (gHandle_PID[0].v_ui >= 2900) /// 稳态
             {
-                gHandle_PID[0].v_ui = APT_0_RRE_RUN_LOOP_KHZ;
+                gHandle_PID[0].v_ui = 2900;
             }
 
-            // 进入打嗝的条件
-            static uint16_t cnt_burst_in = 0U;
-            if ((g_Channelinfo[0].voltage > 12.1f) && (gHandle_PID[0].v_pid_out <= (APT_0_RRE_RUN_LOOP_KHZ + 15.0f)))
-            {
-                gPWM_Burst_StartTimer =0;
-                cnt_burst_in++;
-                // if (cnt_burst_in > 2U) // 20*20us=400us
-                {
-                    g_Channelinfo[0].workMode = POWER_BURST;
-                    cnt_burst_in = 0U;
-                    g_Channelinfo[0].run =0;
-//                    DebugLED_LOW_LEVEL;
-                }
-            }
-            else
-            {
-                cnt_burst_in = 0U;
-            }
-#endif						
-#if 0
             //电流环
             gHandle_PID[0].i_ref = g_Handle_REC_Device.I_Ref_REC_Vaule;
-            gHandle_PID[0].v_fdb = g_Channelinfo[0].current2; // 设置反馈值
+            gHandle_PID[0].v_fdb = g_Channelinfo[0].current; // 设置反馈值
             pid_I_Loop_calc(&gHandle_PID[0]);
 
 
@@ -251,8 +231,6 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
             {
             g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].i_pid_out;
             }
-
-#endif
         }
         break;
         case POWER_RUN_DISCHARGE: // 放电模式
@@ -382,6 +360,7 @@ void TIMER0CallbackFunction(void *handle)
 //   if (POWER_TEST == g_Channelinfo[0].workMode || (POWER_RUN_CHARGE == g_Channelinfo[0].workMode || POWER_SoftStart == g_Channelinfo[0].workMode) )
 //    {
         Updata_EPWM_Handle();
+//				printf("Updata");
 //    }
 
 //    System_LED_LOW_LEVEL;

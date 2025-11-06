@@ -185,9 +185,9 @@ int main(void)
 	modbus_main();
  	App_Drive_InitTimer_7();                  // 100ms
 
-  printf("\r\nV 50 ");
-   pwm_start(0, 0);
 
+	
+	Debug_PWM();
   while (1)
   {
 	 

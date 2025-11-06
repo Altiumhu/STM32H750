@@ -5,7 +5,7 @@
 #define  FW_REV   18    //固件版本号表示1.8
 
 
-#define  BOARD_OUT_VOLT   12.0f    //输出电压
+#define  BOARD_OUT_VOLT   4.5f    //输出电压
 
 typedef struct
 {

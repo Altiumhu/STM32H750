@@ -79,7 +79,7 @@ typedef struct ZPK_Controller
 
 } ZPK_Controller;
 
-extern volatile ZPK_Controller g_ZPK_Handle;
+extern  ZPK_Controller g_ZPK_Handle;
 
 extern void PIDInit(uint16_t ch);
 extern void ZPK_Handle_Init(uint16_t ch);
@@ -87,7 +87,7 @@ extern void ZPK_Handle_Init(uint16_t ch);
 void pid_V_Loop_calc(power_pid_define *v);
 void pid_I_Loop_calc(power_pid_define *I);
 
-extern volatile power_pid_define gHandle_PID[BOARD_CELL_NUM];
+extern  power_pid_define gHandle_PID[BOARD_CELL_NUM];
 
 
 extern void Debug_HandlePID(void);
