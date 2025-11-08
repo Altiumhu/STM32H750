@@ -101,19 +101,36 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
         break;
         case POWER_PRECHARGE: // 预充电
         {
-					 g_Channelinfo[i].workMode = POWER_SoftStart;
+            //电流换
+            //gHandle_PID[i].i_ref = Current_Convert_Voltage(  g_Channelinfo[i].Set_PreCC) * (-1.0f); //设置给定值5A
+                  
+
+            gHandle_PID[i].i_fdb = g_Channelinfo[i].current_ADC * (-1.0f); //设置反馈值
+            pid_I_Loop_calc(&gHandle_PID[i]); //电流换
+
+            //电压环
+            gHandle_PID[i].v_ref = gHandle_PID[i].v_ref + 0.001f;
+            //软启功率输出电容电压作为反馈值，电池端电压作为给定值 
+            gHandle_PID[i].v_ref = fmin(gHandle_PID[i].v_ref, g_Channelinfo[i].voltage);
+                                           
+
+            gHandle_PID[i].v_fdb = g_Channelinfo[i].Cap_voltage; //设置反馈值
+            pid_V_Loop_calc(&gHandle_PID[i]);
+            g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].v_pid_out;
+
+            g_epwmHandle[i].High_MOS_STA = 1;
 					
         }
         break;
         case POWER_SoftStart: // 软启动
         {
 //            // 电压环环PID参数缓慢加到 kp=5.0  ki=1.0
-//            gHandle_PID[0].v_kp = gHandle_PID[0].v_kp + 0.1;
-//            if (gHandle_PID[0].v_kp >= 5.0f)
-//                gHandle_PID[0].v_kp = 5.0f;
-//            gHandle_PID[0].v_ki = gHandle_PID[0].v_ki + 0.01;
-//            if (gHandle_PID[0].v_ki >= 1.0f)
-//                gHandle_PID[0].v_ki = 1.0f;
+            gHandle_PID[0].v_kp = gHandle_PID[0].v_kp + 0.1;
+            if (gHandle_PID[0].v_kp >= 5.0f)
+                gHandle_PID[0].v_kp = 5.0f;
+            gHandle_PID[0].v_ki = gHandle_PID[0].v_ki + 0.01;
+            if (gHandle_PID[0].v_ki >= 1.0f)
+                gHandle_PID[0].v_ki = 1.0f;
 #if CLOOS_LOOP_MODE // 闭环开启保护
 
             if (g_Channelinfo[0].Cap_voltage >= (BOARD_OUT_VOLT * 0.90f))
@@ -377,14 +394,14 @@ void TIMER0CallbackFunction(void *handle)
  * -----------------------------------------------
  * 2025-06-05	  V1.0	      Hu Weiping
  **********************************************************************/
-// void Power_PID_Updata(float FB, float REF)
-//{
-//    /// 电压环
-//    gHandle_PID[0].v_ref = REF;
-//    gHandle_PID[0].v_fdb = FB; // 设置反馈值
+ void Power_PID_Updata(float FB, float REF)
+{
+    /// 电压环
+    gHandle_PID[0].v_ref = REF;
+    gHandle_PID[0].v_fdb = FB; // 设置反馈值
 
-//    pid_V_Loop_calc(&gHandle_PID[0]);
-//}
+    pid_V_Loop_calc(&gHandle_PID[0]);
+}
 /**********************************************************************
  * Function: 	 Power_PID_Updata
  * Description:  调试pid参数

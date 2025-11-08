@@ -14,9 +14,36 @@ void Set_TIM8_PWM_Duty(uint32_t channel, float duty);
 // 配置PWM初始化数据
 void HAL_EPWM_Config(uint16_t ch)
 {
-	// for(ch =0;ch<BOARD_CHANNEL_NUM;ch++)
-	{
-	}
+  // for(ch =0;ch<BOARD_CHANNEL_NUM;ch++)
+   {
+      // g_epwmHandle[ch].High_MOS_Timer_TBPRD =(uint32_t) ((EPWM_DUTY_MAX * (float32_t)(CHARGE_EPWM_TIMER_TBPRD << 8))*0.01f);
+       g_epwmHandle[ch].High_MOS_PHS = 0;
+       g_epwmHandle[ch].High_MOS_DUTY = 2300U;
+       g_epwmHandle[ch].High_MOS_LOW_DUTY = g_epwmHandle[ch].High_MOS_DUTY; //高压侧上管占空比
+
+       g_epwmHandle[ch].High_MOS_DTF = 40;
+       g_epwmHandle[ch].High_MOS_DTB = 4400;//285ns
+      // g_epwmHandle[ch].High_MOS_DUTY_MAX = g_epwmHandle[ch].High_MOS_Timer_TBPRD>>1 202752;
+       g_epwmHandle[ch].High_MOS_DUTY_MAX = 2900;//36.40% 97750
+       g_epwmHandle[ch].High_MOS_DUTY_MIN = 5200; //5200
+       g_epwmHandle[ch].High_MOS_STA = 0;
+      // g_epwmHandle[ch].High_MOS_OpenFlag = 0;
+
+       g_epwmHandle[ch].Low_MOS_Timer_TBPRD=g_epwmHandle[ch].High_MOS_Timer_TBPRD;
+       g_epwmHandle[ch].Low_MOS_PHS = 0;
+       g_epwmHandle[ch].Low_MOS_DUTY = 5500U ;
+       g_epwmHandle[ch].Low_MOS_DTF = 40;
+       g_epwmHandle[ch].Low_MOS_DTB = 4500;
+       g_epwmHandle[ch].Low_MOS_DUTY_MAX = g_epwmHandle[ch].Low_MOS_Timer_TBPRD>>1;
+       g_epwmHandle[ch].Low_MOS_DUTY_MIN = 5000;
+       g_epwmHandle[ch].Low_MOS_STA = 0;
+       g_epwmHandle[ch].Low_MOS_OpenFlag = 0;
+
+
+
+
+ 
+   }
 }
 // PWM更新寄存器值
 void Updata_EPWM_Handle(void)

@@ -39,6 +39,16 @@ typedef struct
 
 
 
+    uint32_t  Low_MOS_Timer_TBPRD;
+    uint32_t  Low_MOS_PHS;   //低压侧相位
+    uint32_t  Low_MOS_DUTY; //低压侧上管占空比
+    uint32_t  Low_MOS_DTF;  //低压侧下管前死区
+    uint32_t  Low_MOS_DTB;  //低压侧下管后死区
+    uint32_t  Low_MOS_DUTY_MAX; //buck上管占空比最大值
+    uint32_t   Low_MOS_DUTY_MIN;
+    uint16_t   Low_MOS_STA;  //低压侧下管使能
+    uint16_t   Low_MOS_OpenFlag;  //打开标记
+		
 } EPWM_Handle;
 
 // 单通道数据数据结构
