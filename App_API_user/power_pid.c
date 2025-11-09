@@ -61,11 +61,11 @@ void PIDInit(uint16_t ch)
     // 电压环的参数初始化通道1
     gHandle_PID[ch].v_fdb = 0;                              // 反馈值
     gHandle_PID[ch].v_err = 0.0f;                           // 误差
-    gHandle_PID[ch].v_kp =0.5f;                            // 比例系数
-    gHandle_PID[ch].v_ki = 0.2f;                            // 积分系数
+    gHandle_PID[ch].v_kp =1.0f;                            // 比例系数
+    gHandle_PID[ch].v_ki = 0.1f;                            // 积分系数
     gHandle_PID[ch].v_ref = 5.0f;                          // 电压环基准复位，进行软起动
     gHandle_PID[ch].v_err_sum = (200);         //
-    gHandle_PID[ch].v_up = (6000);               //
+    gHandle_PID[ch].v_up = (3000);               //
     gHandle_PID[ch].v_ui = (0);              //
     gHandle_PID[ch].v_max_out_value = gHandle_PID[ch].v_up; /* 最大脉宽*/
     gHandle_PID[ch].v_min_out_value = gHandle_PID[ch].v_ui; /* 最小脉宽*/
@@ -78,7 +78,7 @@ void PIDInit(uint16_t ch)
     gHandle_PID[ch].i_kp = 10.0f;               // 比例系数500
     gHandle_PID[ch].i_ki = 0.5f;               // 积分系数100-30a
     gHandle_PID[ch].i_ref = 0.5f;              // 电压环基准复位，进行软起动
-    gHandle_PID[ch].i_up = (6000);  //
+    gHandle_PID[ch].i_up = (3000);  //
     gHandle_PID[ch].i_ui = (0); //
     gHandle_PID[ch].i_err_sum = 200;
     gHandle_PID[ch].i_max_out_value = gHandle_PID[ch].i_up; /* 最大脉宽*/
@@ -364,10 +364,10 @@ void Debug_HandlePID(void)
     for (ch = 0; ch < 1; ch++)
     {
 
-        //DBG_PRINTF("\r\nCH[%d]Set=%fV FB=%fV pid_out=%f ", ch + 1, gHandle_PID[0].v_ref, gHandle_PID[0].v_fdb, gHandle_PID[0].v_pid_out);
-        //DBG_PRINTF("\r\n Fre=%d  HOMSduty=%d low=%d", g_epwmHandle[0].High_MOS_Timer_TBPRD, g_epwmHandle[0].High_MOS_DUTY, g_epwmHandle[0].Low_MOS_DUTY);
-   
-       // DBG_PRINTF("\r\n v_max_out_value=%d  v_up=%d ", gHandle_PID[ch].v_max_out_value, gHandle_PID[0].v_up);
+        printf("\r\nCH[%d]Set=%fV FB=%fV pid_out=%f ", ch + 1, gHandle_PID[0].v_ref, gHandle_PID[0].v_fdb, gHandle_PID[0].v_pid_out);
+        printf("\r\n Fre=%d  HOMSduty=%d low=%d", g_epwmHandle[0].High_MOS_Timer_TBPRD, g_epwmHandle[0].High_MOS_DUTY, g_epwmHandle[0].Low_MOS_DUTY);
+        printf("\r\nCH[%d] I_Set=%fV I_FB=%fA i_pid_out=%f ", ch + 1, gHandle_PID[0].i_ref, gHandle_PID[0].i_fdb, gHandle_PID[0].i_pid_out);
+      // printf("\r\n v_max_out_value=%d  v_up=%d ", gHandle_PID[ch].v_max_out_value, gHandle_PID[0].v_up);
     }
 
 #endif

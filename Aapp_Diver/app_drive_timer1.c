@@ -25,7 +25,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   short temp;
   if (htim->Instance == TIM7)
   {
-//     Updata_EPWM_Handle();
+
     timer7_1000ms_counter++;
     if (timer7_1000ms_counter > 10) // 1秒钟
     {  

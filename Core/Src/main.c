@@ -184,10 +184,8 @@ int main(void)
 #endif
 	modbus_main();
  	App_Drive_InitTimer_7();                  // 100ms
-
-
-	
 	Debug_PWM();
+
   while (1)
   {
 	 

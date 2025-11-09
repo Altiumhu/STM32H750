@@ -56,6 +56,15 @@ void ADC_Filter(void)
 void ADC_Convert_Vaule(void)
 {
     float adcvoltage;
+	
+	g_Channelinfo[0].voltage = adc_values[0]*5.03548E-05*2.2f;
+	
+	g_Channelinfo[0].current = adc_values[4]*0.000335088f;
+	
+	g_Channelinfo[0].current_voltage = adc_values[4]*5.03548E-05f;
+	
+	g_Channelinfo[0].Cap_voltage = adc_values[12]*5.03548E-05f*3.033333f;
+	
 
 }
 
@@ -88,6 +97,8 @@ void AppUser_Sample_Debug(void)
 	
 	
      printf("PC0 %d\r\n", adc_values[12]);
+	
+	
      printf("PC1=%d\r\n", adc_values[13]);
     AppUser_ChannelInfo_Debug();
 }
@@ -99,10 +110,10 @@ void AppUser_ChannelInfo_Debug(void)
 //  DBG_PRINTF("LLC_IPeak =%f ADC1_A1=%d\r\n", g_Channelinfo[0].LLC_IPeak, adc1Result[ADC1_A8]);
 
 //  // 采集输出电容电压
-//  DBG_PRINTF("Cap_voltage =%f ADC1_A6=%d\r\n", g_Channelinfo[0].Cap_voltage, adc1Result[ADC1_A6]);
-//  DBG_PRINTF("voltage =%f ADC1_A5=%d\r\n", g_Channelinfo[0].voltage, adc1Result[ADC1_A5]);
+   printf("Cap_voltage =%f ADC1_A10=%d\r\n", g_Channelinfo[0].Cap_voltage, adc_values[12]);
+   printf("voltage =%f adc_values =%d\r\n", g_Channelinfo[0].voltage, adc_values[0]);
 //  // 电流
-//  DBG_PRINTF("+12V_IO_det1 =%f ADC1_A2=%d current_ADC=%fV\r\n", g_Channelinfo[0].current, adc1Result[ADC1_A2],g_Channelinfo[0].current_ADC );
+  printf("current =%f ADC1_A2=%d  current_voltage=%f\r\n", g_Channelinfo[0].current,adc_values[4],g_Channelinfo[0].current_voltage);
 //  DBG_PRINTF("+12V_IO_det2 =%f ADC1_A3=%d\r\n", g_Channelinfo[0].current2, adc1Result[ADC1_A3]);
 //  // 12V电流
 //  DBG_PRINTF("current_VABU_12V =%f ADC1_A4=%d\r\n", g_Channelinfo[0].current_VABU_12V, adc1Result[ADC1_A4]);

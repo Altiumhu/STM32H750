@@ -52,7 +52,7 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
 
     for (i = 0; i < BOARD_CHANNEL_NUM; i++)
     {
-        g_Channelinfo[i].fault.all = g_Channelinfo[i].fault.all; // 工作模式
+        //g_Channelinfo[i].fault.all = g_Channelinfo[i].fault.all; // 工作模式
 
         if (g_Channelinfo[i].fault.all) // 判断故障
         {
@@ -97,26 +97,39 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
 //            }
            g_Channelinfo[i].run =0x0;
            gPWM_Burst_StartTimer =0;
+
+					pwm_start(i, 0);
+	
         }
         break;
         case POWER_PRECHARGE: // 预充电
         {
             //电流换
-            //gHandle_PID[i].i_ref = Current_Convert_Voltage(  g_Channelinfo[i].Set_PreCC) * (-1.0f); //设置给定值5A
+            gHandle_PID[i].i_ref =3.0f; //设置给定值5A
                   
 
-            gHandle_PID[i].i_fdb = g_Channelinfo[i].current_ADC * (-1.0f); //设置反馈值
+            gHandle_PID[i].i_fdb = g_Channelinfo[i].current ; //设置反馈值
             pid_I_Loop_calc(&gHandle_PID[i]); //电流换
 
             //电压环
-            gHandle_PID[i].v_ref = gHandle_PID[i].v_ref + 0.001f;
+					  gHandle_PID[i].v_ref = 3.5f;
+           // gHandle_PID[i].v_ref = gHandle_PID[i].v_ref + 0.001f;
             //软启功率输出电容电压作为反馈值，电池端电压作为给定值 
-            gHandle_PID[i].v_ref = fmin(gHandle_PID[i].v_ref, g_Channelinfo[i].voltage);
+           // gHandle_PID[i].v_ref = fmin(gHandle_PID[i].v_ref, g_Channelinfo[i].voltage);
                                            
 
             gHandle_PID[i].v_fdb = g_Channelinfo[i].Cap_voltage; //设置反馈值
             pid_V_Loop_calc(&gHandle_PID[i]);
-            g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].v_pid_out;
+					
+					if(gHandle_PID[i].v_pid_out<=gHandle_PID[i].i_pid_out)
+					{
+					  g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].v_pid_out;
+					}
+					else
+					{
+					  g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].i_pid_out;
+					}
+//            g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].v_pid_out;
 
             g_epwmHandle[i].High_MOS_STA = 1;
 					

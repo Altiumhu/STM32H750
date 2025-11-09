@@ -14,8 +14,8 @@ typedef struct
      float OVP_voltage; //
 
      float current;    // 电流 		0.1mA 平均
+     float current_voltage; // 电流        0.1mA
      uint16_t current_ADC; // 电流        0.1mA
-
 
      float power;              // 功率
      float res;                // 电阻

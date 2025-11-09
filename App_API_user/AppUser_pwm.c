@@ -18,14 +18,14 @@ void HAL_EPWM_Config(uint16_t ch)
    {
       // g_epwmHandle[ch].High_MOS_Timer_TBPRD =(uint32_t) ((EPWM_DUTY_MAX * (float32_t)(CHARGE_EPWM_TIMER_TBPRD << 8))*0.01f);
        g_epwmHandle[ch].High_MOS_PHS = 0;
-       g_epwmHandle[ch].High_MOS_DUTY = 2300U;
+       g_epwmHandle[ch].High_MOS_DUTY = 2933U;
        g_epwmHandle[ch].High_MOS_LOW_DUTY = g_epwmHandle[ch].High_MOS_DUTY; //高压侧上管占空比
 
        g_epwmHandle[ch].High_MOS_DTF = 40;
-       g_epwmHandle[ch].High_MOS_DTB = 4400;//285ns
+       g_epwmHandle[ch].High_MOS_DTB = 10;//285ns
       // g_epwmHandle[ch].High_MOS_DUTY_MAX = g_epwmHandle[ch].High_MOS_Timer_TBPRD>>1 202752;
-       g_epwmHandle[ch].High_MOS_DUTY_MAX = 2900;//36.40% 97750
-       g_epwmHandle[ch].High_MOS_DUTY_MIN = 5200; //5200
+       g_epwmHandle[ch].High_MOS_DUTY_MAX = 3200;//36.40% 97750
+       g_epwmHandle[ch].High_MOS_DUTY_MIN = 10; //5200
        g_epwmHandle[ch].High_MOS_STA = 0;
       // g_epwmHandle[ch].High_MOS_OpenFlag = 0;
 
@@ -55,7 +55,18 @@ void Updata_EPWM_Handle(void)
 	
   for(channel=0;channel<16;channel++)
 	{
-			g_epwmHandle[channel].High_MOS_DUTY =2300;
+			
+		
+		
+		  if(g_epwmHandle[channel].High_MOS_DUTY>=g_epwmHandle[channel].High_MOS_DUTY_MAX)
+			{
+			  g_epwmHandle[channel].High_MOS_DUTY =g_epwmHandle[channel].High_MOS_DUTY_MAX;
+			}
+			
+		  if(g_epwmHandle[channel].High_MOS_DUTY<=g_epwmHandle[channel].High_MOS_DUTY_MIN)
+			{
+			  g_epwmHandle[channel].High_MOS_DUTY =g_epwmHandle[channel].High_MOS_DUTY_MIN;
+			}
 		
 			switch (channel)
 			{
@@ -242,7 +253,7 @@ void Debug_PWM(void)
 	__HAL_TIM_SET_COMPARE (&htim12, TIM_CHANNEL_1 , 4000);
 	for(channel =0;channel<16;channel++)
 	{
-	   pwm_start(channel, 0);
+	   
 	}
 
 

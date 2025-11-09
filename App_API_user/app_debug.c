@@ -97,17 +97,22 @@ void AppDebug_vTask(void)
         return;
 
     printf("\r\nDebug Run=%d\r\n", poll_time++);
+		
+		printf("\r\n workMode=%d \r\n",   g_Channelinfo[0].workMode );
+		printf("\r\n fault=0x%X \r\n",   	 g_Channelinfo[0].fault.all );
+	
 
 //		
 		 ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
 		 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
+		  g_Channelinfo[0].fault.all= 0;
     //  UserSlave_SendLink();
 //         UserFlash_WriteUserData();
 //     AppUserDebug_TempVaule();
     // DebugLED_LOW_LEVEL ;
     // DBG_PRINTF("\r\ng_debugNUmer.debug1 %d \r\n",  g_debugNUmer.debug1);
     AppUser_Sample_Debug();
-//    Debug_HandlePID();
+   Debug_HandlePID();
     CAN1_Send_TEST();
 //     Debug_PWM();
 
