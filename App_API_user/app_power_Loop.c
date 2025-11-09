@@ -99,13 +99,19 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
            gPWM_Burst_StartTimer =0;
 
 					pwm_start(i, 0);
+					if(i==0)
+					{
+					 
+						 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
+					}
+					
 	
         }
         break;
         case POWER_PRECHARGE: // 预充电
         {
             //电流换
-            gHandle_PID[i].i_ref =3.0f; //设置给定值5A
+            gHandle_PID[i].i_ref =1.0f; //设置给定值5A
                   
 
             gHandle_PID[i].i_fdb = g_Channelinfo[i].current ; //设置反馈值
@@ -129,9 +135,14 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
 					{
 					  g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].i_pid_out;
 					}
-//            g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].v_pid_out;
-
             g_epwmHandle[i].High_MOS_STA = 1;
+					
+						if( g_Channelinfo[i].Cap_voltage>=3.0f)
+						{
+						   ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
+							 g_Channelinfo[i].workMode = POWER_RUN_CHARGE;
+						}
+//		 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
 					
         }
         break;
@@ -235,31 +246,30 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
 
         case POWER_RUN_CHARGE: // 06
         {
-					
 
             // 电压环
-            Power_PID_Updata(g_Channelinfo[0].Cap_voltage, BOARD_OUT_VOLT);
-            g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].v_pid_out;
-
-            gHandle_PID[0].v_ui = gHandle_PID[0].v_ui + 5.0f;
-            if (gHandle_PID[0].v_ui >= 2900) /// 稳态
-            {
-                gHandle_PID[0].v_ui = 2900;
-            }
+					 gHandle_PID[i].v_ref = BOARD_OUT_VOLT;
+            gHandle_PID[i].v_fdb = g_Channelinfo[i].voltage; //设置反馈值
+            pid_V_Loop_calc(&gHandle_PID[i]);
 
             //电流环
-            gHandle_PID[0].i_ref = g_Handle_REC_Device.I_Ref_REC_Vaule;
-            gHandle_PID[0].v_fdb = g_Channelinfo[0].current; // 设置反馈值
-            pid_I_Loop_calc(&gHandle_PID[0]);
+            gHandle_PID[i].i_ref +=0.00001f;
+					  if(gHandle_PID[i].i_ref >=5.0f)
+						{
+						  gHandle_PID[i].i_ref = 5.0f;
+						}
+					
+            gHandle_PID[i].i_fdb = g_Channelinfo[i].current; // 设置反馈值
+            pid_I_Loop_calc(&gHandle_PID[i]);
 
 
-            if( gHandle_PID[0].v_pid_out< gHandle_PID[0].i_pid_out)//双环竞争
+            if( gHandle_PID[i].v_pid_out< gHandle_PID[i].i_pid_out)//双环竞争
             {
-              g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].v_pid_out;
+              g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].v_pid_out;
             }
             else
             {
-            g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].i_pid_out;
+               g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].i_pid_out;
             }
         }
         break;
