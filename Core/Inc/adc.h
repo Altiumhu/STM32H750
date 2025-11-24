@@ -38,13 +38,16 @@ extern ADC_HandleTypeDef hadc3;
 
 /* USER CODE BEGIN Private defines */
 extern volatile uint16_t adc_values[14];
+extern volatile uint16_t adc3_values[2] ;
 /* USER CODE END Private defines */
 
 void MX_ADC1_Init(void);
 void MX_ADC3_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-void ADC_StartConversion(void);
+extern void ADC_StartConversion(void);
+
+extern void ADC3_StartConversion(void);
 uint16_t ADC_GetValue(uint8_t channel);
 /* USER CODE END Prototypes */
 

@@ -52,9 +52,8 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, LED_G_Pin|FAN_GPIO_Pin|LED_595_LD_Pin|LED_595_CLK_Pin
-                          |LED_595_DATA_Pin|EXIO_165_LD_Pin|EXIO_165_CLK_Pin|UN_OVP_Pin
-                          |UN_OCP_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, FAN_GPIO_Pin|LED_595_LD_Pin|LED_595_CLK_Pin|LED_595_DATA_Pin
+                          |EXIO_165_LD_Pin|EXIO_165_CLK_Pin|UN_OVP_Pin|UN_OCP_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, SYS_LED1_Pin|SYS_LED2_Pin, GPIO_PIN_RESET);
@@ -67,13 +66,6 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, EXIO_595_LD_Pin|EXIO_595_CLK_Pin|EXIO_595_DATA_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pins : LED_G_Pin UN_OCP_Pin */
-  GPIO_InitStruct.Pin = LED_G_Pin|UN_OCP_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : FAN_GPIO_Pin LED_595_LD_Pin LED_595_DATA_Pin EXIO_165_LD_Pin
                            EXIO_165_CLK_Pin UN_OVP_Pin */
@@ -145,6 +137,13 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BUS_OVP_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : UN_OCP_Pin */
+  GPIO_InitStruct.Pin = UN_OCP_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(UN_OCP_GPIO_Port, &GPIO_InitStruct);
 
 }
 
