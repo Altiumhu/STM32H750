@@ -271,9 +271,13 @@ void AppUser_Sample_Debug(void)
 	
 	
      printf("PC0 %d\r\n", adc_values[12]);
-	
-	
      printf("PC1=%d\r\n", adc_values[13]);
+		 
+     printf("PC1=%d\r\n", adc_values[13]);
+		 
+     printf("PC2 %d\r\n", adc3_values[0]);
+	
+     printf("PC3=%d\r\n", adc3_values[1]);
     AppUser_ChannelInfo_Debug();
 }
 
