@@ -33,12 +33,17 @@ void AppUser_Voltage_OUT_VP(void)
  
 }
 
+
+
+
+
 void Scan_System_Fault(void)
 {
      g_StartTimer++;
      if(g_StartTimer>=200)
      {
          g_StartTimer =200;
+			   Sys_Power_INPUT_OVP();//输入过压保护
          AppUser_OUT_OCP();//过流电流保护
          AppUser_Voltage_OUT_VP();//电池电压保护
 

@@ -83,7 +83,7 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
 
            PIDInit(i);
            HAL_EPWM_Config(i);
-
+           Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);  
 
            g_Channelinfo[i].workMode = POWER_PRECHARGE;
 //            if ((g_Channelinfo[i].voltage_port - g_Channelinfo[i].Cap_voltage) >= -0.05f) //端口电压-电容电压》=0.05V 防止开机电容有电
@@ -96,15 +96,10 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
 //                g_Channelinfo[i].fault.bit.CAP_BAT = 1; //容压大于电池电压
 //            }
            g_Channelinfo[i].run =0x0;
-           gPWM_Burst_StartTimer =0;
+
 
 					pwm_start(i, 0);
-					if(i==0)
-					{
-					 
-						 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
-					}
-					
+					Set_PWM_Channel_CH595_EN(2, i, EX_595_SET);//打开MOS驱动使能
 	
         }
         break;
@@ -139,7 +134,8 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
 					
 						if( g_Channelinfo[i].Cap_voltage>=3.0f)
 						{
-						   ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
+						   //ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
+							Set_PWM_Channel_CH595_EN(0, i, EX_595_SET);//打开PRT
 							 g_Channelinfo[i].workMode = POWER_RUN_CHARGE;
 						}
 //		 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
@@ -159,16 +155,16 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
 
             if (g_Channelinfo[0].Cap_voltage >= (BOARD_OUT_VOLT * 0.90f))
             {
-                g_epwmHandle[0].High_MOS_Timer_TBPRD_MAX = APT_0_RRE_35KHZ;
-                gHandle_PID[0].v_up = (APT_0_RRE_35KHZ); //
-                gHandle_PID[0].v_max_out_value = gHandle_PID[0].v_up;
+//                g_epwmHandle[0].High_MOS_Timer_TBPRD_MAX = APT_0_RRE_35KHZ;
+//                gHandle_PID[0].v_up = (APT_0_RRE_35KHZ); //
+//                gHandle_PID[0].v_max_out_value = gHandle_PID[0].v_up;
 
-                DebugLED_LOW_LEVEL;
-                g_apt0.tmrInterrupt.tmrInterruptScale = 1;
-                USER_API_APT_SetTimerInterrupt(&g_apt0);
-                g_Handle_REC_Device.V_Ref_REC_Vaule = BOARD_OUT_VOLT;
-                g_Protect_handle[0].SR_Current = 5.0f;
-                g_Channelinfo[0].workMode = POWER_RUN_CHARGE;
+//                DebugLED_LOW_LEVEL;
+//                g_apt0.tmrInterrupt.tmrInterruptScale = 1;
+//                USER_API_APT_SetTimerInterrupt(&g_apt0);
+//                g_Handle_REC_Device.V_Ref_REC_Vaule = BOARD_OUT_VOLT;
+//                g_Protect_handle[0].SR_Current = 5.0f;
+//                g_Channelinfo[0].workMode = POWER_RUN_CHARGE;
 
                 // if (gHandle_PID[0].loop == I_LOOP)
                 //     gHandle_PID[0].v_err_sum = gHandle_PID[0].i_pid_out;
@@ -438,14 +434,14 @@ void TIMER0CallbackFunction(void *handle)
  **********************************************************************/
 void Debug_Loop(void)
 {
-//    DBG_PRINTF("\r\nworkMode= %d", g_Channelinfo[0].workMode);
-//    DBG_PRINTF("\r\nFAULT= 0x%X", g_Channelinfo[0].fault.all);
-//    DBG_PRINTF("\r\nSR_STA= 0x%d  LowFlag%d", g_epwmHandle[0].Low_MOS_STA, g_epwmHandle[0].Low_MOS_OpenFlag);
+    printf("\r\nworkMode= %d", g_Channelinfo[0].workMode);
+    printf("\r\nFAULT= 0x%X", g_Channelinfo[0].fault.all);
+    printf("\r\nSR_STA= 0x%d  LowFlag%d", g_epwmHandle[0].Low_MOS_STA, g_epwmHandle[0].Low_MOS_OpenFlag);
 
-//    DBG_PRINTF("\r\nloop=%d", gHandle_PID[0].loop);
-//    DBG_PRINTF("\r\nlBurstout=%f", gHandle_Burst_PID[0].v_pid_out);
+    printf("\r\nloop=%d", gHandle_PID[0].loop);
+    //printf("\r\nlBurstout=%f", gHandle_Burst_PID[0].v_pid_out);
 
-    // DBG_PRINTF("\r\nHigh_MOS_STA= 0x%d  High_MOS_OpenFlag=%d", g_epwmHandle[0].High_MOS_STA, g_epwmHandle[0].High_MOS_OpenFlag);
+    printf("\r\nHigh_MOS_STA= 0x%d  High_MOS_OpenFlag=%d", g_epwmHandle[0].High_MOS_STA, g_epwmHandle[0].High_MOS_OpenFlag);
 }
 
 

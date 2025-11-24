@@ -5,6 +5,9 @@
 
 #define EPWM_DUTY_MAX 99.99f
 
+
+
+
 volatile EPWM_Handle g_epwmHandle[EPWM_CH_NUM];
 
 volatile FAN_Handle gFAN_Handle[EPWM_CH_NUM];

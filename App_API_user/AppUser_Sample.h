@@ -7,16 +7,20 @@ typedef struct
 {
 
      float Cap_voltage; // 输出电容电压
+	   uint16_t Cap_voltage_ADC; // 输出电容ADC
 	
      float voltage_port;    // 端口电压	0.1mV
+		 uint16_t voltage_port_ADC; // 端口电压ADC
 	
      float voltage;    // 电池电压0.1mV
+		 uint16_t voltage_ADC; // 电池电压ADC
      float OVP_voltage; //
 
      float current;    // 电流 		0.1mA 平均
      float current_voltage; // 电流        0.1mA
      uint16_t current_ADC; // 电流        0.1mA
-
+     uint16_t current_DC_ADC; // 放电电流ADC
+	
      float power;              // 功率
      float res;                // 电阻
      float temp_channe;        // 温度通道0.1°C
@@ -34,6 +38,8 @@ typedef struct
 
      float Set_CV;    // 恒压值
      float Set_PreCV; // 恒压值
+		 
+	
 
 } ChannelInfo;
 

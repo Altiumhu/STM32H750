@@ -81,6 +81,10 @@ void Error_Handler(void);
 #define CD4052_A_GPIO_Port GPIOB
 #define CD4052_B_Pin GPIO_PIN_15
 #define CD4052_B_GPIO_Port GPIOB
+#define AD_VD_EN_Pin GPIO_PIN_9
+#define AD_VD_EN_GPIO_Port GPIOD
+#define AD_V_PORT_EN_Pin GPIO_PIN_10
+#define AD_V_PORT_EN_GPIO_Port GPIOD
 #define EXIO_595_LD_Pin GPIO_PIN_8
 #define EXIO_595_LD_GPIO_Port GPIOA
 #define EXIO_595_CLK_Pin GPIO_PIN_11
@@ -99,6 +103,8 @@ void Error_Handler(void);
 #define ADD5_GPIO_Port GPIOD
 #define ADD6_Pin GPIO_PIN_7
 #define ADD6_GPIO_Port GPIOD
+#define BUS_OVP_Pin GPIO_PIN_7
+#define BUS_OVP_GPIO_Port GPIOB
 #define UN_OVP_Pin GPIO_PIN_0
 #define UN_OVP_GPIO_Port GPIOE
 #define UN_OCP_Pin GPIO_PIN_1

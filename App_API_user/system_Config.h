@@ -35,7 +35,7 @@
 
 #define DBUG_EN                      1          //调试使能-----
 
-#define CLOOS_LOOP_MODE              0         //调试使能  0是开环  1是闭环
+#define CLOOS_LOOP_MODE              1         //调试使能  0是开环  1是闭环
 
 
 

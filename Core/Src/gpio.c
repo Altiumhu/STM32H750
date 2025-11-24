@@ -63,6 +63,9 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOB, CD4052_A_Pin|GPIO_PIN_13|CD4052_B_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOD, AD_VD_EN_Pin|AD_V_PORT_EN_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, EXIO_595_LD_Pin|EXIO_595_CLK_Pin|EXIO_595_DATA_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : LED_G_Pin UN_OCP_Pin */
@@ -108,6 +111,13 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : AD_VD_EN_Pin AD_V_PORT_EN_Pin */
+  GPIO_InitStruct.Pin = AD_VD_EN_Pin|AD_V_PORT_EN_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
   /*Configure GPIO pin : EXIO_595_LD_Pin */
   GPIO_InitStruct.Pin = EXIO_595_LD_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -130,11 +140,11 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PB7 */
-  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  /*Configure GPIO pin : BUS_OVP_Pin */
+  GPIO_InitStruct.Pin = BUS_OVP_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(BUS_OVP_GPIO_Port, &GPIO_InitStruct);
 
 }
 

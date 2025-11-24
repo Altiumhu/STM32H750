@@ -9,6 +9,180 @@ volatile ChannelInfo g_Channelinfo[BOARD_CHANNEL_NUM]; // 通道信息
 void AppUser_ChannelInfo_Debug(void);
 
 void ADC_Filter(void);
+
+
+void  GetADC_Driver_Result(void)
+{
+	static  uint16_t CD4052_Chnum =0;//
+	static  uint16_t Samp_ChnumTimer =0;//
+    // 启动转换前刷新Cache
+//    SCB_CleanDCache_by_Addr((uint32_t *)adc_values, sizeof(adc_values));
+
+    // 主循环中读取ADC值
+
+	  
+	switch(CD4052_Chnum)
+	{
+		case 0:
+			      Samp_ChnumTimer ++;
+		        if(Samp_ChnumTimer>=10)
+						{
+							CD4052_Chnum=1;
+							Samp_ChnumTimer =0;
+						}
+			      SetCD4052(CD4052_Chnum);
+						g_Channelinfo[0].voltage_ADC= adc1Result[0]; // 通道 1 电压ADC
+						g_Channelinfo[4].voltage_ADC= adc1Result[1]; // 通道 5 电压ADC
+						
+						g_Channelinfo[8].voltage_ADC= adc1Result[2]; // 通道 9 电压ADC
+						g_Channelinfo[12].voltage_ADC= adc1Result[3]; // 通道 13 电压ADC
+						
+						g_Channelinfo[0].current_ADC= adc1Result[4]; // 通道 1 电流ADC
+						g_Channelinfo[4].current_ADC= adc1Result[5]; // 通道 5 电流ADC
+						g_Channelinfo[8].current_ADC= adc1Result[6]; // 通道 9 电流ADC
+						g_Channelinfo[12].current_ADC= adc1Result[7]; // 通道 13 电流ADC
+						
+						g_Channelinfo[0].current_DC_ADC= adc1Result[8]; // 通道 1 电流ADC
+						g_Channelinfo[4].current_DC_ADC= adc1Result[9]; // 通道 5 电流ADC
+						g_Channelinfo[8].current_DC_ADC= adc1Result[10]; // 通道 9 电流ADC
+						g_Channelinfo[12].current_DC_ADC= adc1Result[11]; // 通道 13 电流ADC	
+						
+						//处理电容端电压和端口电压
+						if(g_Channelinfo[0].workMode==POWER_PRECHARGE ||g_Channelinfo[0].workMode == POWER_INIT )
+						{
+						  Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);//采集电容电压
+						  g_Channelinfo[0].Cap_voltage_ADC= adc1Result[12]; // 通道 1 电容ADC
+						  g_Channelinfo[4].Cap_voltage_ADC= adc1Result[13]; // 通道 5 电容ADC		
+						}
+						else if( g_Channelinfo[0].workMode == POWER_FAULT||POWER_RUN_CHARGE == g_Channelinfo[0].workMode )
+						{
+							Set_Sample_Channel_VPortGPIO(AD_V_PORT);//采集电容电压
+						  g_Channelinfo[0].voltage_port_ADC = adc1Result[12]; // 通道 1 电流ADC
+						  g_Channelinfo[4].voltage_port_ADC = adc1Result[13]; // 通道 5 电流ADC	
+						}
+
+
+						
+			     break;
+	
+		case 1:
+			      Samp_ChnumTimer ++;
+		        if(Samp_ChnumTimer>=10)
+						{
+							CD4052_Chnum=2;
+							Samp_ChnumTimer =0;
+						}
+			      SetCD4052(CD4052_Chnum);
+						g_Channelinfo[1].voltage_ADC= adc1Result[0]; // 通道 2 电压ADC
+						g_Channelinfo[5].voltage_ADC= adc1Result[1]; // 通道 6 电压ADC						
+						g_Channelinfo[9].voltage_ADC= adc1Result[2]; // 通道 10 电压ADC
+						g_Channelinfo[13].voltage_ADC= adc1Result[3]; // 通道 14 电压ADC
+						
+						g_Channelinfo[1].current_ADC= adc1Result[4]; // 通道 2 电流ADC
+						g_Channelinfo[5].current_ADC= adc1Result[5]; // 通道 6 电流ADC
+						g_Channelinfo[9].current_ADC= adc1Result[6]; // 通道 10 电流ADC
+						g_Channelinfo[13].current_ADC= adc1Result[7]; // 通道 14 电流ADC
+						
+						g_Channelinfo[1].current_DC_ADC= adc1Result[8]; // 通道 2 电流ADC
+						g_Channelinfo[5].current_DC_ADC= adc1Result[9]; // 通道 6 电流ADC
+						g_Channelinfo[9].current_DC_ADC= adc1Result[10]; // 通道 10 电流ADC
+						g_Channelinfo[13].current_DC_ADC= adc1Result[11]; // 通道 14 电流ADC	
+						//处理电容端电压和端口电压
+						if(g_Channelinfo[0].workMode==POWER_PRECHARGE ||g_Channelinfo[0].workMode == POWER_INIT )
+						{
+						  Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);//采集电容电压
+						  g_Channelinfo[1].Cap_voltage_ADC= adc1Result[12]; // 通道 2 电容ADC
+						  g_Channelinfo[5].Cap_voltage_ADC= adc1Result[13]; // 通道 6 电容ADC		
+						}
+						else if( g_Channelinfo[0].workMode == POWER_FAULT||POWER_RUN_CHARGE == g_Channelinfo[0].workMode )
+						{
+							Set_Sample_Channel_VPortGPIO(AD_V_PORT);//采集端口电压
+						  g_Channelinfo[1].voltage_port_ADC = adc1Result[12]; // 通道 2 电流ADC
+						  g_Channelinfo[5].voltage_port_ADC = adc1Result[13]; // 通道 6 电流ADC	
+						}									
+			     break;	
+		case 2:
+			      Samp_ChnumTimer ++;
+		        if(Samp_ChnumTimer>=10)
+						{
+							CD4052_Chnum=3;
+							Samp_ChnumTimer =0;
+						}
+			      SetCD4052(CD4052_Chnum);
+						g_Channelinfo[2].voltage_ADC= adc1Result[0]; // 通道 3 电压ADC
+						g_Channelinfo[6].voltage_ADC= adc1Result[1]; // 通道 7 电压ADC						
+						g_Channelinfo[9].voltage_ADC= adc1Result[2]; // 通道 11 电压ADC
+						g_Channelinfo[14].voltage_ADC= adc1Result[3]; // 通道 15 电压ADC
+						
+						g_Channelinfo[2].current_ADC= adc1Result[4]; // 通道 3 电流ADC
+						g_Channelinfo[6].current_ADC= adc1Result[5]; // 通道 7 电流ADC
+						g_Channelinfo[9].current_ADC= adc1Result[6]; // 通道 11 电流ADC
+						g_Channelinfo[14].current_ADC= adc1Result[7]; // 通道 15 电流ADC
+						
+						g_Channelinfo[2].current_DC_ADC= adc1Result[8]; // 通道3 电流ADC
+						g_Channelinfo[6].current_DC_ADC= adc1Result[9]; // 通道 7 电流ADC
+						g_Channelinfo[9].current_DC_ADC= adc1Result[10]; // 通道 11 电流ADC
+						g_Channelinfo[14].current_DC_ADC= adc1Result[11]; // 通道 15 电流ADC	
+						//处理电容端电压和端口电压
+						if(g_Channelinfo[0].workMode==POWER_PRECHARGE ||g_Channelinfo[0].workMode == POWER_INIT )
+						{
+						  Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);//采集电容电压
+						  g_Channelinfo[1].Cap_voltage_ADC= adc1Result[12]; // 通道 2 电容ADC
+						  g_Channelinfo[5].Cap_voltage_ADC= adc1Result[13]; // 通道 6 电容ADC		
+						}
+						else if( g_Channelinfo[0].workMode == POWER_FAULT||POWER_RUN_CHARGE == g_Channelinfo[0].workMode )
+						{
+							Set_Sample_Channel_VPortGPIO(AD_V_PORT);//采集端口电压
+						  g_Channelinfo[1].voltage_port_ADC = adc1Result[12]; // 通道 2 电流ADC
+						  g_Channelinfo[5].voltage_port_ADC = adc1Result[13]; // 通道 6 电流ADC	
+						}									
+			     break;	
+		case 3:
+			      Samp_ChnumTimer ++;
+		        if(Samp_ChnumTimer>=10)
+						{
+							CD4052_Chnum=1;
+							Samp_ChnumTimer =0;
+						}
+			      SetCD4052(CD4052_Chnum);
+						g_Channelinfo[3].voltage_ADC= adc1Result[0]; // 通道 4 电压ADC
+						g_Channelinfo[7].voltage_ADC= adc1Result[1]; // 通道 8 电压ADC						
+						g_Channelinfo[11].voltage_ADC= adc1Result[2]; // 通道 12 电压ADC
+						g_Channelinfo[15].voltage_ADC= adc1Result[3]; // 通道 16 电压ADC
+						
+						g_Channelinfo[3].current_ADC= adc1Result[4]; // 通道 4 电流ADC
+						g_Channelinfo[7].current_ADC= adc1Result[5]; // 通道 8 电流ADC
+						g_Channelinfo[11].current_ADC= adc1Result[6]; // 通道 12 电流ADC
+						g_Channelinfo[15].current_ADC= adc1Result[7]; // 通道 16 电流ADC
+						
+						g_Channelinfo[3].current_DC_ADC= adc1Result[8]; // 通道 4 电流ADC
+						g_Channelinfo[7].current_DC_ADC= adc1Result[9]; // 通道 8 电流ADC
+						g_Channelinfo[11].current_DC_ADC= adc1Result[10]; // 通道 12 电流ADC
+						g_Channelinfo[15].current_DC_ADC= adc1Result[11]; // 通道 16 电流ADC	
+																	
+			     break;							
+	
+	}
+	
+    adc1Result[0] = adc_values[0]; // PA0 
+    adc1Result[1] = adc_values[1]; // PA1
+    adc1Result[2] = adc_values[2]; // PA2
+    adc1Result[3] = adc_values[3]; // PA3
+    adc1Result[4] = adc_values[4]; // PA4
+    adc1Result[5] = adc_values[5]; // PA5
+    adc1Result[6] = adc_values[6]; // PA6
+    adc1Result[7] = adc_values[7]; // PA7
+    adc1Result[8] = adc_values[8]; // PC0
+
+    adc1Result[9] = adc_values[9]; // PA5
+    adc1Result[10] = adc_values[10]; // PA6
+    adc1Result[11] = adc_values[11]; // PA7
+    adc1Result[12] = adc_values[12]; // PC0
+    adc1Result[13] = adc_values[13]; // PC0
+    // 读取后使Cache无效
+//    SCB_InvalidateDCache_by_Addr((uint32_t *)adc_values, sizeof(adc_values));
+}
+
 /**********************************************************************
  * Function:      ADC_Filter
  * Description:   ADC滤波

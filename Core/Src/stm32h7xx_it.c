@@ -90,7 +90,17 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-
+	 printf( "HardFault at 0x%08X", SCB->BFAR);
+	
+	   uint32_t addr = SCB->BFAR;
+    if (addr < 0x20000000) 
+        printf(" HardFault_Handler :Flash access error\n");
+    else if (addr < 0x40000000) 
+        printf("HardFault_Handler :SRAM access error\n");
+    else if (addr < 0x60000000) 
+        printf("HardFault_Handler:Peripheral access error\n");
+    else
+        printf("External memory error\n");
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
@@ -106,6 +116,10 @@ void MemManage_Handler(void)
 {
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
 
+    /* if Memory Manage exception occurs, go to infinite loop */
+    while (1)
+    {
+    }
   /* USER CODE END MemoryManagement_IRQn 0 */
   while (1)
   {

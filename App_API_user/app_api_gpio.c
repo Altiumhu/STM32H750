@@ -9,7 +9,8 @@ typedef void (*GPIO_Callback)(GPIO_TypeDef *, uint16_t);
 void GPIO_Array_Init(GPIO_Config *config);
 
 // MCU_IO_OUT 引脚配置数组
-GPIO_Config MCU_IO_OUT[MCU_IO_OUT_MAX] = {
+GPIO_Config MCU_IO_OUT[MCU_IO_OUT_MAX] =
+{
 
     {GPIOB, CD4052_A_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT1
     {GPIOB, CD4052_B_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT2
@@ -149,11 +150,29 @@ void Get_FAN_GPIO(void)
 
 void Debug_GPIO(void)
 {
+
 }
+
+
+//检测输入过压保护
+void Sys_Power_INPUT_OVP(void)
+{
+    uint8_t ch;
+
+    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7) == 1)
+    {
+        for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
+            g_Channelinfo[ch].fault.bit.H_OVP = 1;
+    }
+
+}
+
+
+
 
 void Sys_Run_Led(void)
 {
-    HAL_GPIO_TogglePin(GPIOC, SYS_LED1_Pin|SYS_LED2_Pin);
+    HAL_GPIO_TogglePin(GPIOC, SYS_LED1_Pin | SYS_LED2_Pin);
 }
 #if 0
 // 设置GPIO控制和气缸控制
@@ -203,7 +222,7 @@ void cmd_led_control(int argc, char **argv)
     }
 
     // 实现LED控制逻辑...
-   // LOG_INFO(LOG_MODULE_PERIPH, "LED command: %s %s", argv[1], argc > 2 ? argv[2] : "all");
+    // LOG_INFO(LOG_MODULE_PERIPH, "LED command: %s %s", argv[1], argc > 2 ? argv[2] : "all");
 }
 
 // 设置指定位为1
@@ -254,7 +273,7 @@ void Read_GPIO_vTask(void)
     g_Master_Hand.IO_INPUT_Data[1] = 0x0;
     g_Master_Hand.IO_INPUT_Data[2] = 0x0;
     g_Master_Hand.IO_INPUT_Data[3] = IO_INPUbit8_15 << 8 | IO_INPUbit0_7; // 读取传感器输入IO数据
-                                                                          // printf("\r\n g_Master_Hand.IO_INPUT_Data[3]=  %X", g_Master_Hand.IO_INPUT_Data[3]);
+    // printf("\r\n g_Master_Hand.IO_INPUT_Data[3]=  %X", g_Master_Hand.IO_INPUT_Data[3]);
 
 //    if (GetBit(g_Master_Hand.IO_INPUT_Data[3], 12) == 0) // 手动模式按键检测 ---IO  JP_IN13
 //    {
@@ -319,14 +338,14 @@ void SetParGPIO(uint8_t IO)
 // 设置CD4052
 void SetCD4052(uint8_t IO)
 {
-      switch (IO)
+    switch (IO)
     {
     case 0: //
         HAL_GPIO_WritePin(MCU_IO_OUT[0].port, MCU_IO_OUT[0].pin, GPIO_PIN_RESET);   //  设置低电平
         HAL_GPIO_WritePin(MCU_IO_OUT[1].port, MCU_IO_OUT[1].pin, GPIO_PIN_RESET); // 设置低电平
         break;
 
-    case 1: // 
+    case 1: //
         HAL_GPIO_WritePin(MCU_IO_OUT[0].port, MCU_IO_OUT[0].pin, GPIO_PIN_SET);   //  设置高电平
         HAL_GPIO_WritePin(MCU_IO_OUT[1].port, MCU_IO_OUT[1].pin, GPIO_PIN_RESET); // 设置低电平
         break;
@@ -340,9 +359,86 @@ void SetCD4052(uint8_t IO)
         HAL_GPIO_WritePin(MCU_IO_OUT[0].port, MCU_IO_OUT[0].pin, GPIO_PIN_SET);   //  设置高电平
         HAL_GPIO_WritePin(MCU_IO_OUT[1].port, MCU_IO_OUT[1].pin, GPIO_PIN_SET); // 设置高电平
         break;
-
-
     }
-	 
+}
+
+//设置采集 电容电压还是端口电压
+void Set_Sample_Channel_VPortGPIO(V_PORT ch)
+{
+
+    switch (ch)
+    {
+    case AD_V_CAP_EN:
+		     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_SET); //PD10
+         HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_RESET); //PD9
+        break;
+    case AD_V_PORT:
+		     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10 ,  GPIO_PIN_RESET); //PD10
+         HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_SET); //PD9
+        break;
+		}
 
 }
+
+void Set_PWM_Channel_CH595_EN(uint32_t chip, uint16_t ch, uint32_t value)
+{
+
+    switch (ch)
+    {
+    case 0:
+        ex_595_write(chip, EX_595_PIN_0, value);
+
+        break;
+    case 1:
+        ex_595_write(chip, EX_595_PIN_1, value);
+        break;
+    case 2:
+        ex_595_write(chip, EX_595_PIN_2, value);
+        break;
+    case 3:
+        ex_595_write(chip, EX_595_PIN_3, value);
+        break;
+    case 4:
+        ex_595_write(chip, EX_595_PIN_4, value);
+        break;
+    case 5:
+        ex_595_write(chip, EX_595_PIN_5, value);
+        break;
+    case 6:
+        ex_595_write(chip, EX_595_PIN_6, value);
+        break;
+    case 7:
+        ex_595_write(chip, EX_595_PIN_7, value);
+        break;
+    case 8:
+        ex_595_write(chip, EX_595_PIN_0, value);
+        break;
+    case 9:
+        ex_595_write(chip, EX_595_PIN_1, value);
+        break;
+    case 10:
+        ex_595_write(chip, EX_595_PIN_2, value);
+        break;
+    case 11:
+        ex_595_write(chip, EX_595_PIN_3, value);
+        break;
+    case 12:
+        ex_595_write(chip, EX_595_PIN_4, value);
+        break;
+    case 13:
+        ex_595_write(chip, EX_595_PIN_5, value);
+        break;
+    case 14:
+        ex_595_write(chip, EX_595_PIN_6, value);
+        break;
+    case 15:
+        ex_595_write(chip, EX_595_PIN_7, value);
+        break;
+    case 16:
+        break;
+
+    }
+
+
+}
+

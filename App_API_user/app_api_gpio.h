@@ -26,6 +26,14 @@ typedef struct
 
 } Structural_Smoke;
 
+// 电源闭环控制控制状态机状态定义枚举
+typedef enum V_PORT
+{
+    AD_V_CAP_EN = 0U, // 电容滤波电压
+	  AD_V_PORT,//端口电压
+
+} V_PORT;
+
 
 
 extern Structural_Smoke g_Structural_Smoke;
@@ -66,8 +74,14 @@ extern uint32_t flip_bit(uint32_t value, int position);
 
 extern uint8_t Get_INPUT_GPIO_Bit(uint8_t IOtype);
 
+extern void Sys_Power_INPUT_OVP(void);
+
 extern void SetCD4052(uint8_t IO);
 
+
+void Set_PWM_Channel_CH595_EN(uint32_t chip, uint16_t ch, uint32_t value);
+
+void Set_Sample_Channel_VPortGPIO(V_PORT ch);
 
 
 
