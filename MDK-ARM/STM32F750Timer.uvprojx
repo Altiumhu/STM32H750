@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_PWR_LDO_SUPPLY,USE_HAL_DRIVER,STM32H750xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../CAN_large_data;../Aapp_Diver;../Aapp_Diver/EXIO;../SYSTEM/sys;../SYSTEM/delay;../App_API_user;../CommandLineInterface;../Modbus</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../CAN_large_data;../Aapp_Diver;../Aapp_Diver/EXIO;../SYSTEM/sys;../SYSTEM/delay;../App_API_user;../CommandLineInterface;../Modbus;..\Shell</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1583,41 +1583,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>CommandLineInterface</GroupName>
-          <Files>
-            <File>
-              <FileName>cli_cfg.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CommandLineInterface\cli_cfg.c</FilePath>
-            </File>
-            <File>
-              <FileName>cli_cfg.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CommandLineInterface\cli_cfg.h</FilePath>
-            </File>
-            <File>
-              <FileName>cli_system.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CommandLineInterface\cli_system.c</FilePath>
-            </File>
-            <File>
-              <FileName>cli_system.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CommandLineInterface\cli_system.h</FilePath>
-            </File>
-            <File>
-              <FileName>log_system.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CommandLineInterface\log_system.c</FilePath>
-            </File>
-            <File>
-              <FileName>log_system.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CommandLineInterface\log_system.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Modbus_Master</GroupName>
           <Files>
             <File>
@@ -1659,6 +1624,56 @@
               <FileName>TEst_main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Modbus\TEst_main.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Shell</GroupName>
+          <Files>
+            <File>
+              <FileName>shell.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Shell\shell.c</FilePath>
+            </File>
+            <File>
+              <FileName>shell.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Shell\shell.h</FilePath>
+            </File>
+            <File>
+              <FileName>shell_cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Shell\shell_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>shell_cmd_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Shell\shell_cmd_list.c</FilePath>
+            </File>
+            <File>
+              <FileName>shell_companion.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Shell\shell_companion.c</FilePath>
+            </File>
+            <File>
+              <FileName>shell_ext.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Shell\shell_ext.c</FilePath>
+            </File>
+            <File>
+              <FileName>shell_ext.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Shell\shell_ext.h</FilePath>
+            </File>
+            <File>
+              <FileName>shell_port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Shell\shell_port.c</FilePath>
+            </File>
+            <File>
+              <FileName>shell_port.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Shell\shell_port.h</FilePath>
             </File>
           </Files>
         </Group>

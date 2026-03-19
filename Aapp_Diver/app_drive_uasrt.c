@@ -68,14 +68,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	if (huart->Instance == USART1)
 	{
 		// 处理接收到的数据（示例：回传数据）
-		 HAL_UART_Transmit(&huart1, huart1_rx_buffer, 1, 100);
-    UART_RxByteHandler(huart1_rx_buffer[0]);
-		cli_process_char(huart1_rx_buffer[0]);
+		
+//         UART_RxByteHandler(huart1_rx_buffer[0]);
+   
 		///AppUser_ReceivingDataInterface(rx_buffer[0]);
 
+		 HAL_UART_Transmit(&huart1, huart1_rx_buffer, 1, 100);
 		// 重新使能中断以接收下一字节
 		HAL_UART_Receive_IT(&huart1, huart1_rx_buffer, 1);
-	
+		
+//	  shellHandler(&shell, huart1_rx_buffer[0]);
 
 		//        HAL_UART_Transmit(&huart1, &rx_data, 1, HAL_MAX_DELAY);
 		//        HAL_UART_Receive_IT(&huart1, &rx_data, 1);
@@ -95,7 +97,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 	else if (huart->Instance == UART7)
 	{
-		 HAL_UART_Transmit(&huart7, huart7_rx_buffer, 1, 100);
+		// HAL_UART_Transmit(&huart7, huart7_rx_buffer, 1, 100);
 		HAL_UART_Receive_IT(&huart7, huart7_rx_buffer, 1);
 		AppUser_ReceivingDataInterface(huart7_rx_buffer[0]);
 

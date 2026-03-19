@@ -158,9 +158,6 @@ int main(void)
 
   AppUser_Device_InitData();
 
-  log_init(&huart1, LOG_OUTPUT_UART); // 初始化日志系统 (使用UART1输出)
-  cli_init(&huart1);                  // 初始化CLI系统
-  User_CLI_Cmd();                     // 注册命令
 
   // 校准ADC
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
@@ -184,7 +181,8 @@ int main(void)
   LargeDataTransfer_SetReceivedCallback(OnDataReceived);
   LargeDataTransfer_SetFailedCallback(OnTransferFailed);
 
-
+    // 初始化用户shell
+    userShellInit();
 #endif
 
  	App_Drive_InitTimer_7();                  // 100ms

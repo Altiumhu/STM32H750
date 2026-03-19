@@ -165,9 +165,6 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 
 //#include "./MALLOC/malloc.h"
 
-#include "log_system.h"
-#include "cli_system.h"
-#include "cli_cfg.h"
 
 
 //#include "large_data_transfer.h"
@@ -179,7 +176,9 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 #include "modbus_config.h"
 #include "modbus_master.h"
 
-
+#include "shell.h"
+#include "shell_port.h"
+#include "shell_cfg.h"
 
 #define  fmin(a,b) ((a)<(b)?(a):(b))
 #define  fmax(a,b) ((a)>(b)?(a):(b))
