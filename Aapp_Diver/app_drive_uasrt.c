@@ -95,9 +95,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 	else if (huart->Instance == UART7)
 	{
-		 HAL_UART_Transmit(&huart7, huart7_rx_buffer, 1, 0);
-		AppUser_ReceivingDataInterface(huart7_rx_buffer[0]);
+		 HAL_UART_Transmit(&huart7, huart7_rx_buffer, 1, 100);
 		HAL_UART_Receive_IT(&huart7, huart7_rx_buffer, 1);
+		AppUser_ReceivingDataInterface(huart7_rx_buffer[0]);
+
 	}
 }
 
