@@ -407,7 +407,7 @@ static INT32S _Rs485ProtocolParse(const INT8U data)
 					if (_g485ProtocolCb_Modbus != NULL)
 					{
 					
-						//printf("\r\n ok cmd\r\n");
+						printf("\r\n ok cmd\r\n");
 						//  printf("\r\n 调用 AppUser_ModBus_RTU_CmdAnalys函数 \r\n ");
 						_g485ProtocolCb_Modbus(&_gRecvCtrl.protocol); // 调用 AppUser_ModBus_RTU_CmdAnalys函数
 					}

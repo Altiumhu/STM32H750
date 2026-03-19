@@ -256,7 +256,7 @@ void Debug_PWM(void)
 	__HAL_TIM_SET_COMPARE (&htim12, TIM_CHANNEL_1 , 4000);
 	for(channel =0;channel<16;channel++)
 	{
-	   
+	   pwm_start(channel,0);
 	}
 
 

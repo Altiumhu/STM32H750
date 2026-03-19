@@ -75,8 +75,6 @@ void debug_show_en(uint16_t en)
     }
 }
 
-
-
 void debug_show(void)
 {
     static uint32_t poll_time = 0;
@@ -84,11 +82,22 @@ void debug_show(void)
         return;
 
     printf("\r\n********第%d次****************\r\n", poll_time++);
-
 }
 extern void CAN1_Send_TEST(void);
 
 extern void UserFlash_WriteUserData(void);
+
+void debug_show_workMode(void)
+{
+    uint32_t channel;
+
+    for (channel = 0; channel < 16; channel++)
+    {
+        printf("\r\n ch=[%d] workMode=%d ",channel, g_Channelinfo[channel].workMode);
+        printf(" ch=[%d] voltage=%f current=%f Cap_voltage=%f\r\n",channel,  g_Channelinfo[channel].voltage ,g_Channelinfo[channel].current,g_Channelinfo[channel].Cap_voltage);
+        printf(" ch=[%d] fault=0x%X \r\n",channel, g_Channelinfo[channel].fault.all);
+    }
+}
 void AppDebug_vTask(void)
 {
     static uint32_t poll_time = 0;
@@ -97,10 +106,7 @@ void AppDebug_vTask(void)
         return;
 
     printf("\r\nDebug Run=%d\r\n", poll_time++);
-		
-		printf("\r\n workMode=%d \r\n",   g_Channelinfo[0].workMode );
-		printf("\r\n fault=0x%X \r\n",   	 g_Channelinfo[0].fault.all );
-	
+    debug_show_workMode();//显示故障和运行模式
 
 //		
 //		 ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
