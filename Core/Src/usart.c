@@ -341,7 +341,8 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 *******************************************************************************/
 void USART1_Send(uint8_t *buff, uint16_t Size)
 {
-	HAL_UART_Transmit_IT(&huart1, (uint8_t*)buff, Size); 
+    // 使用阻塞模式发送，带超时保护，避免数据丢失
+	HAL_UART_Transmit(&huart1, (uint8_t*)buff, Size, 1000); 
 }
 
 //�ض���fputc����,�ض�����ʹ��printf����

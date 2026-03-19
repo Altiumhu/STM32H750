@@ -38,6 +38,7 @@ extern void USART1_Send(uint8_t *buff, uint16_t Size);
  */
 short userShellWrite(char *data, unsigned short len)
 {
+    short count = 0;
     
 	while(len--)
 	{
@@ -46,49 +47,31 @@ short userShellWrite(char *data, unsigned short len)
 		//HAL_UART_Transmit(&huart1, data, 1, 100);
 		
 		USART1_Send(*data++,1);
-
+        count++;
 	}
     
  //   serialTransmit(&debugSerial, (uint8_t *)data, len, 0x1FF);
     
     
-    return len;
+    return count;  // 返回实际发送的字节数
 }
 
 extern uint8_t huart1_rx_buffer[1];		   // 单字节接收缓冲区
+
 /**
  * @brief 用户shell读
  * 
  * @param data 数据
  * @param len 数据长度
  * 
- * @return short 实际读取到
+ * @return short 实际读取到的数据长度
+ * @note 由于数据接收在中断回调中直接处理，此函数返回0
  */
 short userShellRead(char *data, unsigned short len)
 {
-//    return serialReceive(&debugSerial, (uint8_t *)data, len, 0);
-    
-#if 0    
-   int i = 0;
-	short lenTmp = 0;
-	for(i=0; i<len; i++)
-	{
-		while(RESET == usart_flag_get(USART2, USART_FLAG_RBNE));	
-		*data = (char)(usart_data_receive(USART2)); 
-		//printf("%c", *data);
-		data++;
-		lenTmp++;		
-	}
-	
-#else
-	  
-	     HAL_UART_Receive_IT(&huart1, huart1_rx_buffer, 1);
-	*data = huart1_rx_buffer[0]; 
-	
-#endif
-	
-	return 1;	
-
+    // 数据接收已在HAL_UART_RxCpltCallback中通过shellHandler处理
+    // 此函数不需要实际读取，直接返回0
+    return 0;
 }
 
 /**

@@ -2,6 +2,7 @@
 
 #include "head.h"
 #include "app_drive_uasrt.h"
+#include "shell_debug.h"
 
 uint8_t huart1_rx_buffer[1];		   // 单字节接收缓冲区
 uint8_t huart3_rx_buffer[1];   // 单字节接收缓冲区
@@ -25,31 +26,16 @@ __attribute__((aligned(32))) uint8_t txData[] = "huart1 DMA TEST\r\n";
  **********************************************************************/
 void App_Drive_UASRT_Init(void)
 {
+    // 初始化调试Shell
+    Shell_Init();
 
+    // 启动串口接收中断
+    HAL_UART_Receive_IT(&huart1, huart1_rx_buffer, 1);
+    HAL_UART_Receive_IT(&huart7, huart7_rx_buffer, 1);
 
-
-// HAL_UART_Receive_IT(&huart5, &rx_data, 1);
-	char msg[] = "Hello UART1!\r\n";
+    // 打印欢迎信息
+	char msg[] = "UART1 Ready for Debug Shell!\r\n";
 	HAL_UART_Transmit(&huart1, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
-
-//	char huart3msg[] = "Hello UART3!\r\n";
-//	HAL_UART_Transmit(&huart3, (uint8_t *)huart3msg, strlen(huart3msg), HAL_MAX_DELAY);
-
-	char hlpuart1msg[] = "Hello huart7\r\n";
-	HAL_UART_Transmit(&huart7, (uint8_t *)hlpuart1msg, strlen(hlpuart1msg), HAL_MAX_DELAY);
-
-	printf("\r\n STM32F750=%f", votlag);
-//	SCB_CleanDCache_by_Addr((uint32_t *)txData, sizeof(txData));
-
-//	HAL_UART_Transmit_DMA(&huart1, txData, sizeof(txData) - 1);
-
-//	HAL_UART_Transmit_DMA(&huart7, txData, sizeof(txData) - 1);
-
-
-	HAL_UART_Receive_IT(&huart1, huart1_rx_buffer, 1); // 启动串口接收中断
-
-	//HAL_UART_Receive_IT(&huart3, huart3_rx_buffer, 1); // 启动串口接收中断
-	HAL_UART_Receive_IT(&huart7, huart7_rx_buffer, 1); // 启动串口接收中断
 }
 /**********************************************************************
  * Function:      HAL_UART_RxCpltCallback
@@ -63,24 +49,20 @@ void App_Drive_UASRT_Init(void)
  * 2022-05-31      V1.0        Hu Weiping
  **********************************************************************/
 extern void UART_RxByteHandler(uint8_t received_byte);
+
+// Shell相关声明
+extern void shellHandler(Shell *shell, char data);
+extern Shell shell;
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if (huart->Instance == USART1)
 	{
-		// 处理接收到的数据（示例：回传数据）
-		
-//         UART_RxByteHandler(huart1_rx_buffer[0]);
-   
-		///AppUser_ReceivingDataInterface(rx_buffer[0]);
+		// 处理接收到的数据 - 调用调试Shell
+		Shell_UART_RxHandler(huart1_rx_buffer[0]);
 
-		 HAL_UART_Transmit(&huart1, huart1_rx_buffer, 1, 100);
 		// 重新使能中断以接收下一字节
 		HAL_UART_Receive_IT(&huart1, huart1_rx_buffer, 1);
-		
-//	  shellHandler(&shell, huart1_rx_buffer[0]);
-
-		//        HAL_UART_Transmit(&huart1, &rx_data, 1, HAL_MAX_DELAY);
-		//        HAL_UART_Receive_IT(&huart1, &rx_data, 1);
 	}
 	else if (huart->Instance == USART3)
 	{

@@ -181,8 +181,8 @@ int main(void)
   LargeDataTransfer_SetReceivedCallback(OnDataReceived);
   LargeDataTransfer_SetFailedCallback(OnTransferFailed);
 
-    // 初始化用户shell
-    userShellInit();
+//    // 初始化用户shell
+//    userShellInit();
 #endif
 
  	App_Drive_InitTimer_7();                  // 100ms
