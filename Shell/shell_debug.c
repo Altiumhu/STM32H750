@@ -1,7 +1,7 @@
 /**
  * @file shell_debug.c
  * @brief 嵌入式Shell调试交互程序
- * @author  Hu Weiping
+ * @author  胡伟平
  * @date 2026-03-19
  */
 
