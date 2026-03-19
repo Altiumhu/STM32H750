@@ -264,22 +264,25 @@ void Debug_PWM(void)
 }
 
 void shell_Debug_PWM(int argc, char *argv[])
-{
-	uint32_t channel;
-	channel = argc ;
+{ 
+	int num [16];
+	int channel,i;
 	
+    if (argc < 2) {
+        printf("Usage: 输入非法指令\r\n");
+        return;
+    }
+
+    // 参数个数（不含命令本身）
+   int num_params = argc - 1;
+    // 字符串转整型
+    num[0] = atoi(argv[1]);
+    num[1] = atoi(argv[2]);
 	
-	printf("\r\n channel=%d   ",	channel);
+	  printf("\r\n 启动pwm=%d %d  ",	num[0],num[1]);
 	
-	 HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1);
-	__HAL_TIM_SET_COMPARE (&htim12, TIM_CHANNEL_1 , 4000);
-	for(channel =0;channel<16;channel++)
-	{
-	   pwm_start(channel,0);
-	}
-
-
-
+	  pwm_start( num[0],0);
+	
 }
 
 

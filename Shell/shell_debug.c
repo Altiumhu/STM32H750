@@ -37,6 +37,11 @@ static char history[SHELL_MAX_HISTORY][SHELL_MAX_CMD_LEN];
 static uint8_t history_count = 0;
 static uint8_t history_index = 0;
 
+// 转义序列处理
+static char esc_buffer[8];
+static uint8_t esc_count = 0;
+static uint8_t in_escape = 0;
+
 /* ============================================
  * 命令处理函数声明
  * ============================================ */
@@ -50,6 +55,8 @@ static void cmd_clear(int argc, char *argv[]);
 static void cmd_info(int argc, char *argv[]);
 
 extern void shell_Debug_PWM(int argc, char *argv[]);
+
+static void cmd_myfunc(int argc, char *argv[]);
 /* ============================================
  * 命令表
  * ============================================ */
@@ -64,6 +71,7 @@ static const ShellCommand_t commands[] = {
     {"info",   "显示系统信息",          cmd_info},
 
     {"pwm",   "启动PWM",          shell_Debug_PWM},
+    {"mycmd",  "我的命令",        cmd_myfunc},  // 添加新命令
     {NULL, NULL, NULL}  // 结束标志
 };
 
@@ -286,11 +294,96 @@ static void cmd_info(int argc, char *argv[])
     Shell_SendString("Build: "__DATE__" "__TIME__"\r\n");
 }
 
+static void cmd_myfunc(int argc, char *argv[])
+{
+   // 参数个数（不含命令本身）
+    int num_params = argc - 1;
+    
+    printf("\r\n 参数个数=%d", num_params);  // 会打印 1
+    printf("\r\n 第一个参数=%s", argv[1]);   // 会打印 0
+    
+    Shell_SendString("这是我的自定义命令！\r\n");}
+/* ============================================
+ * 显示历史命令
+ * ============================================ */
+static void show_history(uint8_t direction)
+{
+    if (history_count == 0) {
+        return;
+    }
+    
+    if (direction == 1)  // 上键 - 上一条
+    {
+        if (history_index < history_count) {
+            history_index++;
+        }
+    }
+    else  // 下键 - 下一条
+    {
+        if (history_index > 0) {
+            history_index--;
+        }
+    }
+    
+    // 清除当前行
+    while (rx_index > 0) {
+        Shell_SendString("\b \b");
+        rx_index--;
+    }
+    
+    // 显示历史命令
+    uint8_t idx = history_count - history_index;
+    if (idx > 0 && idx <= history_count) {
+        strcpy(rx_buffer, history[idx - 1]);
+        rx_index = strlen(rx_buffer);
+        Shell_SendString(rx_buffer);
+    }
+}
+
 /* ============================================
  * 字符处理
  * ============================================ */
 void Shell_ProcessChar(char c)
 {
+    // 处理转义序列 (上下键)
+    if (in_escape) {
+        esc_buffer[esc_count++] = c;
+        
+        // 检查是否完成转义序列
+        if (esc_count >= 2) {
+            if (esc_buffer[0] == '[') {
+                if (esc_count == 2) {
+                    // 可能是方向键: [A (上), [B (下), [C (右), [D (左)
+                    if (c >= 'A' && c <= 'D') {
+                        // 完成转义序列
+                        in_escape = 0;
+                        esc_count = 0;
+                        
+                        if (c == 'A') {  // 上键
+                            show_history(1);
+                            return;
+                        }
+                        else if (c == 'B') {  // 下键
+                            show_history(0);
+                            return;
+                        }
+                    }
+                }
+            }
+            // 无效转义序列，重置
+            in_escape = 0;
+            esc_count = 0;
+        }
+        return;
+    }
+    
+    // 检测转义序列开始 (ESC = 0x1B)
+    if (c == 0x1B) {
+        in_escape = 1;
+        esc_count = 0;
+        return;
+    }
+    
     // 处理换行
     if (c == '\r' || c == '\n') {
         Shell_SendString("\r\n");
@@ -303,6 +396,7 @@ void Shell_ProcessChar(char c)
         }
         
         rx_index = 0;
+        history_index = 0;  // 重置历史索引
         Shell_PrintPrompt();
         return;
     }
@@ -331,6 +425,8 @@ void Shell_Init(void)
     rx_index = 0;
     history_count = 0;
     history_index = 0;
+    in_escape = 0;
+    esc_count = 0;
     
     Shell_SendString("\r\n");
     Shell_SendString("=================================\r\n");
