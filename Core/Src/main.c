@@ -151,7 +151,7 @@ int main(void)
   AppUser_prvSetupHardware();
   Display_PeriphCLKFreq();
 
-  // printf("\r\nSTM32F750=%f LargeDataFrame=%d", votlag,sizeof(LargeDataFrame));
+  // printf("\r\nSTM32F750=%f 1LargeDataFrame=%d", votlag,sizeof(LargeDataFrame));
 
 
   RS485_ModbusCmdTask("CmdTask"); // RS485通讯解初始化
