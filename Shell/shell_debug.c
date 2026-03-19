@@ -53,6 +53,8 @@ static void cmd_reset(int argc, char *argv[]);
 static void cmd_version(int argc, char *argv[]);
 static void cmd_clear(int argc, char *argv[]);
 static void cmd_info(int argc, char *argv[]);
+static void cmd_adc(int argc, char *argv[]);
+static void cmd_task(int argc, char *argv[]);
 
 extern void shell_Debug_PWM(int argc, char *argv[]);
 
@@ -69,9 +71,11 @@ static const ShellCommand_t commands[] = {
     {"version","显示版本信息",          cmd_version},
     {"clear",  "清屏",                 cmd_clear},
     {"info",   "显示系统信息",          cmd_info},
+    {"adc",    "ADC读取",               cmd_adc},
+    {"task",   "Show Task Status",    cmd_task},
 
-    {"pwm",   "启动PWM",          shell_Debug_PWM},
-    {"mycmd",  "我的命令",        cmd_myfunc},  // 添加新命令
+    {"pwm",   "Debug PWM",        shell_Debug_PWM},
+    {"mycmd",  "My Command",      cmd_myfunc},
     {NULL, NULL, NULL}  // 结束标志
 };
 
@@ -302,7 +306,66 @@ static void cmd_myfunc(int argc, char *argv[])
     printf("\r\n 参数个数=%d", num_params);  // 会打印 1
     printf("\r\n 第一个参数=%s", argv[1]);   // 会打印 0
     
-    Shell_SendString("这是我的自定义命令！\r\n");}
+    Shell_SendString("这是我的自定义命令！\r\n");
+}
+
+/* ============================================
+ * ADC读取命令
+ * ============================================ */
+extern uint16_t adc1Result[16];  // ADC结果数组
+
+static void cmd_adc(int argc, char *argv[])
+{
+    char buf[64];
+    
+    Shell_SendString("\r\n=== ADC Values ===\r\n");
+    Shell_SendString("CH\tRaw\t\tVoltage(mV)\r\n");
+    Shell_SendString("-----------------------------\r\n");
+    
+    for (int i = 0; i < 16; i++) {
+        if (adc1Result[i] > 0) {
+            // 假设参考电压3.3V, 12位ADC
+            uint32_t voltage = (adc1Result[i] * 3300) / 65535;
+            
+            sprintf(buf, "%d\t%d\t\t%lu mV\r\n", i, adc1Result[i], voltage);
+            Shell_SendString(buf);
+        }
+    }
+    
+    Shell_SendString("=============================\r\n");
+}
+
+/* ============================================
+ * 任务状态命令 (模拟)
+ * ============================================ */
+static void cmd_task(int argc, char *argv[])
+{
+    char buf[64];
+    
+    Shell_SendString("\r\n=== Task Status ===\r\n");
+    Shell_SendString("Name\t\tState\tPriority\r\n");
+    Shell_SendString("-----------------------------\r\n");
+    
+    // 模拟任务信息 - 实际项目可能使用FreeRTOS
+    Shell_SendString("MainTask\tRunning\t3\r\n");
+    Shell_SendString("UART_Rx\tReady\t2\r\n");
+    Shell_SendString("ADC_Poll\tBlocked\t4\r\n");
+    Shell_SendString("CAN_Tx\tReady\t2\r\n");
+    Shell_SendString("Shell\tReady\t1\r\n");
+    
+    Shell_SendString("=============================\r\n");
+    
+    // 显示系统运行时间
+    uint32_t tick = HAL_GetTick();
+    uint32_t seconds = tick / 1000;
+    uint32_t minutes = seconds / 60;
+    uint32_t hours = minutes / 60;
+    
+    Shell_SendString("\r\nSystem Uptime: ");
+    sprintf(buf, "%luh %lum %lus\r\n", hours, minutes % 60, seconds % 60);
+    Shell_SendString(buf);
+}
+
 /* ============================================
  * 显示历史命令
  * ============================================ */
