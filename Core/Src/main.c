@@ -159,15 +159,7 @@ int main(void)
   AppUser_Device_InitData();
 
 
-  // 校准ADC
-  HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
-  // 启动ADC转换
-  ADC_StartConversion();
-  // 校准ADC
-  HAL_ADCEx_Calibration_Start(&hadc3, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
-  // 启动ADC转换
-	
-  ADC3_StartConversion();
+ 
 #if 1
   // 发送初始消息 (设备上线通知)   ad failed with erro
   uint8_t init_msg[4] = {0xAA, 0x55, 0x01, 0x23};

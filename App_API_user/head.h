@@ -176,9 +176,6 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 #include "modbus_config.h"
 #include "modbus_master.h"
 
-#include "shell.h"
-#include "shell_port.h"
-#include "shell_cfg.h"
 
 #define  fmin(a,b) ((a)<(b)?(a):(b))
 #define  fmax(a,b) ((a)>(b)?(a):(b))

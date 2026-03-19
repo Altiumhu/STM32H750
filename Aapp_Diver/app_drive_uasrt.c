@@ -50,9 +50,7 @@ void App_Drive_UASRT_Init(void)
  **********************************************************************/
 extern void UART_RxByteHandler(uint8_t received_byte);
 
-// Shell相关声明
-extern void shellHandler(Shell *shell, char data);
-extern Shell shell;
+
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {

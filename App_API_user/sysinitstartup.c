@@ -159,6 +159,16 @@ void AppUser_prvSetupHardware(void)
 //  HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1); // 关键启动代码
 //  HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_2); // 关键启动代码
 
+ // 校准ADC
+  HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
+  // 启动ADC转换
+  ADC_StartConversion();
+  // 校准ADC
+  HAL_ADCEx_Calibration_Start(&hadc3, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
+  // 启动ADC转换
+	
+  ADC3_StartConversion();
+
 }
 void Display_PeriphCLKFreq(void)
 {

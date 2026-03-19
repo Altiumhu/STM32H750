@@ -10,7 +10,7 @@
       <TargetName>STM32F750Timer</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -185,7 +185,6 @@
             <uocXRam>0</uocXRam>
             <RvdsVP>3</RvdsVP>
             <RvdsMve>0</RvdsMve>
-            <RvdsCdeCp>0</RvdsCdeCp>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -352,7 +351,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -1581,16 +1580,6 @@
               <FileType>5</FileType>
               <FilePath>..\App_API_user\app_api_timer1.h</FilePath>
             </File>
-            <File>
-              <FileName>shell_debug.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\App_API_user\shell_debug.c</FilePath>
-            </File>
-            <File>
-              <FileName>shell_debug.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\App_API_user\shell_debug.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -1642,49 +1631,14 @@
           <GroupName>Shell</GroupName>
           <Files>
             <File>
-              <FileName>shell.c</FileName>
+              <FileName>shell_debug.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Shell\shell.c</FilePath>
+              <FilePath>..\Shell\shell_debug.c</FilePath>
             </File>
             <File>
-              <FileName>shell.h</FileName>
+              <FileName>shell_debug.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Shell\shell.h</FilePath>
-            </File>
-            <File>
-              <FileName>shell_cfg.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Shell\shell_cfg.h</FilePath>
-            </File>
-            <File>
-              <FileName>shell_cmd_list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Shell\shell_cmd_list.c</FilePath>
-            </File>
-            <File>
-              <FileName>shell_companion.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Shell\shell_companion.c</FilePath>
-            </File>
-            <File>
-              <FileName>shell_ext.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Shell\shell_ext.c</FilePath>
-            </File>
-            <File>
-              <FileName>shell_ext.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Shell\shell_ext.h</FilePath>
-            </File>
-            <File>
-              <FileName>shell_port.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Shell\shell_port.c</FilePath>
-            </File>
-            <File>
-              <FileName>shell_port.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Shell\shell_port.h</FilePath>
+              <FilePath>..\Shell\shell_debug.h</FilePath>
             </File>
           </Files>
         </Group>
