@@ -26,10 +26,7 @@ __attribute__((aligned(32))) uint8_t txData[] = "huart1 DMA TEST\r\n";
 void App_Drive_UASRT_Init(void)
 {
 
-	HAL_UART_Receive_IT(&huart1, huart1_rx_buffer, 1); // 启动串口接收中断
 
-	//HAL_UART_Receive_IT(&huart3, huart3_rx_buffer, 1); // 启动串口接收中断
-	HAL_UART_Receive_IT(&huart7, huart7_rx_buffer, 1); // 启动串口接收中断
 
 // HAL_UART_Receive_IT(&huart5, &rx_data, 1);
 	char msg[] = "Hello UART1!\r\n";
@@ -47,6 +44,12 @@ void App_Drive_UASRT_Init(void)
 //	HAL_UART_Transmit_DMA(&huart1, txData, sizeof(txData) - 1);
 
 //	HAL_UART_Transmit_DMA(&huart7, txData, sizeof(txData) - 1);
+
+
+	HAL_UART_Receive_IT(&huart1, huart1_rx_buffer, 1); // 启动串口接收中断
+
+	//HAL_UART_Receive_IT(&huart3, huart3_rx_buffer, 1); // 启动串口接收中断
+	HAL_UART_Receive_IT(&huart7, huart7_rx_buffer, 1); // 启动串口接收中断
 }
 /**********************************************************************
  * Function:      HAL_UART_RxCpltCallback
@@ -92,7 +95,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 	else if (huart->Instance == UART7)
 	{
-		// HAL_UART_Transmit(&huart7, huart7_rx_buffer, 1, 0);
+		 HAL_UART_Transmit(&huart7, huart7_rx_buffer, 1, 0);
 		AppUser_ReceivingDataInterface(huart7_rx_buffer[0]);
 		HAL_UART_Receive_IT(&huart7, huart7_rx_buffer, 1);
 	}
