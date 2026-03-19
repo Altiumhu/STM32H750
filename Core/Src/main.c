@@ -186,7 +186,7 @@ int main(void)
 
 
 #endif
-	modbus_main();
+
  	App_Drive_InitTimer_7();                  // 100ms
 	Debug_PWM();
 
@@ -197,7 +197,7 @@ int main(void)
     AppUser_PortocolRecv(); // MCU通讯协议包
     AppDebug_vTask();
     //        AppUser_temp_sample();
-		ModbusMaster_Task();
+
 		sample_irq_handler(); // 采集数据转换
 	//	Updata_EPWM_Handle();
 		
