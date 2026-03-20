@@ -36,6 +36,8 @@ typedef struct
      float Set_CC;    // 充电恒流值
      float Set_PreCC; // 预充设置充电恒流值
 
+    float  Set_PreDC;
+
      float Set_CV;    // 恒压值
      float Set_PreCV; // 恒压值
 

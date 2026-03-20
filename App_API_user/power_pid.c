@@ -361,12 +361,12 @@ void Debug_HandlePID(void)
 
 #if 1
 
-    for (ch = 0; ch < 1; ch++)
+    for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
     {
+        printf("\r\nCH[%d] I_Set=%fmA I_FB=%fmA i_pid_out=%f ", ch + 1, gHandle_PID[ch].i_ref, gHandle_PID[ch].i_fdb, gHandle_PID[ch].i_pid_out);
+        printf("\r\nCH[%d]Set=%fV FB=%fV pid_out=%f ", ch + 1, gHandle_PID[ch].v_ref, gHandle_PID[ch].v_fdb, gHandle_PID[ch].v_pid_out);
+        printf("\r\n  HOMSduty=%d low=%d \r\n", g_epwmHandle[ch].High_MOS_DUTY, g_epwmHandle[ch].Low_MOS_DUTY);
 
-        printf("\r\nCH[%d]Set=%fV FB=%fV pid_out=%f ", ch + 1, gHandle_PID[0].v_ref, gHandle_PID[0].v_fdb, gHandle_PID[0].v_pid_out);
-        printf("\r\n Fre=%d  HOMSduty=%d low=%d", g_epwmHandle[0].High_MOS_Timer_TBPRD, g_epwmHandle[0].High_MOS_DUTY, g_epwmHandle[0].Low_MOS_DUTY);
-        printf("\r\nCH[%d] I_Set=%fV I_FB=%fA i_pid_out=%f ", ch + 1, gHandle_PID[0].i_ref, gHandle_PID[0].i_fdb, gHandle_PID[0].i_pid_out);
       // printf("\r\n v_max_out_value=%d  v_up=%d ", gHandle_PID[ch].v_max_out_value, gHandle_PID[0].v_up);
     }
 

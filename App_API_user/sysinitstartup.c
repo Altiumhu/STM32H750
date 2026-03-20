@@ -103,13 +103,13 @@ void AppUser_Device_InitData(void)
 
        g_Channelinfo[ch].run =Worke_OFF;
 
-       g_Channelinfo[ch].Set_PreCC = 5.0f ;//5.0A设置CC电5.0A
+       g_Channelinfo[ch].Set_PreCC = 5000.0f ;//5.0A设置CC电5.0A
 
-//       g_Channelinfo[ch].Set_PreDC = -5.0f; //设置放电5.0A
+       g_Channelinfo[ch].Set_PreDC = -5000.0f; //设置放电5.0A
 
-//       g_Channelinfo[ch].Set_PreCV =  0.55f ;//5.0V 电压值
+       g_Channelinfo[ch].Set_PreCV =  550.0f ;//5.0V 电压值
 
-//       g_Channelinfo[ch].Set_CC = SetRef_ConvertCurrent(ch,Caltype_CC, g_Channelinfo[ch].Set_PreCC);
+       g_Channelinfo[ch].Set_CC =1000.0;
 
 //       g_Channelinfo[ch].Set_DC = g_Channelinfo[ch].Set_CC*(-1.0f);
 //       g_Channelinfo[ch].Set_CV = g_Channelinfo[ch].Set_PreCV;

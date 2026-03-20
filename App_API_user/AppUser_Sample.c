@@ -492,11 +492,9 @@ void AppUser_ChannelInfo_Debug(void)
            g_Channelinfo[0].current, adc_values[4], g_Channelinfo[0].current_voltage);
 
 
-
-
     for (ch = 0; ch < 16; ch++)
     {
-        printf("\r\n ch=[%d] workMode=%d ", ch, g_Channelinfo[ch].workMode);
+        printf("\r\n ch=[%d] workMode=%d \r\n", ch, g_Channelinfo[ch].workMode);
         printf(" ch=[%d] voltage=%f--ADC=%d current=%f--ADC%d Cap_voltage=%f\r\n", ch, g_Channelinfo[ch].voltage, g_Channelinfo[ch].voltage_ADC,
                g_Channelinfo[ch].current, g_Channelinfo[ch].current_ADC, g_Channelinfo[ch].Cap_voltage);
         printf(" ch=[%d] fault=0x%X \r\n", ch, g_Channelinfo[ch].fault.all);

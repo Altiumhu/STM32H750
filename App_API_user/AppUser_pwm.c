@@ -18,13 +18,13 @@ void HAL_EPWM_Config(uint16_t ch)
 	{
 		// g_epwmHandle[ch].High_MOS_Timer_TBPRD =(uint32_t) ((EPWM_DUTY_MAX * (float32_t)(CHARGE_EPWM_TIMER_TBPRD << 8))*0.01f);
 		g_epwmHandle[ch].High_MOS_PHS = 0;
-		g_epwmHandle[ch].High_MOS_DUTY = 2933U;
+		g_epwmHandle[ch].High_MOS_DUTY = TIMER_DUTY_MIN;
 		g_epwmHandle[ch].High_MOS_LOW_DUTY = g_epwmHandle[ch].High_MOS_DUTY; // 高压侧上管占空比
 
 		g_epwmHandle[ch].High_MOS_DTF = 40;
 		g_epwmHandle[ch].High_MOS_DTB = 10; // 285ns
 		// g_epwmHandle[ch].High_MOS_DUTY_MAX = g_epwmHandle[ch].High_MOS_Timer_TBPRD>>1 202752;
-		g_epwmHandle[ch].High_MOS_DUTY_MAX = 3200; // 36.40% 97750
+		g_epwmHandle[ch].High_MOS_DUTY_MAX = TIMER_DUTY_MAX; // 36.40% 97750
 		g_epwmHandle[ch].High_MOS_DUTY_MIN = 10;   // 5200
 		g_epwmHandle[ch].High_MOS_STA = 0;
 		// g_epwmHandle[ch].High_MOS_OpenFlag = 0;

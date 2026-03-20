@@ -12,6 +12,14 @@
 
 #define EPWM_CH_NUM 16
 
+
+// 设置开关频率显示 最高频率和最低频率
+#define TIMER_PREIOD_MAX 30             // 100Khez
+#define TIMER_PREIOD_MIN 180             //  600Khz
+
+#define TIMER_DUTY_MAX 3200             // // 36.40% 97750
+#define TIMER_DUTY_MIN 200             //  600Khz
+
 // 电源闭环控制控制状态机状态定义枚举
 typedef enum EPWM_Num_define
 {
