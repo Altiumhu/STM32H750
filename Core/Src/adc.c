@@ -22,6 +22,8 @@
 
 /* USER CODE BEGIN 0 */
 #include "head.h"
+#include "cd4052.h"
+
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
@@ -507,8 +509,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 	
 	    if (hadc->Instance == ADC1)
     {
-
-
+        // ADC1 DMA完成 - 可在这里处理数据
     }
 }
 

@@ -143,6 +143,9 @@ void AppUser_prvSetupHardware(void)
   //  fdcan3_init(10, 8, 16, 5, FDCAN_MODE_NORMAL);          /* FDCAN初始化，普通模式,波特率500kbps */
   App_Drive_UASRT_Init();
 
+  // 初始化CD4052模拟开关
+  CD4052_Init();
+  
   // 校准ADC
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
   // 启动ADC转换

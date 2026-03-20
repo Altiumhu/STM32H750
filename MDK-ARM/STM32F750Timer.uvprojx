@@ -1386,6 +1386,16 @@
               <FileType>5</FileType>
               <FilePath>..\Aapp_Diver\EXIO\bsp_595.h</FilePath>
             </File>
+            <File>
+              <FileName>cd4052.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Aapp_Diver\cd4052.c</FilePath>
+            </File>
+            <File>
+              <FileName>cd4052_example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Aapp_Diver\cd4052_example.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1672,5 +1682,14 @@
     </components>
     <files/>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>STM32F750Timer</LayName>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>
