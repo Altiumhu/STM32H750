@@ -20,13 +20,6 @@
 #define TIMER_DUTY_MAX 3200             // // 36.40% 97750
 #define TIMER_DUTY_MIN 200             //  600Khz
 
-// 电源闭环控制控制状态机状态定义枚举
-typedef enum EPWM_Num_define
-{
-    CH_NUM0 = 0U, // 通道0
-    CH_NUM1,      // 通道1
-
-} EPWM_Num_define;
 
 // PWM控制量信息体
 typedef struct

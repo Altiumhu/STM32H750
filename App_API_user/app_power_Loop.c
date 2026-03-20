@@ -20,9 +20,8 @@ void TIMER0CallbackFunction(void *handle);
 void APT0TimerCallback(void *aptHandle);
 void System_CloseLoop_Status(void);
 
-static volatile uint32_t Mos_L_PreChareg = 0, Mos_L_PreCharegTimer = 0;
 
-volatile uint16_t burst_ctrl = 200;
+
 
 #define SOTC_PULSE_CNT 16
 volatile uint16_t gPWM_SOTC_CNT = 0;
