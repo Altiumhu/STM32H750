@@ -70,7 +70,7 @@ static const ShellCommand_t commands[] = {
     {"led",    "LED控制: led on|off",   cmd_led},
     {"gpio",   "GPIO操作: gpio read/write pin value", cmd_gpio},
     {"mem",    "内存操作: mem read addr", cmd_mem},
-    {"reset",  "系统复位",              cmd_reset},
+    {"reboot",  "系统复位",              cmd_reset},
     {"version","显示版本信息",          cmd_version},
     {"clear",  "清屏",                 cmd_clear},
     {"info",   "显示系统信息",          cmd_info},

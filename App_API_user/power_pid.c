@@ -61,9 +61,9 @@ void PIDInit(uint16_t ch)
     // 电压环的参数初始化通道1
     gHandle_PID[ch].v_fdb = 0;                              // 反馈值
     gHandle_PID[ch].v_err = 0.0f;                           // 误差
-    gHandle_PID[ch].v_kp =1.0f;                            // 比例系数
-    gHandle_PID[ch].v_ki = 0.1f;                            // 积分系数
-    gHandle_PID[ch].v_ref = 5.0f;                          // 电压环基准复位，进行软起动
+    gHandle_PID[ch].v_kp =2.0f;                            // 比例系数
+    gHandle_PID[ch].v_ki = 0.5f;                            // 积分系数
+    gHandle_PID[ch].v_ref = 3000.0f;                          // 电压环基准复位，进行软起动
     gHandle_PID[ch].v_err_sum = (200);         //
     gHandle_PID[ch].v_up = (3000);               //
     gHandle_PID[ch].v_ui = (0);              //
@@ -76,7 +76,7 @@ void PIDInit(uint16_t ch)
     gHandle_PID[ch].i_fdb = 0.0f;              // 反馈值
     gHandle_PID[ch].i_err = 0.0f;              // 误差
     gHandle_PID[ch].i_kp = 10.0f;               // 比例系数500
-    gHandle_PID[ch].i_ki = 0.5f;               // 积分系数100-30a
+    gHandle_PID[ch].i_ki = 1.5f;               // 积分系数100-30a
     gHandle_PID[ch].i_ref = 0.5f;              // 电压环基准复位，进行软起动
     gHandle_PID[ch].i_up = (3000);  //
     gHandle_PID[ch].i_ui = (0); //

@@ -21,13 +21,6 @@ void APT0TimerCallback(void *aptHandle);
 void System_CloseLoop_Status(void);
 
 
-
-
-#define SOTC_PULSE_CNT 16
-volatile uint16_t gPWM_SOTC_CNT = 0;
-volatile uint16_t gPWM_Burst_CNT = 0;
-volatile uint16_t gPWM_Burst_StartTimer = 0;
-
 /**********************************************************************
  * Function: 	 System_CloseLoop_Status
  * Description:   环路状态机
@@ -46,11 +39,11 @@ void System_CloseLoop_Status(void)
 
     for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
     {
-        // g_Channelinfo[i].fault.all = g_Channelinfo[i].fault.all; // 工作模式
-
+      
         if (g_Channelinfo[ch].fault.all) // 判断故障
         {
             g_Channelinfo[ch].workMode = POWER_FAULT;
+            pwm_stop(ch);
         }
 
         switch (g_Channelinfo[ch].workMode)
@@ -236,10 +229,10 @@ void System_CloseLoop_Status(void)
             pid_V_Loop_calc(&gHandle_PID[ch]);
 
             // 电流环
-            gHandle_PID[ch].i_ref += 0.00001f;
-            if (gHandle_PID[ch].i_ref >= 5.0f)
+            gHandle_PID[ch].i_ref += 0.1f;
+            if (gHandle_PID[ch].i_ref >= 5000.0f)
             {
-                gHandle_PID[ch].i_ref = 5.0f;
+                gHandle_PID[ch].i_ref = 5000.0f;
             }
 
             gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
@@ -270,74 +263,6 @@ void System_CloseLoop_Status(void)
     }
 }
 
-/**********************************************************************
- * Function: 	 APT0TimerCallback
- * Description:   APT周期中断
- * Input: 	      void
- * Output:
- * Return: 	    void
- * Others:
- * Modify Date:    Version:    Author:	      Modification:
- * -----------------------------------------------
- * 2025-06-05	  V1.0	      Hu Weiping
- **********************************************************************/
-void APT0TimerCallback(void *aptHandle)
-{
-    //    BASE_FUNC_UNUSED(aptHandle);
-    /* USER CODE BEGIN APT0_TIMER_INTERRUPT */
-    //  APT_Handle *handle = (APT_Handle *)aptHandle;
-
-    if (g_Channelinfo[0].workMode == POWER_PRECHARGE)
-    {
-    }
-
-#if 0
-
-    USER_API_GLOBAL_LOAD(&g_apt0);
-    USER_API_GLOBAL_LOAD(&g_apt1);
-    USER_API_GLOBAL_LOAD(&g_apt2);
-
-    if (g_Channelinfo[0].fault.all == 0 && g_epwmHandle[0].High_MOS_STA == 1) // 判断无故障，可以启动pwm
-    {
-        if (g_epwmHandle[0].High_MOS_OpenFlag == 0)
-        {
-            g_epwmHandle[0].High_MOS_OpenFlag = 1;
-            pwm_start(0, 0);
-        }
-    }
-    else
-    {
-        if (g_epwmHandle[0].High_MOS_OpenFlag == 1)
-        {
-            g_epwmHandle[0].High_MOS_OpenFlag = 0;
-            pwm_stop(0);
-            pwm_stop(1);
-        }
-    }
-
-    // 同步整流
-    if (g_epwmHandle[0].Low_MOS_STA == 1) //
-    {
-        if (g_epwmHandle[0].Low_MOS_OpenFlag == 0)
-        {
-            g_epwmHandle[0].Low_MOS_OpenFlag = 1;
-            pwm_start(1, 0); //  同步整流打开
-        }
-    }
-    else
-    {
-        if (g_epwmHandle[0].Low_MOS_OpenFlag == 1)
-        {
-            g_epwmHandle[0].Low_MOS_OpenFlag = 0;
-
-            pwm_stop(1); //  同步整流关闭
-        }
-    }
-
-#endif
-
-    /* USER CODE END APT0_TIMER_INTERRUPT */
-}
 
 /**********************************************************************
  * Function: 	 TIMER0CallbackFunction
@@ -404,12 +329,12 @@ void Power_PID_Updata(float FB, float REF)
  **********************************************************************/
 void Debug_Loop(void)
 {
-    printf("\r\nworkMode= %d", g_Channelinfo[0].workMode);
-    printf("\r\nFAULT= 0x%X", g_Channelinfo[0].fault.all);
-    printf("\r\nSR_STA= 0x%d  LowFlag%d", g_epwmHandle[0].Low_MOS_STA, g_epwmHandle[0].Low_MOS_OpenFlag);
+    // printf("\r\nworkMode= %d", g_Channelinfo[0].workMode);
+    // printf("\r\nFAULT= 0x%X", g_Channelinfo[0].fault.all);
+    // printf("\r\nSR_STA= 0x%d  LowFlag%d", g_epwmHandle[0].Low_MOS_STA, g_epwmHandle[0].Low_MOS_OpenFlag);
 
     printf("\r\nloop=%d", gHandle_PID[0].loop);
     // printf("\r\nlBurstout=%f", gHandle_Burst_PID[0].v_pid_out);
 
-    printf("\r\nHigh_MOS_STA= 0x%d  High_MOS_OpenFlag=%d", g_epwmHandle[0].High_MOS_STA, g_epwmHandle[0].High_MOS_OpenFlag);
+  //  printf("\r\nHigh_MOS_STA= 0x%d  High_MOS_OpenFlag=%d", g_epwmHandle[0].High_MOS_STA, g_epwmHandle[0].High_MOS_OpenFlag);
 }
