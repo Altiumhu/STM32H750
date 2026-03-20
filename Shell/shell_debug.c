@@ -79,6 +79,9 @@ static const ShellCommand_t commands[] = {
 
     {"pwm",   "Debug PWM",        shell_Debug_PWM},
     {"debug",   "debug_show_en",        debug_show_en},
+		
+		{"vset",   "VRef_Set",        shell_Set_VRef},
+	  {"iset",   "IRef_Set",        shell_Set_IRef},
     {"mycmd",  "My Command",      cmd_myfunc},
     {NULL, NULL, NULL}  // 结束标志
 };

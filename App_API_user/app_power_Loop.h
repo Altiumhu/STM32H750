@@ -68,8 +68,6 @@ extern void APT0TimerCallback(void *aptHandle);
 
 extern void TIMER0CallbackFunction(void *handle);
 
- extern inline void Power_PID_Updata(float FB, float REF);
-
  extern void Debug_Loop(void);
 
 

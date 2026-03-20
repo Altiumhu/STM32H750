@@ -76,7 +76,7 @@ void GetADC_Driver_Result(void)
     /*-------------------------- CD4052 通道0: 通道1,5,9,13 --------------------------*/
     case 0:
         Samp_ChnumTimer++;
-        if (Samp_ChnumTimer >= 5)
+        if (Samp_ChnumTimer >= 10)
         {
             CD4052_Chnum = 1;
             Samp_ChnumTimer = 0;

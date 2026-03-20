@@ -43,7 +43,7 @@ void System_CloseLoop_Status(void)
         if (g_Channelinfo[ch].fault.all) // 判断故障
         {
             g_Channelinfo[ch].workMode = POWER_FAULT;
-            pwm_stop(ch);
+            pwm_stop(ch);///出现故障就关闭pwm
         }
 
         switch (g_Channelinfo[ch].workMode)
@@ -95,7 +95,7 @@ void System_CloseLoop_Status(void)
             pid_I_Loop_calc(&gHandle_PID[ch]);                // 电流换
 
             // 电压环
-            gHandle_PID[ch].v_ref = 3500.0f;
+            gHandle_PID[ch].v_ref = g_Channelinfo[ch].Set_PreCV ;
             // gHandle_PID[i].v_ref = gHandle_PID[i].v_ref + 0.001f;
             // 软启功率输出电容电压作为反馈值，电池端电压作为给定值
             // gHandle_PID[i].v_ref = fmin(gHandle_PID[i].v_ref, g_Channelinfo[i].voltage);
@@ -224,7 +224,7 @@ void System_CloseLoop_Status(void)
         {
 
             // 电压环
-            gHandle_PID[ch].v_ref = BOARD_OUT_VOLT;
+            gHandle_PID[ch].v_ref = g_Channelinfo[ch].Set_PreCV;
             gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
             pid_V_Loop_calc(&gHandle_PID[ch]);
 
@@ -297,25 +297,7 @@ void TIMER0CallbackFunction(void *handle)
    System_DBUGGPIO_LOW_LEVEL;
     /* USER CODE END TIMER1 ITCallBackFunc */
 }
-/**********************************************************************
- * Function: 	 Power_PID_Updata
- * Description:  电压环路计算
- * Input: 	      void
- * Output:
- * Return: 	    void
- * Others:
- * Modify Date:    Version:    Author:	      Modification:
- * -----------------------------------------------
- * 2025-06-05	  V1.0	      Hu Weiping
- **********************************************************************/
-void Power_PID_Updata(float FB, float REF)
-{
-    /// 电压环
-    gHandle_PID[0].v_ref = REF;
-    gHandle_PID[0].v_fdb = FB; // 设置反馈值
 
-    pid_V_Loop_calc(&gHandle_PID[0]);
-}
 /**********************************************************************
  * Function: 	 Power_PID_Updata
  * Description:  调试pid参数
