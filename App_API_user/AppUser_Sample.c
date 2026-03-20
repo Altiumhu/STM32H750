@@ -19,6 +19,9 @@
 #include "head.h"
 #include "AppUser_Sample.h"
 
+
+uint32_t  g_SanSampTimer=800;
+uint32_t  g_samptimer=600;
 /*=================================================================================================
  * 全局变量定义
  *================================================================================================*/
@@ -76,16 +79,16 @@ void GetADC_Driver_Result(void)
     /*-------------------------- CD4052 通道0: 通道1,5,9,13 --------------------------*/
     case 0:
         Samp_ChnumTimer++;
-        if (Samp_ChnumTimer >= 10)
+        if (Samp_ChnumTimer >= g_SanSampTimer)
         {
             CD4052_Chnum = 1;
             Samp_ChnumTimer = 0;
         }
-
+          SetCD4052(CD4052_Chnum);
         delayTimer++;
-        if (delayTimer > 1) // 延时一个开关周期 等待CD4052开关稳定
+        if (delayTimer >= g_samptimer) // 延时一个开关周期 等待CD4052开关稳定
         {
-            delayTimer = 2;
+            delayTimer = g_samptimer;
             /* 电压采样 */
             g_Channelinfo[0].voltage_ADC = adc1Result[0];  // 通道1 电压
             g_Channelinfo[4].voltage_ADC = adc1Result[1];  // 通道5 电压
@@ -145,13 +148,13 @@ void GetADC_Driver_Result(void)
             g_Channelinfo[4].Cap_voltage = g_Channelinfo[4].Cap_voltage_ADC * 0.050354772f * 3.033333f;
         }
 
-        SetCD4052(CD4052_Chnum);
+     
         break;
 
     /*-------------------------- CD4052 通道1: 通道2,6,10,14 -------------------------*/
     case 1:
         Samp_ChnumTimer++;
-        if (Samp_ChnumTimer >= 10)
+        if (Samp_ChnumTimer >= g_SanSampTimer)
         {
             CD4052_Chnum = 2;
             Samp_ChnumTimer = 0;
@@ -219,7 +222,7 @@ void GetADC_Driver_Result(void)
     /*-------------------------- CD4052 通道2: 通道3,7,11,15 -------------------------*/
     case 2:
         Samp_ChnumTimer++;
-        if (Samp_ChnumTimer >= 10)
+        if (Samp_ChnumTimer >= g_SanSampTimer)
         {
             CD4052_Chnum = 3;
             Samp_ChnumTimer = 0;
@@ -283,7 +286,7 @@ void GetADC_Driver_Result(void)
     /*-------------------------- CD4052 通道3: 通道4,8,12,16 -------------------------*/
     case 3:
         Samp_ChnumTimer++;
-        if (Samp_ChnumTimer >= 10)
+        if (Samp_ChnumTimer >= g_SanSampTimer)
         {
             CD4052_Chnum = 0; // 循环回到通道0
             Samp_ChnumTimer = 0;

@@ -111,7 +111,7 @@ void AppDebug_vTask(void)
     // DebugLED_LOW_LEVEL ;
     // DBG_PRINTF("\r\ng_debugNUmer.debug1 %d \r\n",  g_debugNUmer.debug1);
     AppUser_Sample_Debug();
-    Debug_HandlePID();
+    //Debug_HandlePID();
     CAN1_Send_TEST();
     //     Debug_PWM();
     Debug_Loop();

@@ -20,7 +20,6 @@ void TIMER0CallbackFunction(void *handle);
 void APT0TimerCallback(void *aptHandle);
 void System_CloseLoop_Status(void);
 
-
 /**********************************************************************
  * Function: 	 System_CloseLoop_Status
  * Description:   环路状态机
@@ -39,11 +38,11 @@ void System_CloseLoop_Status(void)
 
     for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
     {
-      
+
         if (g_Channelinfo[ch].fault.all) // 判断故障
         {
             g_Channelinfo[ch].workMode = POWER_FAULT;
-            pwm_stop(ch);///出现故障就关闭pwm
+            pwm_stop(ch); /// 出现故障就关闭pwm
         }
 
         switch (g_Channelinfo[ch].workMode)
@@ -92,10 +91,10 @@ void System_CloseLoop_Status(void)
             gHandle_PID[ch].i_ref = 1000.0f; // 设置给定值5A
 
             gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
-            pid_I_Loop_calc(&gHandle_PID[ch]);                // 电流换
+            pid_I_Loop_calc(&gHandle_PID[ch]);                 // 电流换
 
             // 电压环
-            gHandle_PID[ch].v_ref = g_Channelinfo[ch].Set_PreCV ;
+            gHandle_PID[ch].v_ref = g_Channelinfo[ch].Set_PreCV;
             // gHandle_PID[i].v_ref = gHandle_PID[i].v_ref + 0.001f;
             // 软启功率输出电容电压作为反馈值，电池端电压作为给定值
             // gHandle_PID[i].v_ref = fmin(gHandle_PID[i].v_ref, g_Channelinfo[i].voltage);
@@ -152,7 +151,6 @@ void System_CloseLoop_Status(void)
 
 #if DBUG_EN // 调试使能
 
-            
 #else
             // 电压环
             g_Handle_REC_Device.V_Ref_REC_Vaule = g_Handle_REC_Device.V_Ref_REC_Vaule + 0.1f;
@@ -263,7 +261,6 @@ void System_CloseLoop_Status(void)
     }
 }
 
-
 /**********************************************************************
  * Function: 	 TIMER0CallbackFunction
  * Description:  定时器0中断 20us
@@ -278,7 +275,7 @@ void System_CloseLoop_Status(void)
 
 void TIMER0CallbackFunction(void *handle)
 {
-
+    System_LED1_HIGH_LEVEL;
     System_DBUGGPIO_HIGH_LEVEL;
 
     GetADC_Driver_Result();
@@ -294,7 +291,8 @@ void TIMER0CallbackFunction(void *handle)
 
     Updata_EPWM_Handle();
 
-   System_DBUGGPIO_LOW_LEVEL;
+    System_DBUGGPIO_LOW_LEVEL;
+    System_LED1_LOW_LEVEL;
     /* USER CODE END TIMER1 ITCallBackFunc */
 }
 
@@ -318,5 +316,5 @@ void Debug_Loop(void)
     printf("\r\nloop=%d", gHandle_PID[0].loop);
     // printf("\r\nlBurstout=%f", gHandle_Burst_PID[0].v_pid_out);
 
-  //  printf("\r\nHigh_MOS_STA= 0x%d  High_MOS_OpenFlag=%d", g_epwmHandle[0].High_MOS_STA, g_epwmHandle[0].High_MOS_OpenFlag);
+    //  printf("\r\nHigh_MOS_STA= 0x%d  High_MOS_OpenFlag=%d", g_epwmHandle[0].High_MOS_STA, g_epwmHandle[0].High_MOS_OpenFlag);
 }

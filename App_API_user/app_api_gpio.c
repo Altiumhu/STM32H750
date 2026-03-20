@@ -343,6 +343,8 @@ void SetCD4052(uint8_t IO)
     case 0: //
         HAL_GPIO_WritePin(MCU_IO_OUT[0].port, MCU_IO_OUT[0].pin, GPIO_PIN_RESET);   //  设置低电平
         HAL_GPIO_WritePin(MCU_IO_OUT[1].port, MCU_IO_OUT[1].pin, GPIO_PIN_RESET); // 设置低电平
+
+
         break;
 
     case 1: //
