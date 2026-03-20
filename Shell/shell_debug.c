@@ -59,6 +59,9 @@ static void cmd_task(int argc, char *argv[]);
 extern void shell_Debug_PWM(int argc, char *argv[]);
 
 static void cmd_myfunc(int argc, char *argv[]);
+
+
+extern void debug_show_en(int argc, char *argv[]);
 /* ============================================
  * 命令表
  * ============================================ */
@@ -75,6 +78,7 @@ static const ShellCommand_t commands[] = {
     {"task",   "Show Task Status",    cmd_task},
 
     {"pwm",   "Debug PWM",        shell_Debug_PWM},
+    {"debug",   "debug_show_en",        debug_show_en},
     {"mycmd",  "My Command",      cmd_myfunc},
     {NULL, NULL, NULL}  // 结束标志
 };
@@ -105,7 +109,7 @@ void Shell_SendLine(const char *str)
  * ============================================ */
 void Shell_PrintPrompt(void)
 {
-    Shell_SendString("\r\nDebugShell>> ");
+    Shell_SendString("\r\nroot>> ");
 }
 
 /* ============================================

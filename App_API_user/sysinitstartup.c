@@ -116,6 +116,7 @@ void AppUser_Device_InitData(void)
 
        HAL_EPWM_Config(ch);
        PIDInit(ch);
+      pwm_stop( ch);
 
    }
 }

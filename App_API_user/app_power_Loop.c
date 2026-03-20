@@ -22,17 +22,12 @@ void System_CloseLoop_Status(void);
 
 static volatile uint32_t Mos_L_PreChareg = 0, Mos_L_PreCharegTimer = 0;
 
-
 volatile uint16_t burst_ctrl = 200;
-
-
 
 #define SOTC_PULSE_CNT 16
 volatile uint16_t gPWM_SOTC_CNT = 0;
 volatile uint16_t gPWM_Burst_CNT = 0;
 volatile uint16_t gPWM_Burst_StartTimer = 0;
-
-
 
 /**********************************************************************
  * Function: 	 System_CloseLoop_Status
@@ -46,13 +41,13 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
  * 2025-06-05	  V1.0	      Hu Weiping
  **********************************************************************/
 
- void System_CloseLoop_Status(void)
+void System_CloseLoop_Status(void)
 {
     uint16_t i = 0;
 
     for (i = 0; i < BOARD_CHANNEL_NUM; i++)
     {
-        //g_Channelinfo[i].fault.all = g_Channelinfo[i].fault.all; // 工作模式
+        // g_Channelinfo[i].fault.all = g_Channelinfo[i].fault.all; // 工作模式
 
         if (g_Channelinfo[i].fault.all) // 判断故障
         {
@@ -74,77 +69,70 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
             else
             { // 说明有故障，关闭 PRT管 输出低关闭
             }
-
-
         }
         break;
         case POWER_INIT: //
         {
 
-           PIDInit(i);
-           HAL_EPWM_Config(i);
-           Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);  
+            PIDInit(i);
+            HAL_EPWM_Config(i);
+            Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
 
-           g_Channelinfo[i].workMode = POWER_PRECHARGE;
-//            if ((g_Channelinfo[i].voltage_port - g_Channelinfo[i].Cap_voltage) >= -0.05f) //端口电压-电容电压》=0.05V 防止开机电容有电
-//                   
-//            {
-//                g_Channelinfo[i].workMode = POWER_PRECHARGE;
-//            }
-//            else
-//            {
-//                g_Channelinfo[i].fault.bit.CAP_BAT = 1; //容压大于电池电压
-//            }
-           g_Channelinfo[i].run =0x0;
+            g_Channelinfo[i].workMode = POWER_PRECHARGE;
+            //            if ((g_Channelinfo[i].voltage_port - g_Channelinfo[i].Cap_voltage) >= -0.05f) //端口电压-电容电压》=0.05V 防止开机电容有电
+            //
+            //            {
+            //                g_Channelinfo[i].workMode = POWER_PRECHARGE;
+            //            }
+            //            else
+            //            {
+            //                g_Channelinfo[i].fault.bit.CAP_BAT = 1; //容压大于电池电压
+            //            }
+            g_Channelinfo[i].run = 0x0;
 
-
-					pwm_start(i, 0);
-					Set_PWM_Channel_CH595_EN(2, i, EX_595_SET);//打开MOS驱动使能
-	
+            pwm_start(i, 0);
+            Set_PWM_Channel_CH595_EN(2, i, EX_595_SET); // 打开MOS驱动使能
         }
         break;
         case POWER_PRECHARGE: // 预充电
         {
-            //电流换
-            gHandle_PID[i].i_ref =1.0f; //设置给定值5A
-                  
+            // 电流换
+            gHandle_PID[i].i_ref = 1.0f; // 设置给定值5A
 
-            gHandle_PID[i].i_fdb = g_Channelinfo[i].current ; //设置反馈值
-            pid_I_Loop_calc(&gHandle_PID[i]); //电流换
+            gHandle_PID[i].i_fdb = g_Channelinfo[i].current; // 设置反馈值
+            pid_I_Loop_calc(&gHandle_PID[i]);                // 电流换
 
-            //电压环
-					  gHandle_PID[i].v_ref = 3.5f;
-           // gHandle_PID[i].v_ref = gHandle_PID[i].v_ref + 0.001f;
-            //软启功率输出电容电压作为反馈值，电池端电压作为给定值 
-           // gHandle_PID[i].v_ref = fmin(gHandle_PID[i].v_ref, g_Channelinfo[i].voltage);
-                                           
+            // 电压环
+            gHandle_PID[i].v_ref = 3.5f;
+            // gHandle_PID[i].v_ref = gHandle_PID[i].v_ref + 0.001f;
+            // 软启功率输出电容电压作为反馈值，电池端电压作为给定值
+            // gHandle_PID[i].v_ref = fmin(gHandle_PID[i].v_ref, g_Channelinfo[i].voltage);
 
-            gHandle_PID[i].v_fdb = g_Channelinfo[i].Cap_voltage; //设置反馈值
+            gHandle_PID[i].v_fdb = g_Channelinfo[i].Cap_voltage; // 设置反馈值
             pid_V_Loop_calc(&gHandle_PID[i]);
-					
-					if(gHandle_PID[i].v_pid_out<=gHandle_PID[i].i_pid_out)
-					{
-					  g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].v_pid_out;
-					}
-					else
-					{
-					  g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].i_pid_out;
-					}
+
+            if (gHandle_PID[i].v_pid_out <= gHandle_PID[i].i_pid_out)
+            {
+                g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].v_pid_out;
+            }
+            else
+            {
+                g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].i_pid_out;
+            }
             g_epwmHandle[i].High_MOS_STA = 1;
-					
-						if( g_Channelinfo[i].Cap_voltage>=3.0f)
-						{
-						   //ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
-							Set_PWM_Channel_CH595_EN(0, i, EX_595_SET);//打开PRT
-							 g_Channelinfo[i].workMode = POWER_RUN_CHARGE;
-						}
-//		 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
-					
+
+            if (g_Channelinfo[i].Cap_voltage >= 3.0f)
+            {
+                // ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
+                Set_PWM_Channel_CH595_EN(0, i, EX_595_SET); // 打开PRT
+                g_Channelinfo[i].workMode = POWER_RUN_CHARGE;
+            }
+            //		 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
         }
         break;
         case POWER_SoftStart: // 软启动
         {
-//            // 电压环环PID参数缓慢加到 kp=5.0  ki=1.0
+            //            // 电压环环PID参数缓慢加到 kp=5.0  ki=1.0
             gHandle_PID[0].v_kp = gHandle_PID[0].v_kp + 0.1;
             if (gHandle_PID[0].v_kp >= 5.0f)
                 gHandle_PID[0].v_kp = 5.0f;
@@ -155,16 +143,16 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
 
             if (g_Channelinfo[0].Cap_voltage >= (BOARD_OUT_VOLT * 0.90f))
             {
-//                g_epwmHandle[0].High_MOS_Timer_TBPRD_MAX = APT_0_RRE_35KHZ;
-//                gHandle_PID[0].v_up = (APT_0_RRE_35KHZ); //
-//                gHandle_PID[0].v_max_out_value = gHandle_PID[0].v_up;
+                //                g_epwmHandle[0].High_MOS_Timer_TBPRD_MAX = APT_0_RRE_35KHZ;
+                //                gHandle_PID[0].v_up = (APT_0_RRE_35KHZ); //
+                //                gHandle_PID[0].v_max_out_value = gHandle_PID[0].v_up;
 
-//                DebugLED_LOW_LEVEL;
-//                g_apt0.tmrInterrupt.tmrInterruptScale = 1;
-//                USER_API_APT_SetTimerInterrupt(&g_apt0);
-//                g_Handle_REC_Device.V_Ref_REC_Vaule = BOARD_OUT_VOLT;
-//                g_Protect_handle[0].SR_Current = 5.0f;
-//                g_Channelinfo[0].workMode = POWER_RUN_CHARGE;
+                //                DebugLED_LOW_LEVEL;
+                //                g_apt0.tmrInterrupt.tmrInterruptScale = 1;
+                //                USER_API_APT_SetTimerInterrupt(&g_apt0);
+                //                g_Handle_REC_Device.V_Ref_REC_Vaule = BOARD_OUT_VOLT;
+                //                g_Protect_handle[0].SR_Current = 5.0f;
+                //                g_Channelinfo[0].workMode = POWER_RUN_CHARGE;
 
                 // if (gHandle_PID[0].loop == I_LOOP)
                 //     gHandle_PID[0].v_err_sum = gHandle_PID[0].i_pid_out;
@@ -230,12 +218,12 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
             }
 
 #endif
- 
+
 #else
             //   OpenLoopDebugPwm();
-          // g_Channelinfo[0].workMode = POWER_TEST;
+            // g_Channelinfo[0].workMode = POWER_TEST;
 
-             g_Channelinfo[0].workMode = POWER_BURST;
+            g_Channelinfo[0].workMode = POWER_BURST;
 #endif
         }
         break;
@@ -244,28 +232,27 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
         {
 
             // 电压环
-					 gHandle_PID[i].v_ref = BOARD_OUT_VOLT;
-            gHandle_PID[i].v_fdb = g_Channelinfo[i].voltage; //设置反馈值
+            gHandle_PID[i].v_ref = BOARD_OUT_VOLT;
+            gHandle_PID[i].v_fdb = g_Channelinfo[i].voltage; // 设置反馈值
             pid_V_Loop_calc(&gHandle_PID[i]);
 
-            //电流环
-            gHandle_PID[i].i_ref +=0.00001f;
-					  if(gHandle_PID[i].i_ref >=5.0f)
-						{
-						  gHandle_PID[i].i_ref = 5.0f;
-						}
-					
+            // 电流环
+            gHandle_PID[i].i_ref += 0.00001f;
+            if (gHandle_PID[i].i_ref >= 5.0f)
+            {
+                gHandle_PID[i].i_ref = 5.0f;
+            }
+
             gHandle_PID[i].i_fdb = g_Channelinfo[i].current; // 设置反馈值
             pid_I_Loop_calc(&gHandle_PID[i]);
 
-
-            if( gHandle_PID[i].v_pid_out< gHandle_PID[i].i_pid_out)//双环竞争
+            if (gHandle_PID[i].v_pid_out < gHandle_PID[i].i_pid_out) // 双环竞争
             {
-              g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].v_pid_out;
+                g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].v_pid_out;
             }
             else
             {
-               g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].i_pid_out;
+                g_epwmHandle[i].High_MOS_DUTY = gHandle_PID[i].i_pid_out;
             }
         }
         break;
@@ -273,7 +260,6 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
         {
         }
         break;
-     
 
         case POWER_TEST: // 开环测试
         {
@@ -281,11 +267,9 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
             //  if(g_epwmHandle[i].Low_MOS_DUTY>g_epwmHandle[i].Low_MOS_Timer_TBPRD) g_epwmHandle[i].Low_MOS_DUTY =g_epwmHandle[i].Low_MOS_Timer_TBPRD;
         }
         break;
-        
+        }
     }
-	}
 }
-
 
 /**********************************************************************
  * Function: 	 APT0TimerCallback
@@ -298,19 +282,15 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
  * -----------------------------------------------
  * 2025-06-05	  V1.0	      Hu Weiping
  **********************************************************************/
- void APT0TimerCallback(void *aptHandle)
+void APT0TimerCallback(void *aptHandle)
 {
-//    BASE_FUNC_UNUSED(aptHandle);
+    //    BASE_FUNC_UNUSED(aptHandle);
     /* USER CODE BEGIN APT0_TIMER_INTERRUPT */
-  //  APT_Handle *handle = (APT_Handle *)aptHandle;
+    //  APT_Handle *handle = (APT_Handle *)aptHandle;
 
     if (g_Channelinfo[0].workMode == POWER_PRECHARGE)
     {
-
-
     }
-
-     
 
 #if 0
 
@@ -360,7 +340,6 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
     /* USER CODE END APT0_TIMER_INTERRUPT */
 }
 
-
 /**********************************************************************
  * Function: 	 TIMER0CallbackFunction
  * Description:  定时器0中断 20us
@@ -375,31 +354,23 @@ volatile uint16_t gPWM_Burst_StartTimer = 0;
 
 void TIMER0CallbackFunction(void *handle)
 {
-    
 
-//    System_LED_HIGH_LEVEL;
+    System_DBUGGPIO_HIGH_LEVEL;
 
-//    GetADC_Driver_Result();
-  // sample_irq_handler(); // 采集数据转换
+    GetADC_Driver_Result();
+    sample_irq_handler(); // 采集数据转换
 
-#if CLOOS_LOOP_MODE // 闭环开启保护
-     Scan_System_Fault(); // 保护
+#if CLOOS_LOOP_MODE      // 闭环开启保护
+    Scan_System_Fault(); // 保护
 #else
-     //  OpenLoopDebugPwm();
+                          //  OpenLoopDebugPwm();
 #endif
 
-    // ZPK_Handle_Update(12.0f,8.0f);
-    // g_epwmHandle->High_MOS_Timer_TBPRD=  g_ZPK_Handle.OUT ;
     System_CloseLoop_Status();
 
-//   // if (POWER_TEST == g_Channelinfo[0].workMode || (POWER_RUN_CHARGE == g_Channelinfo[0].workMode || POWER_SoftStart == g_Channelinfo[0].workMode) || POWER_BURST == g_Channelinfo[0].workMode)
-//   if (POWER_TEST == g_Channelinfo[0].workMode || (POWER_RUN_CHARGE == g_Channelinfo[0].workMode || POWER_SoftStart == g_Channelinfo[0].workMode) )
-//    {
-        Updata_EPWM_Handle();
-//				printf("Updata");
-//    }
+    Updata_EPWM_Handle();
 
-//    System_LED_LOW_LEVEL;
+   System_DBUGGPIO_LOW_LEVEL;
     /* USER CODE END TIMER1 ITCallBackFunc */
 }
 /**********************************************************************
@@ -413,7 +384,7 @@ void TIMER0CallbackFunction(void *handle)
  * -----------------------------------------------
  * 2025-06-05	  V1.0	      Hu Weiping
  **********************************************************************/
- void Power_PID_Updata(float FB, float REF)
+void Power_PID_Updata(float FB, float REF)
 {
     /// 电压环
     gHandle_PID[0].v_ref = REF;
@@ -439,13 +410,7 @@ void Debug_Loop(void)
     printf("\r\nSR_STA= 0x%d  LowFlag%d", g_epwmHandle[0].Low_MOS_STA, g_epwmHandle[0].Low_MOS_OpenFlag);
 
     printf("\r\nloop=%d", gHandle_PID[0].loop);
-    //printf("\r\nlBurstout=%f", gHandle_Burst_PID[0].v_pid_out);
+    // printf("\r\nlBurstout=%f", gHandle_Burst_PID[0].v_pid_out);
 
     printf("\r\nHigh_MOS_STA= 0x%d  High_MOS_OpenFlag=%d", g_epwmHandle[0].High_MOS_STA, g_epwmHandle[0].High_MOS_OpenFlag);
 }
-
-
-
-
-
-

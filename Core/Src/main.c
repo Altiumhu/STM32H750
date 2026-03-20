@@ -188,7 +188,7 @@ int main(void)
     AppDebug_vTask();
     //        AppUser_temp_sample();
 
-		sample_irq_handler(); // 采集数据转换
+
 	//	Updata_EPWM_Handle();
 		
 

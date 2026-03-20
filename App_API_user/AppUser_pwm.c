@@ -239,7 +239,7 @@ void Debug_PWM(void)
 	__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_1, 4000);
 	for (channel = 0; channel < 16; channel++)
 	{
-		pwm_start(channel, 0);
+		// pwm_start(channel, 0);
 	}
 }
 
@@ -264,6 +264,7 @@ void shell_Debug_PWM(int argc, char *argv[])
 	{
 		printf("\r\n 启动pwm=%d %d  ", num[0], num[1]);
 		pwm_start(num[0], num[1]);
+		g_Channelinfo[num[0]].fault.all =0;
 	}
 	else
 	{

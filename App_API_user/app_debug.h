@@ -16,12 +16,12 @@ typedef struct
 
 
 
-#define DEBUG_STATR   1 //1--表示不打印  0表示打印
+#define DEBUG_STATR   0 //1--表示不打印  0表示打印
 
-#define DEBUG_TIME_GAP  80    //间隔时间ms
+#define DEBUG_TIME_GAP  180    //间隔时间ms
 
 extern void debug_init(void);
-extern void debug_show_en(uint16_t en);
+void debug_show_en(int argc, char *argv[]);
 extern void debug_show_mode(uint16_t echo);
 extern void debug_show(void);
 extern void Debug_Timer_1ms(void);

@@ -1,8 +1,6 @@
 #include "head.h"
 #include "app_debug.h"
 
-
-
 Debug debug;
 
 void debug_init(void)
@@ -13,7 +11,6 @@ void debug_init(void)
     debug.echo = 0;
     debug.poll = 0;
     debug.msg = 0;
-
 
     debug.out = DEBUG_STATR;
 }
@@ -29,9 +26,7 @@ inline void Debug_Timer_1ms(void)
             debug.msg = 1;
             // g_Sys_State.start_RunFlag =1;
         }
-
     }
-
 }
 void Debug_Clear_Msg(void)
 {
@@ -53,31 +48,36 @@ void debug_show_mode(uint16_t echo)
 {
     debug.echo = echo;
 }
-/**********************************************************************
- * Function:     debug_show_en
- * Description:  调试输出使能
- * Input:        flag：0.关闭输出
- * Output:
- * Return:      void
- * Others:      Modbus-RTU
- * Modify Date:    Version:    Author:        Modification:
- * -----------------------------------------------
- * 2022-12-05     V1.0        Hu Weiping
- **********************************************************************/
-void debug_show_en(uint16_t en)
-{
 
-    debug.out = en;
+void debug_show_en(int argc, char *argv[])
+{
+    int num[16];
+    int channel, i;
+
+    if (argc < 2)
+    {
+        printf("Usage: 输入非法指令\r\n");
+        return;
+    }
+
+    // 参数个数（不含命令本身）
+    int num_params = argc - 1;
+    // 字符串转整型
+    num[0] = atoi(argv[1]);
+    num[1] = atoi(argv[2]);
+    debug.out = num[0];
+    printf("\r\n  debug.out =%d\r\n", debug.out);
+
     if (debug.out == 1)
     {
         printf("\033[2J");   // 清屏
         printf("\033[0;0H"); // 设置光标
     }
 }
-
 void debug_show(void)
 {
     static uint32_t poll_time = 0;
+    debug.msg = 0;
     if (debug.msg == 0)
         return;
 
@@ -89,14 +89,7 @@ extern void UserFlash_WriteUserData(void);
 
 void debug_show_workMode(void)
 {
-    uint32_t channel;
 
-    for (channel = 0; channel < 16; channel++)
-    {
-        printf("\r\n ch=[%d] workMode=%d ",channel, g_Channelinfo[channel].workMode);
-        printf(" ch=[%d] voltage=%f current=%f Cap_voltage=%f\r\n",channel,  g_Channelinfo[channel].voltage ,g_Channelinfo[channel].current,g_Channelinfo[channel].Cap_voltage);
-        printf(" ch=[%d] fault=0x%X \r\n",channel, g_Channelinfo[channel].fault.all);
-    }
 }
 void AppDebug_vTask(void)
 {
@@ -106,25 +99,25 @@ void AppDebug_vTask(void)
         return;
 
     printf("\r\nDebug Run=%d\r\n", poll_time++);
-    debug_show_workMode();//显示故障和运行模式
+    debug_show_workMode(); // 显示故障和运行模式
 
-//		
-//		 ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
-//		 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
-//		  g_Channelinfo[0].fault.all= 0;
+    //
+    //		 ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
+    //		 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
+    //		  g_Channelinfo[0].fault.all= 0;
     //  UserSlave_SendLink();
-//         UserFlash_WriteUserData();
-//     AppUserDebug_TempVaule();
+    //         UserFlash_WriteUserData();
+    //     AppUserDebug_TempVaule();
     // DebugLED_LOW_LEVEL ;
     // DBG_PRINTF("\r\ng_debugNUmer.debug1 %d \r\n",  g_debugNUmer.debug1);
     AppUser_Sample_Debug();
-   Debug_HandlePID();
+    Debug_HandlePID();
     CAN1_Send_TEST();
-//     Debug_PWM();
+    //     Debug_PWM();
+    Debug_Loop();
 
-//    AppUserDebug_TempVaule();
+    //    AppUserDebug_TempVaule();
 
     Debug_Clear_Msg();
-// DebugLED_HIGH_LEVEL ;
-
+    // DebugLED_HIGH_LEVEL ;
 }
