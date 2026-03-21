@@ -22,7 +22,7 @@
 
 /* USER CODE BEGIN 0 */
 #include "head.h"
-#include "cd4052.h"
+
 
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;

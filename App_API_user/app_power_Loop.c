@@ -99,7 +99,7 @@ void System_CloseLoop_Status(void)
             // 软启功率输出电容电压作为反馈值，电池端电压作为给定值
             // gHandle_PID[i].v_ref = fmin(gHandle_PID[i].v_ref, g_Channelinfo[i].voltage);
 
-            gHandle_PID[ch].v_fdb = g_Channelinfo[ch].Cap_voltage; // 设置反馈值
+            gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
             pid_V_Loop_calc(&gHandle_PID[ch]);
 
             if (gHandle_PID[ch].v_pid_out <= gHandle_PID[ch].i_pid_out)
@@ -110,10 +110,10 @@ void System_CloseLoop_Status(void)
             {
                 g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
             }
-            // g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
+            g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
             g_epwmHandle[ch].High_MOS_STA = 1;
 
-            if (g_Channelinfo[ch].Cap_voltage >= 1.0)
+            if (g_Channelinfo[ch].current >= 1.0|| g_Channelinfo[ch].voltage>0.5f)
             {
                 // ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
                 Set_PWM_Channel_CH595_EN(0, ch, EX_595_SET); // 打开PRT
@@ -235,7 +235,7 @@ void System_CloseLoop_Status(void)
             pid_V_Loop_calc(&gHandle_PID[ch]);
 
             // 电流环
-            gHandle_PID[ch].i_ref += 1.1f;
+            gHandle_PID[ch].i_ref += 0.01f;
             if (gHandle_PID[ch].i_ref >= g_Channelinfo[ch].Set_PreCC)
             {
                 gHandle_PID[ch].i_ref = g_Channelinfo[ch].Set_PreCC;
@@ -247,11 +247,19 @@ void System_CloseLoop_Status(void)
             if (gHandle_PID[ch].v_pid_out < gHandle_PID[ch].i_pid_out) // 双环竞争
             {
                 g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].v_pid_out;
+
+
             }
             else
             {
                 g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
+
             }
+
+                if( g_Channelinfo[ch].current>=gHandle_PID[ch].i_ref)
+                {
+                    gHandle_PID[ch].i_err_sum = g_epwmHandle[ch].High_MOS_DUTY;
+                }
         }
         break;
         case POWER_RUN_DISCHARGE: // 放电模式

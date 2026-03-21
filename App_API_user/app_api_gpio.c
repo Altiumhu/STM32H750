@@ -10,41 +10,41 @@ void GPIO_Array_Init(GPIO_Config *config);
 
 // MCU_IO_OUT 引脚配置数组
 GPIO_Config MCU_IO_OUT[MCU_IO_OUT_MAX] =
-{
+    {
 
-    {GPIOB, CD4052_A_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT1
-    {GPIOB, CD4052_B_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT2
-    {GPIOE, UN_OCP_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT3
+        {GPIOB, CD4052_A_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT1
+        {GPIOB, CD4052_B_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT2
+        {GPIOE, UN_OCP_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0},   // MCU_IO_OUT3
 
-    {GPIOE, UN_OVP_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT4
-    {GPIOE, FAN_GPIO_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT5
-    {GPIOC, SYS_LED1_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT6
+        {GPIOE, UN_OVP_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0},   // MCU_IO_OUT4
+        {GPIOE, FAN_GPIO_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT5
+        {GPIOC, SYS_LED1_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT6
 
-//    {GPIOD, MCU_IO_OUT7_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT7
-//    {GPIOD, MCU_IO_OUT8_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT8
-//    {GPIOD, MCU_IO_OUT9_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT9
+        //    {GPIOD, MCU_IO_OUT7_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT7
+        //    {GPIOD, MCU_IO_OUT8_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT8
+        //    {GPIOD, MCU_IO_OUT9_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT9
 
-//    {GPIOD, MCU_IO_OUT10_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT10
-//    {GPIOD, MCU_IO_OUT11_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT11
-//    {GPIOD, MCU_IO_OUT12_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT12
+        //    {GPIOD, MCU_IO_OUT10_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT10
+        //    {GPIOD, MCU_IO_OUT11_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT11
+        //    {GPIOD, MCU_IO_OUT12_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT12
 
-//    // 三色灯
-//    {GPIOE, LEDA_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT5
-//    {GPIOE, LEDB_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT6
-//    {GPIOE, LEDG_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT6
-//    {GPIOE, LEDR_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT6
+        //    // 三色灯
+        //    {GPIOE, LEDA_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT5
+        //    {GPIOE, LEDB_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT6
+        //    {GPIOE, LEDG_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT6
+        //    {GPIOE, LEDR_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT6
 
-//    // 蜂鸣器
-//    {GPIOE, MCU_BEEP_OUT_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT4
+        //    // 蜂鸣器
+        //    {GPIOE, MCU_BEEP_OUT_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT4
 
-//    // 呼吸灯
-//    {GPIOB, LED1_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT4
-//    {GPIOB, LED2_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT4
-//    // RS485控制
-//    {GPIOB, RS485_Dir_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT4
-//                                                                                      // 报警器
+        //    // 呼吸灯
+        //    {GPIOB, LED1_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT4
+        //    {GPIOB, LED2_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT4
+        //    // RS485控制
+        //    {GPIOB, RS485_Dir_Pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0}, // MCU_IO_OUT4
+        //                                                                                      // 报警器
 
-    {NULL, 0, 0, 0, 0, 0} // 结束标记
+        {NULL, 0, 0, 0, 0, 0} // 结束标记
 };
 
 // MCU_IO_OUT 引脚配置数组初始化
@@ -99,7 +99,6 @@ void GPIO_Array_Init(GPIO_Config *config)
     }
 }
 
-
 // Boost检查
 uint16_t LLC_BOOST_OK_cnt = 0;
 void Get_Boost_GPIO_OK(void)
@@ -114,34 +113,34 @@ void Smoke_Init_Data(void)
 void Smoke_vTask(void)
 {
 
-//    if (GetBit(g_Master_Hand.IO_INPUT_Data[3], 9) == 0) // 烟雾检测 ---IO  JP_IN9
-//    {
-//        g_Structural_Smoke.smoke_en = 1;
-//    }
-//    else
-//    {
-//        //  g_Structural_Smoke.smoke_en = 0;
-//        g_Structural_Smoke.smoke_timer = 0;
-//        g_Structural_Smoke.smoke_flag = 0;
-//    }
+    //    if (GetBit(g_Master_Hand.IO_INPUT_Data[3], 9) == 0) // 烟雾检测 ---IO  JP_IN9
+    //    {
+    //        g_Structural_Smoke.smoke_en = 1;
+    //    }
+    //    else
+    //    {
+    //        //  g_Structural_Smoke.smoke_en = 0;
+    //        g_Structural_Smoke.smoke_timer = 0;
+    //        g_Structural_Smoke.smoke_flag = 0;
+    //    }
 
-//    if (g_Structural_Smoke.smoke_en == 1 && g_Structural_Smoke.smoke_flag == 0)
-//    {
+    //    if (g_Structural_Smoke.smoke_en == 1 && g_Structural_Smoke.smoke_flag == 0)
+    //    {
 
-////        HAL_GPIO_WritePin(MCU_IO_OUT[5].port, MCU_IO_OUT[5].pin, GPIO_PIN_SET);   // 设置高电平
-//        HAL_GPIO_WritePin(MCU_IO_OUT[8].port, MCU_IO_OUT[8].pin, GPIO_PIN_RESET); // 设置低电平
+    ////        HAL_GPIO_WritePin(MCU_IO_OUT[5].port, MCU_IO_OUT[5].pin, GPIO_PIN_SET);   // 设置高电平
+    //        HAL_GPIO_WritePin(MCU_IO_OUT[8].port, MCU_IO_OUT[8].pin, GPIO_PIN_RESET); // 设置低电平
 
-//        g_Master_Hand.IO_OUT_Data = ClearBit(g_Master_Hand.IO_OUT_Data, 5);
-//        g_Master_Hand.IO_OUT_Data = ClearBit(g_Master_Hand.IO_OUT_Data, 9);
-//       // UserSlave_Stop(-1, 0xffff); // 通知下位机关机
-//        g_Structural_Smoke.smoke_flag = 1;
-//        // 设置托盘下降
+    //        g_Master_Hand.IO_OUT_Data = ClearBit(g_Master_Hand.IO_OUT_Data, 5);
+    //        g_Master_Hand.IO_OUT_Data = ClearBit(g_Master_Hand.IO_OUT_Data, 9);
+    //       // UserSlave_Stop(-1, 0xffff); // 通知下位机关机
+    //        g_Structural_Smoke.smoke_flag = 1;
+    //        // 设置托盘下降
 
-//        // SetParGPIO(0);
+    //        // SetParGPIO(0);
 
-//        g_Master_Hand.IO_OUT_Data = ClearBit(g_Master_Hand.IO_OUT_Data, 0);
-//        g_Master_Hand.IO_OUT_Data = SetBit(g_Master_Hand.IO_OUT_Data, 1);
-//    }
+    //        g_Master_Hand.IO_OUT_Data = ClearBit(g_Master_Hand.IO_OUT_Data, 0);
+    //        g_Master_Hand.IO_OUT_Data = SetBit(g_Master_Hand.IO_OUT_Data, 1);
+    //    }
 }
 // 风机检查
 void Get_FAN_GPIO(void)
@@ -150,11 +149,9 @@ void Get_FAN_GPIO(void)
 
 void Debug_GPIO(void)
 {
-
 }
 
-
-//检测输入过压保护
+// 检测输入过压保护
 void Sys_Power_INPUT_OVP(void)
 {
     uint8_t ch;
@@ -164,11 +161,7 @@ void Sys_Power_INPUT_OVP(void)
         for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
             g_Channelinfo[ch].fault.bit.H_OVP = 1;
     }
-
 }
-
-
-
 
 void Sys_Run_Led(void)
 {
@@ -275,18 +268,18 @@ void Read_GPIO_vTask(void)
     g_Master_Hand.IO_INPUT_Data[3] = IO_INPUbit8_15 << 8 | IO_INPUbit0_7; // 读取传感器输入IO数据
     // printf("\r\n g_Master_Hand.IO_INPUT_Data[3]=  %X", g_Master_Hand.IO_INPUT_Data[3]);
 
-//    if (GetBit(g_Master_Hand.IO_INPUT_Data[3], 12) == 0) // 手动模式按键检测 ---IO  JP_IN13
-//    {
-//        if (GetBit(g_Master_Hand.IO_INPUT_Data[3], 10) == 0) // 上升按键检测  JP_IN11 MCU_IO_OUT[indx].port, MCU_IO_OUT[indx].pin
-//        {
+    //    if (GetBit(g_Master_Hand.IO_INPUT_Data[3], 12) == 0) // 手动模式按键检测 ---IO  JP_IN13
+    //    {
+    //        if (GetBit(g_Master_Hand.IO_INPUT_Data[3], 10) == 0) // 上升按键检测  JP_IN11 MCU_IO_OUT[indx].port, MCU_IO_OUT[indx].pin
+    //        {
 
-//            SetParGPIO(1);
-//        }
-//        else if (GetBit(g_Master_Hand.IO_INPUT_Data[3], 11) == 0) // 下降按键检测  JP_IN12
-//        {
-//            SetParGPIO(0);
-//        }
-//    }
+    //            SetParGPIO(1);
+    //        }
+    //        else if (GetBit(g_Master_Hand.IO_INPUT_Data[3], 11) == 0) // 下降按键检测  JP_IN12
+    //        {
+    //            SetParGPIO(0);
+    //        }
+    //    }
 }
 
 uint8_t Get_INPUT_GPIO_Bit(uint8_t IOtype)
@@ -331,8 +324,6 @@ uint8_t Get_INPUT_GPIO_Bit(uint8_t IOtype)
 // 设置气缸动作
 void SetParGPIO(uint8_t IO)
 {
-
-
 }
 
 // 设置CD4052
@@ -340,46 +331,44 @@ void SetCD4052(uint8_t IO)
 {
     switch (IO)
     {
-    case 0: //
-        HAL_GPIO_WritePin(MCU_IO_OUT[0].port, MCU_IO_OUT[0].pin, GPIO_PIN_RESET);   //  设置低电平
+    case 0:                                                                       //
+        HAL_GPIO_WritePin(MCU_IO_OUT[0].port, MCU_IO_OUT[0].pin, GPIO_PIN_RESET); //  设置低电平
         HAL_GPIO_WritePin(MCU_IO_OUT[1].port, MCU_IO_OUT[1].pin, GPIO_PIN_RESET); // 设置低电平
-
 
         break;
 
-    case 1: //
+    case 1:                                                                       //
         HAL_GPIO_WritePin(MCU_IO_OUT[0].port, MCU_IO_OUT[0].pin, GPIO_PIN_SET);   //  设置高电平
         HAL_GPIO_WritePin(MCU_IO_OUT[1].port, MCU_IO_OUT[1].pin, GPIO_PIN_RESET); // 设置低电平
         break;
 
     case 2:
-        HAL_GPIO_WritePin(MCU_IO_OUT[0].port, MCU_IO_OUT[0].pin, GPIO_PIN_RESET);   //  设置低电平
-        HAL_GPIO_WritePin(MCU_IO_OUT[1].port, MCU_IO_OUT[1].pin, GPIO_PIN_SET); // 设置高电平
+        HAL_GPIO_WritePin(MCU_IO_OUT[0].port, MCU_IO_OUT[0].pin, GPIO_PIN_RESET); //  设置低电平
+        HAL_GPIO_WritePin(MCU_IO_OUT[1].port, MCU_IO_OUT[1].pin, GPIO_PIN_SET);   // 设置高电平
         break;
 
     case 3:
-        HAL_GPIO_WritePin(MCU_IO_OUT[0].port, MCU_IO_OUT[0].pin, GPIO_PIN_SET);   //  设置高电平
+        HAL_GPIO_WritePin(MCU_IO_OUT[0].port, MCU_IO_OUT[0].pin, GPIO_PIN_SET); //  设置高电平
         HAL_GPIO_WritePin(MCU_IO_OUT[1].port, MCU_IO_OUT[1].pin, GPIO_PIN_SET); // 设置高电平
         break;
     }
 }
 
-//设置采集 电容电压还是端口电压
+// 设置采集 电容电压还是端口电压
 void Set_Sample_Channel_VPortGPIO(V_PORT ch)
 {
 
     switch (ch)
     {
     case AD_V_CAP_EN:
-		     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_SET); //PD10
-         HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_RESET); //PD9
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_SET);  // PD10
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_RESET); // PD9
         break;
     case AD_V_PORT:
-		     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10 ,  GPIO_PIN_RESET); //PD10
-         HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_SET); //PD9
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_RESET); // PD10
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_SET);    // PD9
         break;
-		}
-
+    }
 }
 
 void Set_PWM_Channel_CH595_EN(uint32_t chip, uint16_t ch, uint32_t value)
@@ -438,9 +427,5 @@ void Set_PWM_Channel_CH595_EN(uint32_t chip, uint16_t ch, uint32_t value)
         break;
     case 16:
         break;
-
     }
-
-
 }
-

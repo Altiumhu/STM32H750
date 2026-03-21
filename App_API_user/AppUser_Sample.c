@@ -19,7 +19,7 @@
 #include "head.h"
 #include "AppUser_Sample.h"
 
-uint32_t g_SanSampTimer =20;
+uint32_t g_SanSampTimer = 20;
 uint32_t g_samptimer = 0; // 增加延时，让CD4052切换后充分稳定
 /*=================================================================================================
  * 全局变量定义
@@ -70,7 +70,7 @@ void GetADC_Driver_Result(void)
     static uint16_t Samp_ChnumTimer = 0, delayTimer = 0; // 通道切换计时器
 
     /* DMA传输后清理D-Cache,确保读取到最新数据 */
-    SCB_CleanDCache_by_Addr((uint32_t *)adc_values, sizeof(adc_values));
+    //SCB_CleanDCache_by_Addr((uint32_t *)adc_values, sizeof(adc_values));
 
     /* 根据CD4052通道号读取对应的ADC数据到g_Channelinfo */
     switch (CD4052_Chnum)
@@ -80,54 +80,51 @@ void GetADC_Driver_Result(void)
         Samp_ChnumTimer++;
         if (Samp_ChnumTimer >= g_SanSampTimer)
         {
-            CD4052_Chnum =1;
+            CD4052_Chnum = 1;
             Samp_ChnumTimer = 0;
             delayTimer = 0;
         }
-          SetCD4052(CD4052_Chnum);
+        SetCD4052(CD4052_Chnum);
 
+        /// SetCD4052(CD4052_Chnum); // 延时够了再切换
+        /* 电压采样 */
+        g_Channelinfo[0].voltage_ADC = adc1Result[0];  // 通道1 电压
+        g_Channelinfo[8].voltage_ADC = adc1Result[1];  // 通道5 电压
+        g_Channelinfo[4].voltage_ADC = adc1Result[2];  // 通道9 电压
+        g_Channelinfo[12].voltage_ADC = adc1Result[3]; // 通道13 电压
+        /* 通道1电压: 分压系数2.2 */
+        g_Channelinfo[0].voltage = g_Channelinfo[0].voltage_ADC * V_CAL_Ka * 2.2f;
+        g_Channelinfo[4].voltage = g_Channelinfo[4].voltage_ADC * V_CAL_Ka * 2.2f;
+        g_Channelinfo[8].voltage = g_Channelinfo[8].voltage_ADC * V_CAL_Ka * 2.2f;
+        g_Channelinfo[12].voltage = g_Channelinfo[12].voltage_ADC * V_CAL_Ka * 2.2f;
 
-           /// SetCD4052(CD4052_Chnum); // 延时够了再切换
-            /* 电压采样 */
-            g_Channelinfo[0].voltage_ADC = adc1Result[0];  // 通道1 电压
-            g_Channelinfo[8].voltage_ADC = adc1Result[1];  // 通道5 电压
-            g_Channelinfo[4].voltage_ADC = adc1Result[2];  // 通道9 电压
-            g_Channelinfo[12].voltage_ADC = adc1Result[3]; // 通道13 电压
-            /* 通道1电压: 分压系数2.2 */
-            g_Channelinfo[0].voltage = g_Channelinfo[0].voltage_ADC *V_CAL_Ka* 2.2f;
-            g_Channelinfo[4].voltage = g_Channelinfo[4].voltage_ADC *V_CAL_Ka* 2.2f;
-            g_Channelinfo[8].voltage = g_Channelinfo[8].voltage_ADC * V_CAL_Ka* 2.2f;
-            g_Channelinfo[12].voltage = g_Channelinfo[12].voltage_ADC * V_CAL_Ka * 2.2f;
+        /* 充电电流采样 */
+        g_Channelinfo[0].current_ADC = adc1Result[4];  // 通道1 电流
+        g_Channelinfo[4].current_ADC = adc1Result[5];  // 通道5 电流
+        g_Channelinfo[8].current_ADC = adc1Result[6];  // 通道9 电流
+        g_Channelinfo[12].current_ADC = adc1Result[7]; // 通道13 电流
 
-            /* 充电电流采样 */
-            g_Channelinfo[0].current_ADC = adc1Result[4];  // 通道1 电流
-            g_Channelinfo[4].current_ADC = adc1Result[5];  // 通道5 电流
-            g_Channelinfo[8].current_ADC = adc1Result[6];  // 通道9 电流
-            g_Channelinfo[12].current_ADC = adc1Result[7]; // 通道13 电流
+        /* 放电流电流采样 */
+        g_Channelinfo[0].current_DC_ADC = adc1Result[8];   // 通道1 直流电流
+        g_Channelinfo[4].current_DC_ADC = adc1Result[9];   // 通道5 直流电流
+        g_Channelinfo[8].current_DC_ADC = adc1Result[10];  // 通道9 直流电流
+        g_Channelinfo[12].current_DC_ADC = adc1Result[11]; // 通道13 直流电流
 
-            /* 放电流电流采样 */
-            g_Channelinfo[0].current_DC_ADC = adc1Result[8];   // 通道1 直流电流
-            g_Channelinfo[4].current_DC_ADC = adc1Result[9];   // 通道5 直流电流
-            g_Channelinfo[8].current_DC_ADC = adc1Result[10];  // 通道9 直流电流
-            g_Channelinfo[12].current_DC_ADC = adc1Result[11]; // 通道13 直流电流
-
-            /* 通道1电流: 采样电阻1.66666mΩ,0.0003x - 0.0437*/
-            if (g_Channelinfo[0].workMode == POWER_RUN_DISCHARGE)
-            {
-                g_Channelinfo[0].current = g_Channelinfo[0].current_DC_ADC * CC_CAL_Ka+ CC_CAL_Kb;
-                g_Channelinfo[4].current = g_Channelinfo[4].current_DC_ADC *  CC_CAL_Ka+ CC_CAL_Kb;
-                g_Channelinfo[8].current = g_Channelinfo[8].current_DC_ADC *   CC_CAL_Ka+ CC_CAL_Kb;
-                g_Channelinfo[12].current = g_Channelinfo[12].current_DC_ADC *  CC_CAL_Ka+ CC_CAL_Kb;
-            }
-            else
-            {
-                g_Channelinfo[0].current = g_Channelinfo[0].current_ADC *  CC_CAL_Ka+ CC_CAL_Kb;
-                g_Channelinfo[4].current = g_Channelinfo[4].current_ADC * CC_CAL_Ka+ CC_CAL_Kb;
-                g_Channelinfo[8].current = g_Channelinfo[8].current_ADC *  CC_CAL_Ka+ CC_CAL_Kb;
-                g_Channelinfo[12].current = g_Channelinfo[12].current_ADC *  CC_CAL_Ka+ CC_CAL_Kb;
-            }
-
-        
+        /* 通道1电流: 采样电阻1.66666mΩ,0.0003x - 0.0437*/
+        if (g_Channelinfo[0].workMode == POWER_RUN_DISCHARGE)
+        {
+            g_Channelinfo[0].current = g_Channelinfo[0].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+            g_Channelinfo[4].current = g_Channelinfo[4].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+            g_Channelinfo[8].current = g_Channelinfo[8].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+            g_Channelinfo[12].current = g_Channelinfo[12].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+        }
+        else
+        {
+            g_Channelinfo[0].current = g_Channelinfo[0].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+            g_Channelinfo[4].current = g_Channelinfo[4].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+            g_Channelinfo[8].current = g_Channelinfo[8].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+            g_Channelinfo[12].current = g_Channelinfo[12].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+        }
 
         /* 电容端电压/端口电压采样 */
         if (g_Channelinfo[0].workMode == POWER_PRECHARGE || g_Channelinfo[0].workMode == POWER_INIT)
@@ -135,17 +132,30 @@ void GetADC_Driver_Result(void)
             Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);         // 切换到电容电压采样
             g_Channelinfo[0].Cap_voltage_ADC = adc1Result[12]; // 通道1 电容电压
             g_Channelinfo[4].Cap_voltage_ADC = adc1Result[13]; // 通道5 电容电压
-                                                               /* 通道1电容电压: 分压系数3.033333 */
-            g_Channelinfo[0].Cap_voltage = g_Channelinfo[0].Cap_voltage_ADC * V_CAL_Ka* 3.033333f;
-            g_Channelinfo[4].Cap_voltage = g_Channelinfo[4].Cap_voltage_ADC *V_CAL_Ka* 3.033333f;
+
+            g_Channelinfo[8].Cap_voltage_ADC = adc1Result[14];  // 通道1 电容电压
+            g_Channelinfo[12].Cap_voltage_ADC = adc1Result[15]; // 通道5 电容电压
+                                                                /* 通道1电容电压: 分压系数3.033333 */
+            g_Channelinfo[8].Cap_voltage = g_Channelinfo[8].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+            g_Channelinfo[12].Cap_voltage = g_Channelinfo[12].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+
+            g_Channelinfo[0].Cap_voltage = g_Channelinfo[0].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+            g_Channelinfo[4].Cap_voltage = g_Channelinfo[4].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
         }
         else if (g_Channelinfo[0].workMode == POWER_FAULT || g_Channelinfo[0].workMode == POWER_RUN_CHARGE)
         {
             Set_Sample_Channel_VPortGPIO(AD_V_PORT);            // 切换到端口电压采样
             g_Channelinfo[0].voltage_port_ADC = adc1Result[12]; // 通道1 端口电压
             g_Channelinfo[4].voltage_port_ADC = adc1Result[13]; // 通道5 端口电压
-            g_Channelinfo[0].Cap_voltage = g_Channelinfo[0].Cap_voltage_ADC * V_CAL_Ka* 3.033333f;
-            g_Channelinfo[4].Cap_voltage = g_Channelinfo[4].Cap_voltage_ADC * V_CAL_Ka* 3.033333f;
+
+            g_Channelinfo[8].voltage_port_ADC = adc1Result[14];  // 通道1 端口电压
+            g_Channelinfo[12].voltage_port_ADC = adc1Result[15]; // 通道5 端口电压
+
+            g_Channelinfo[0].voltage_port = g_Channelinfo[0].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+            g_Channelinfo[4].voltage_port = g_Channelinfo[4].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+
+            g_Channelinfo[8].voltage_port = g_Channelinfo[8].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+            g_Channelinfo[12].voltage_port = g_Channelinfo[12].voltage_port_ADC * V_CAL_Ka * 3.033333f;
         }
 
         break;
@@ -161,13 +171,12 @@ void GetADC_Driver_Result(void)
         }
         delayTimer++;
 
-         SetCD4052(CD4052_Chnum); // 延时够了再切换
+        SetCD4052(CD4052_Chnum); // 延时够了再切换
 
         if (delayTimer >= g_samptimer) // 延时一个开关周期 等待CD4052开关稳定
         {
             delayTimer = g_samptimer;
 
-           
             /* 电压采样 */
             g_Channelinfo[1].voltage_ADC = adc1Result[0];  // 通道1 电压
             g_Channelinfo[9].voltage_ADC = adc1Result[1];  // 通道5 电压
@@ -177,7 +186,7 @@ void GetADC_Driver_Result(void)
             g_Channelinfo[1].voltage = g_Channelinfo[1].voltage_ADC * V_CAL_Ka * 2.2f;
             g_Channelinfo[5].voltage = g_Channelinfo[5].voltage_ADC * V_CAL_Ka * 2.2f;
             g_Channelinfo[9].voltage = g_Channelinfo[9].voltage_ADC * V_CAL_Ka * 2.2f;
-            g_Channelinfo[13].voltage = g_Channelinfo[13].voltage_ADC * V_CAL_Ka* 2.2f;
+            g_Channelinfo[13].voltage = g_Channelinfo[13].voltage_ADC * V_CAL_Ka * 2.2f;
 
             /* 充电电流采样 */
             g_Channelinfo[1].current_ADC = adc1Result[4];  // 通道2 电流
@@ -194,17 +203,17 @@ void GetADC_Driver_Result(void)
             /* 通道1电流: 采样电阻1.6666mΩ, y = 0.4071x放大倍数 */
             if (g_Channelinfo[0].workMode == POWER_RUN_DISCHARGE)
             {
-                g_Channelinfo[1].current = g_Channelinfo[1].current_DC_ADC *CC_CAL_Ka+ CC_CAL_Kb;
-                g_Channelinfo[5].current = g_Channelinfo[5].current_DC_ADC  *CC_CAL_Ka+ CC_CAL_Kb;
-                g_Channelinfo[9].current = g_Channelinfo[9].current_DC_ADC  *CC_CAL_Ka+ CC_CAL_Kb;
-                g_Channelinfo[13].current = g_Channelinfo[13].current_DC_ADC * CC_CAL_Ka+ CC_CAL_Kb;
+                g_Channelinfo[1].current = g_Channelinfo[1].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[5].current = g_Channelinfo[5].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[9].current = g_Channelinfo[9].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[13].current = g_Channelinfo[13].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
             }
             else
             {
-                g_Channelinfo[1].current = g_Channelinfo[1].current_ADC *CC_CAL_Ka+ CC_CAL_Kb;
-                g_Channelinfo[5].current = g_Channelinfo[5].current_ADC  *CC_CAL_Ka+ CC_CAL_Kb;
-                g_Channelinfo[9].current = g_Channelinfo[9].current_ADC  *CC_CAL_Ka+ CC_CAL_Kb;
-                g_Channelinfo[13].current = g_Channelinfo[13].current_ADC *CC_CAL_Ka+ CC_CAL_Kb;
+                g_Channelinfo[1].current = g_Channelinfo[1].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[5].current = g_Channelinfo[5].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[9].current = g_Channelinfo[9].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[13].current = g_Channelinfo[13].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
             }
 
             /* 电容端电压/端口电压采样 */
@@ -213,16 +222,30 @@ void GetADC_Driver_Result(void)
                 Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
                 g_Channelinfo[1].Cap_voltage_ADC = adc1Result[12]; // 通道2 电容电压
                 g_Channelinfo[5].Cap_voltage_ADC = adc1Result[13]; // 通道6 电容电压
+
+                g_Channelinfo[9].Cap_voltage_ADC = adc1Result[14];  // 通道1 电容电压
+                g_Channelinfo[13].Cap_voltage_ADC = adc1Result[15]; // 通道5 电容电压
+
                 g_Channelinfo[1].Cap_voltage = g_Channelinfo[1].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
                 g_Channelinfo[5].Cap_voltage = g_Channelinfo[5].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+                /* 通道1电容电压: 分压系数3.033333 */
+                g_Channelinfo[9].Cap_voltage = g_Channelinfo[9].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+                g_Channelinfo[13].Cap_voltage = g_Channelinfo[13].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
             }
             else if (g_Channelinfo[0].workMode == POWER_FAULT || g_Channelinfo[0].workMode == POWER_RUN_CHARGE)
             {
                 Set_Sample_Channel_VPortGPIO(AD_V_PORT);
-                g_Channelinfo[1].voltage_port_ADC = adc1Result[12]; // 通道2 端口电压
-                g_Channelinfo[5].voltage_port_ADC = adc1Result[13]; // 通道6 端口电压
-                g_Channelinfo[1].Cap_voltage = g_Channelinfo[1].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
-                g_Channelinfo[5].Cap_voltage = g_Channelinfo[5].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+                g_Channelinfo[1].voltage_port_ADC = adc1Result[12];  // 通道2 端口电压
+                g_Channelinfo[5].voltage_port_ADC = adc1Result[13];  // 通道6 端口电压
+                g_Channelinfo[9].voltage_port_ADC = adc1Result[14];  // 通道1 电容电压
+                g_Channelinfo[13].voltage_port_ADC = adc1Result[15]; // 通道5 电容电压
+
+                g_Channelinfo[1].voltage_port = g_Channelinfo[1].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+                g_Channelinfo[5].voltage_port = g_Channelinfo[5].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+
+                /* 通道1电容电压: 分压系数3.033333 */
+                g_Channelinfo[9].voltage_port = g_Channelinfo[9].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+                g_Channelinfo[13].voltage_port = g_Channelinfo[13].voltage_port_ADC * V_CAL_Ka * 3.033333f;
             }
         }
 
@@ -238,10 +261,10 @@ void GetADC_Driver_Result(void)
             delayTimer = 0;
         }
         delayTimer++;
-         SetCD4052(CD4052_Chnum); // 延时够了再切换
+        SetCD4052(CD4052_Chnum);       // 延时够了再切换
         if (delayTimer >= g_samptimer) // 延时一个开关周期 等待CD4052开关稳定
         {
-          
+
             delayTimer = g_samptimer;
 
             /* 电压采样 */
@@ -250,10 +273,10 @@ void GetADC_Driver_Result(void)
             g_Channelinfo[6].voltage_ADC = adc1Result[2];  // 通道11 电压
             g_Channelinfo[14].voltage_ADC = adc1Result[3]; // 通道15 电压
             /* 通道1电压: 分压系数2.2 */
-            g_Channelinfo[2].voltage = g_Channelinfo[2].voltage_ADC *V_CAL_Ka * 2.2f;
-            g_Channelinfo[10].voltage = g_Channelinfo[10].voltage_ADC *V_CAL_Ka * 2.2f;
+            g_Channelinfo[2].voltage = g_Channelinfo[2].voltage_ADC * V_CAL_Ka * 2.2f;
+            g_Channelinfo[10].voltage = g_Channelinfo[10].voltage_ADC * V_CAL_Ka * 2.2f;
             g_Channelinfo[6].voltage = g_Channelinfo[6].voltage_ADC * V_CAL_Ka * 2.2f;
-            g_Channelinfo[14].voltage = g_Channelinfo[14].voltage_ADC * V_CAL_Ka* 2.2f;
+            g_Channelinfo[14].voltage = g_Channelinfo[14].voltage_ADC * V_CAL_Ka * 2.2f;
 
             /* 充电电流采样 */
             g_Channelinfo[2].current_ADC = adc1Result[4];  // 通道1 电流
@@ -270,35 +293,50 @@ void GetADC_Driver_Result(void)
             /* 通道1电流: 采样电阻0.1Ω, 放大倍数 */
             if (g_Channelinfo[0].workMode == POWER_RUN_DISCHARGE)
             {
-                g_Channelinfo[2].current = g_Channelinfo[2].current_DC_ADC * 0.3876f+ 796.28f;
-                g_Channelinfo[6].current = g_Channelinfo[6].current_DC_ADC * 0.3876f+ 796.28f;
-                g_Channelinfo[10].current = g_Channelinfo[10].current_DC_ADC *0.3876f+ 796.28f;
-                g_Channelinfo[14].current = g_Channelinfo[14].current_DC_ADC * 0.3876f+ 796.28f;
+                g_Channelinfo[2].current = g_Channelinfo[2].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[6].current = g_Channelinfo[6].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[10].current = g_Channelinfo[10].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[14].current = g_Channelinfo[14].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
             }
             else
             {
-                g_Channelinfo[2].current = g_Channelinfo[2].current_ADC * 0.3876f+ 796.28f;
-                g_Channelinfo[6].current = g_Channelinfo[6].current_ADC * 0.3876f+ 796.28f;
-                g_Channelinfo[10].current = g_Channelinfo[10].current_ADC *0.3876f+ 796.28f;
-                g_Channelinfo[14].current = g_Channelinfo[14].current_ADC * 0.3876f+ 796.28f;
+                g_Channelinfo[2].current = g_Channelinfo[2].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[6].current = g_Channelinfo[6].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[10].current = g_Channelinfo[10].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[14].current = g_Channelinfo[14].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
             }
 
             /* 电容端电压/端口电压采样 */
-            // if (g_Channelinfo[0].workMode == POWER_PRECHARGE || g_Channelinfo[0].workMode == POWER_INIT)
-            // {
-            //     Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
-            //     g_Channelinfo[2].Cap_voltage_ADC = adc1Result[12]; // 通道3 电容电压
-            //     g_Channelinfo[6].Cap_voltage_ADC = adc1Result[13]; // 通道7 电容电压
-            // }
-            // else if (g_Channelinfo[0].workMode == POWER_FAULT || g_Channelinfo[0].workMode == POWER_RUN_CHARGE)
-            // {
-            //     Set_Sample_Channel_VPortGPIO(AD_V_PORT);
-            //     g_Channelinfo[2].voltage_port_ADC = adc1Result[12]; // 通道3 端口电压
-            //     g_Channelinfo[6].voltage_port_ADC = adc1Result[13]; // 通道7 端口电压
-            // }
-                g_Channelinfo[2].Cap_voltage_ADC = adc1Result[12]; // 通道3 电容电压
-                g_Channelinfo[6].Cap_voltage_ADC = adc1Result[13]; // 通道7 电容电压
-             Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
+            if (g_Channelinfo[0].workMode == POWER_PRECHARGE || g_Channelinfo[0].workMode == POWER_INIT)
+            {
+                Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
+                g_Channelinfo[2].Cap_voltage_ADC = adc1Result[12];  // 通道3 电容电压
+                g_Channelinfo[6].Cap_voltage_ADC = adc1Result[13];  // 通道7 电容电压
+                g_Channelinfo[10].Cap_voltage_ADC = adc1Result[14]; // 通道1 电容电压
+                g_Channelinfo[14].Cap_voltage_ADC = adc1Result[15]; // 通道5 电容电压
+
+                g_Channelinfo[2].Cap_voltage = g_Channelinfo[2].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+                g_Channelinfo[6].Cap_voltage = g_Channelinfo[6].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+                /* 通道1电容电压: 分压系数3.033333 */
+                g_Channelinfo[10].Cap_voltage = g_Channelinfo[10].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+                g_Channelinfo[14].Cap_voltage = g_Channelinfo[14].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+            }
+            else if (g_Channelinfo[0].workMode == POWER_FAULT || g_Channelinfo[0].workMode == POWER_RUN_CHARGE)
+            {
+                Set_Sample_Channel_VPortGPIO(AD_V_PORT);
+                g_Channelinfo[2].voltage_port_ADC = adc1Result[12]; // 通道3 端口电压
+                g_Channelinfo[6].voltage_port_ADC = adc1Result[13]; // 通道7 端口电压
+
+                g_Channelinfo[10].voltage_port_ADC = adc1Result[14]; // 通道1 电容电压
+                g_Channelinfo[14].voltage_port_ADC = adc1Result[15]; // 通道5 电容电压
+
+                g_Channelinfo[2].voltage_port = g_Channelinfo[2].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+                g_Channelinfo[6].voltage_port = g_Channelinfo[6].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+
+                /* 通道1电容电压: 分压系数3.033333 */
+                g_Channelinfo[10].voltage_port = g_Channelinfo[10].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+                g_Channelinfo[14].voltage_port = g_Channelinfo[14].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+            }
         }
         break;
 
@@ -309,24 +347,24 @@ void GetADC_Driver_Result(void)
         {
             CD4052_Chnum = 0; // 循环回到通道0
             Samp_ChnumTimer = 0;
-            delayTimer=0;
+            delayTimer = 0;
         }
         delayTimer++;
-          SetCD4052(CD4052_Chnum);       // 延时够了再切换
+        SetCD4052(CD4052_Chnum);       // 延时够了再切换
         if (delayTimer >= g_samptimer) // 延时一个开关周期 等待CD4052开关稳定
         {
             delayTimer = g_samptimer;
-  
+
             /* 电压采样 */
             g_Channelinfo[3].voltage_ADC = adc1Result[0];  // 通道4 电压
             g_Channelinfo[11].voltage_ADC = adc1Result[1]; // 通道8 电压
             g_Channelinfo[7].voltage_ADC = adc1Result[2];  // 通道12 电压
             g_Channelinfo[15].voltage_ADC = adc1Result[3]; // 通道16 电压
             /* 通道1电压: 分压系数2.2 */
-            g_Channelinfo[3].voltage = g_Channelinfo[3].voltage_ADC * V_CAL_Ka* 2.2f;
+            g_Channelinfo[3].voltage = g_Channelinfo[3].voltage_ADC * V_CAL_Ka * 2.2f;
             g_Channelinfo[7].voltage = g_Channelinfo[7].voltage_ADC * V_CAL_Ka * 2.2f;
             g_Channelinfo[11].voltage = g_Channelinfo[11].voltage_ADC * V_CAL_Ka * 2.2f;
-            g_Channelinfo[15].voltage = g_Channelinfo[15].voltage_ADC * V_CAL_Ka* 2.2f;
+            g_Channelinfo[15].voltage = g_Channelinfo[15].voltage_ADC * V_CAL_Ka * 2.2f;
 
             /* 充电电流采样 */
             /* 电流采样 */
@@ -343,17 +381,17 @@ void GetADC_Driver_Result(void)
                                                                /* 通道1电流: 采样电阻0.1Ω, 放大倍数 */
             if (g_Channelinfo[0].workMode == POWER_RUN_DISCHARGE)
             {
-                g_Channelinfo[3].current = g_Channelinfo[3].current_DC_ADC * 0.3876f+ 796.28f;
-                g_Channelinfo[7].current = g_Channelinfo[7].current_DC_ADC * 0.3876f+ 796.28f;
-                g_Channelinfo[11].current = g_Channelinfo[11].current_DC_ADC *0.3876f+ 796.28f;
-                g_Channelinfo[15].current = g_Channelinfo[15].current_DC_ADC * 0.3876f+ 796.28f;
+                g_Channelinfo[3].current = g_Channelinfo[3].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[7].current = g_Channelinfo[7].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[11].current = g_Channelinfo[11].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[15].current = g_Channelinfo[15].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
             }
             else
             {
-                g_Channelinfo[3].current = g_Channelinfo[3].current_ADC *0.3876f+ 796.28f;
-                g_Channelinfo[7].current = g_Channelinfo[7].current_ADC * 0.3876f+ 796.28f;
-                g_Channelinfo[11].current = g_Channelinfo[11].current_ADC *0.3876f+ 796.28f;
-                g_Channelinfo[15].current = g_Channelinfo[15].current_ADC *0.3876f+ 796.28f;
+                g_Channelinfo[3].current = g_Channelinfo[3].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[7].current = g_Channelinfo[7].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[11].current = g_Channelinfo[11].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                g_Channelinfo[15].current = g_Channelinfo[15].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
             }
         }
         /* 电容端电压/端口电压采样 */
@@ -362,12 +400,30 @@ void GetADC_Driver_Result(void)
             Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
             g_Channelinfo[3].Cap_voltage_ADC = adc1Result[12]; // 通道3 电容电压
             g_Channelinfo[7].Cap_voltage_ADC = adc1Result[13]; // 通道7 电容电压
+
+            g_Channelinfo[11].Cap_voltage_ADC = adc1Result[14]; // 通道1 电容电压
+            g_Channelinfo[15].Cap_voltage_ADC = adc1Result[15]; // 通道5 电容电压
+
+            g_Channelinfo[3].Cap_voltage = g_Channelinfo[3].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+            g_Channelinfo[7].Cap_voltage = g_Channelinfo[7].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+            /* 通道1电容电压: 分压系数3.033333 */
+            g_Channelinfo[11].Cap_voltage = g_Channelinfo[11].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
+            g_Channelinfo[15].Cap_voltage = g_Channelinfo[15].Cap_voltage_ADC * V_CAL_Ka * 3.033333f;
         }
         else if (g_Channelinfo[0].workMode == POWER_FAULT || g_Channelinfo[0].workMode == POWER_RUN_CHARGE)
         {
             Set_Sample_Channel_VPortGPIO(AD_V_PORT);
-            g_Channelinfo[3].voltage_port_ADC = adc1Result[12]; // 通道3 端口电压
-            g_Channelinfo[7].voltage_port_ADC = adc1Result[13]; // 通道7 端口电压
+            g_Channelinfo[3].voltage_port_ADC = adc1Result[12];  // 通道3 端口电压
+            g_Channelinfo[7].voltage_port_ADC = adc1Result[13];  // 通道7 端口电压
+            g_Channelinfo[11].voltage_port_ADC = adc1Result[14]; // 通道1 电容电压
+            g_Channelinfo[15].voltage_port_ADC = adc1Result[15]; // 通道5 电容电压
+
+            g_Channelinfo[3].voltage_port = g_Channelinfo[3].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+            g_Channelinfo[7].voltage_port = g_Channelinfo[7].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+
+            /* 通道1电容电压: 分压系数3.033333 */
+            g_Channelinfo[11].voltage_port = g_Channelinfo[11].voltage_port_ADC * V_CAL_Ka * 3.033333f;
+            g_Channelinfo[15].voltage_port = g_Channelinfo[15].voltage_port_ADC * V_CAL_Ka * 3.033333f;
         }
 
         break;
@@ -396,8 +452,11 @@ void GetADC_Driver_Result(void)
     adc1Result[12] = adc_values[12]; // PC0 - 电容/端口电压1
     adc1Result[13] = adc_values[13]; // PC1 - 电容/端口电压2
 
+    adc1Result[14] = adc3_values[0]; // PC2 - 电容/端口电压1
+    adc1Result[15] = adc3_values[1]; // PC3 - 电容/端口电压2
+
     /* DMA读取完成后使D-Cache失效,避免后续DMA写入时产生缓存一致性冲突 */
-    SCB_InvalidateDCache_by_Addr((uint32_t *)adc_values, sizeof(adc_values));
+    //SCB_InvalidateDCache_by_Addr((uint32_t *)adc_values, sizeof(adc_values));
 }
 
 /*=================================================================================================
@@ -512,12 +571,12 @@ void AppUser_ChannelInfo_Debug(void)
     /* 电容电压 */
     printf("Cap_voltage =%f ADC1_A10=%d\r\n", g_Channelinfo[0].Cap_voltage, adc_values[12]);
 
-    for (ch = 0; ch < 4; ch++)
+    for (ch = 4; ch < 8; ch++)
     {
-        printf("\r\n ch=[%d] workMode=%d \r\n", ch+1, g_Channelinfo[ch].workMode);
-        printf(" ch=[%d] voltage=%f--ADC=%d current=%f--ADC%d Cap_voltage=%f\r\n", ch+1, g_Channelinfo[ch].voltage, g_Channelinfo[ch].voltage_ADC,
-               g_Channelinfo[ch].current, g_Channelinfo[ch].current_ADC, g_Channelinfo[ch].Cap_voltage);
-        printf(" ch=[%d] fault=0x%X \r\n", ch+1, g_Channelinfo[ch].fault.all);
+        printf("\r\n ch=[%d] workMode=%d \r\n", ch + 1, g_Channelinfo[ch].workMode);
+        printf(" ch=[%d] voltage=%f--ADC=%d current=%f--ADC%d Cap_voltage=%f voltage_port=%f\r\n", ch + 1, g_Channelinfo[ch].voltage, g_Channelinfo[ch].voltage_ADC,
+               g_Channelinfo[ch].current, g_Channelinfo[ch].current_ADC, g_Channelinfo[ch].Cap_voltage ,g_Channelinfo[ch].voltage_port );
+        printf(" ch=[%d] fault=0x%X \r\n", ch + 1, g_Channelinfo[ch].fault.all);
     }
 }
 

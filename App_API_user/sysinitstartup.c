@@ -155,6 +155,17 @@ void AppUser_prvSetupHardware(void)
   ADC3_StartConversion();
 
   Set_ULock_GPIO();//解除硬件保护
+
+
+  for (uint16_t i = 0; i < 16; i++)
+  {
+    Set_PWM_Channel_CH595_EN(2, i, EX_595_RESET); // 打开MOS驱动使能
+  
+   Set_PWM_Channel_CH595_EN(0, i, EX_595_RESET); // 打开PRT
+  }
+  
+
+
 }
 void Display_PeriphCLKFreq(void)
 {
