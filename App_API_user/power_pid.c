@@ -61,7 +61,7 @@ void PIDInit(uint16_t ch)
     // 电压环的参数初始化通道1
     gHandle_PID[ch].v_fdb = 0;                              // 反馈值
     gHandle_PID[ch].v_err = 0.0f;                           // 误差
-    gHandle_PID[ch].v_kp =2.0f;                            // 比例系数
+    gHandle_PID[ch].v_kp =1.0f;                            // 比例系数
     gHandle_PID[ch].v_ki = 0.5f;                            // 积分系数
     gHandle_PID[ch].v_ref = 3000.0f;                          // 电压环基准复位，进行软起动
     gHandle_PID[ch].v_err_sum = (200);         //
@@ -75,8 +75,8 @@ void PIDInit(uint16_t ch)
 
     gHandle_PID[ch].i_fdb = 0.0f;              // 反馈值
     gHandle_PID[ch].i_err = 0.0f;              // 误差
-    gHandle_PID[ch].i_kp = 10.0f;               // 比例系数500
-    gHandle_PID[ch].i_ki = 1.5f;               // 积分系数100-30a
+    gHandle_PID[ch].i_kp = 0.1f;               // 比例系数500
+    gHandle_PID[ch].i_ki = 0.055f;               // 积分系数100-30a
     gHandle_PID[ch].i_ref = 0.5f;              // 电压环基准复位，进行软起动
     gHandle_PID[ch].i_up = (3000);  //
     gHandle_PID[ch].i_ui = (0); //
@@ -227,8 +227,8 @@ void pid_I_Loop_calc(power_pid_define *I)
 {
     I->i_err = I->i_ref - I->i_fdb;
 
-    I->i_err = __fmin(I->i_err, 40.0f);  // 误差限幅
-    I->i_err = __fmax(I->i_err, -40.0f); // 误差限幅
+    I->i_err = __fmin(I->i_err, 1.0f);  // 误差限幅
+    I->i_err = __fmax(I->i_err, -1.0f); // 误差限幅
 
     I->i_err_sum = I->i_err_sum + I->i_ki * I->i_err; // 正常情况下积分计算
 

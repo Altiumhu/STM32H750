@@ -138,13 +138,12 @@ void AppUser_prvSetupHardware(void)
   //  mpu_memory_protection();                               /* 保护相关存储区域 */
   //  sdram_init();                                          /* 初始化SDRAM */
   //  // key_init();                                            /* 初始化按键 */
-  //  MCU_IO_OUT_Init();                                     /* 输出IO初始化 */
+   MCU_IO_OUT_Init();                                     /* 输出IO初始化 */
   //  fdcan_init(1, 8, 31, 8,   FDCAN_MODE_NORMAL); /* FDCAN初始化， 普通模式,波特率500kbps  */
   //  fdcan3_init(10, 8, 16, 5, FDCAN_MODE_NORMAL);          /* FDCAN初始化，普通模式,波特率500kbps */
   App_Drive_UASRT_Init();
 
-  // 初始化CD4052模拟开关
-  CD4052_Init();
+
   
   // 校准ADC
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);

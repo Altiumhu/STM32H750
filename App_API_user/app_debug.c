@@ -89,7 +89,6 @@ extern void UserFlash_WriteUserData(void);
 
 void debug_show_workMode(void)
 {
-
 }
 void AppDebug_vTask(void)
 {
@@ -102,8 +101,15 @@ void AppDebug_vTask(void)
     debug_show_workMode(); // 显示故障和运行模式
 
     //
-    //		 ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
-    //		 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
+    //  ex_595_write(0, EX_595_PIN_0, 1);
+    //  ex_595_write(2, EX_595_PIN_0, 1);
+
+    g_Channelinfo[0].fault.all = 0;
+    // pwm_start(0, 0);
+    // Set_PWM_Channel_CH595_EN(2, 0, EX_595_SET); // 打开MOS驱动使能
+
+    // Set_PWM_Channel_CH595_EN(0, 0, EX_595_SET); // 打开PRT
+
     //		  g_Channelinfo[0].fault.all= 0;
     //  UserSlave_SendLink();
     //         UserFlash_WriteUserData();
@@ -111,7 +117,7 @@ void AppDebug_vTask(void)
     // DebugLED_LOW_LEVEL ;
     // DBG_PRINTF("\r\ng_debugNUmer.debug1 %d \r\n",  g_debugNUmer.debug1);
     AppUser_Sample_Debug();
-    //Debug_HandlePID();
+     Debug_HandlePID();
     CAN1_Send_TEST();
     //     Debug_PWM();
     Debug_Loop();

@@ -18,7 +18,7 @@
 #define TIMER_PREIOD_MIN 180             //  600Khz
 
 #define TIMER_DUTY_MAX 3200             // // 36.40% 97750
-#define TIMER_DUTY_MIN 200             //  600Khz
+#define TIMER_DUTY_MIN 1             //  600Khz
 
 
 // PWM控制量信息体
