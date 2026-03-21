@@ -2,6 +2,16 @@
 #define USRE_APP_USER_SAMPLE_H_
 #include "head.h"
 #include "system_Config.h"
+
+
+
+#define V_CAL_Ka 0.000050354772f
+
+// #define V_CAL_Ka 0.050354772f
+
+
+#define CC_CAL_Ka 0.0003329f
+#define CC_CAL_Kb -0.043701f
 // 单通道数据数据结构
 typedef struct
 {

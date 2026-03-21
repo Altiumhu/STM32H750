@@ -29,7 +29,7 @@ void shell_Set_VRef(int argc, char *argv[])
 	channel[0] = atoi(argv[1]) - 1;
 	VRef = atof(argv[2]);
 
-	g_Channelinfo[channel[0]].Set_PreCV = VRef * 1000.0f;
+	g_Channelinfo[channel[0]].Set_PreCV = VRef ;
 
 	printf("\r\n设置通道[%d]目标电压=%fmV\r\n", channel[0], g_Channelinfo[channel[0]].Set_PreCV);
 }
@@ -53,7 +53,7 @@ void shell_Set_IRef(int argc, char *argv[])
 	channel[0] = atoi(argv[1]) - 1;
 	IRef = atof(argv[2]);
 
-	g_Channelinfo[channel[0]].Set_PreCC = IRef * 1000.0f;
+	g_Channelinfo[channel[0]].Set_PreCC = IRef ;
 	;
 
 	printf("\r\n设置通道[%d]目标电流=%fmA\r\n", channel[0], g_Channelinfo[channel[0]].Set_PreCC);

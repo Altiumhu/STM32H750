@@ -105,10 +105,10 @@ void AppDebug_vTask(void)
     //  ex_595_write(2, EX_595_PIN_0, 1);
 
     g_Channelinfo[0].fault.all = 0;
-    // pwm_start(0, 0);
-    // Set_PWM_Channel_CH595_EN(2, 0, EX_595_SET); // 打开MOS驱动使能
+    //  pwm_start(0, 0);
+     Set_PWM_Channel_CH595_EN(2, 0, EX_595_SET); // 打开MOS驱动使能
 
-    // Set_PWM_Channel_CH595_EN(0, 0, EX_595_SET); // 打开PRT
+     Set_PWM_Channel_CH595_EN(0, 0, EX_595_SET); // 打开PRT
 
     //		  g_Channelinfo[0].fault.all= 0;
     //  UserSlave_SendLink();

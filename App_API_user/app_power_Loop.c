@@ -42,7 +42,7 @@ void System_CloseLoop_Status(void)
         if (g_Channelinfo[ch].fault.all) // 判断故障
         {
             g_Channelinfo[ch].workMode = POWER_FAULT;
-            //pwm_stop(ch); /// 出现故障就关闭pwm
+            // pwm_stop(ch); /// 出现故障就关闭pwm
         }
 
         switch (g_Channelinfo[ch].workMode)
@@ -88,13 +88,13 @@ void System_CloseLoop_Status(void)
         case POWER_PRECHARGE: // 预充电
         {
             // 电流换
-            gHandle_PID[ch].i_ref = 1000.0f; // 设置给定值5A
+            gHandle_PID[ch].i_ref = 1.0f; // 设置给定值5A
 
             gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
             pid_I_Loop_calc(&gHandle_PID[ch]);                 // 电流换
 
             // 电压环
-            gHandle_PID[ch].v_ref =3500.0f;
+            gHandle_PID[ch].v_ref = 1.5f;
             // gHandle_PID[i].v_ref = gHandle_PID[i].v_ref + 0.001f;
             // 软启功率输出电容电压作为反馈值，电池端电压作为给定值
             // gHandle_PID[i].v_ref = fmin(gHandle_PID[i].v_ref, g_Channelinfo[i].voltage);
@@ -113,7 +113,7 @@ void System_CloseLoop_Status(void)
             // g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
             g_epwmHandle[ch].High_MOS_STA = 1;
 
-            if (g_Channelinfo[ch].Cap_voltage >= 3000.0f)
+            if (g_Channelinfo[ch].Cap_voltage >= 1.0)
             {
                 // ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
                 Set_PWM_Channel_CH595_EN(0, ch, EX_595_SET); // 打开PRT
@@ -222,7 +222,7 @@ void System_CloseLoop_Status(void)
         case POWER_RUN_CHARGE: // 06
         {
 
-             gHandle_PID[ch].v_kp = gHandle_PID[ch].v_kp + 0.1;
+            gHandle_PID[ch].v_kp = gHandle_PID[ch].v_kp + 0.1;
             if (gHandle_PID[ch].v_kp >= 1.1f)
                 gHandle_PID[ch].v_kp = 1.1f;
             gHandle_PID[ch].v_ki = gHandle_PID[ch].v_ki + 0.1;
@@ -236,9 +236,9 @@ void System_CloseLoop_Status(void)
 
             // 电流环
             gHandle_PID[ch].i_ref += 1.1f;
-            if (gHandle_PID[ch].i_ref >= 	g_Channelinfo[ch].Set_PreCC )
+            if (gHandle_PID[ch].i_ref >= g_Channelinfo[ch].Set_PreCC)
             {
-                gHandle_PID[ch].i_ref =	g_Channelinfo[ch].Set_PreCC ;
+                gHandle_PID[ch].i_ref = g_Channelinfo[ch].Set_PreCC;
             }
 
             gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
@@ -251,9 +251,7 @@ void System_CloseLoop_Status(void)
             else
             {
                 g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
-
             }
-
         }
         break;
         case POWER_RUN_DISCHARGE: // 放电模式
@@ -288,18 +286,18 @@ void TIMER0CallbackFunction(void *handle)
     System_LED1_HIGH_LEVEL;
     System_DBUGGPIO_HIGH_LEVEL;
 
-     GetADC_Driver_Result();
-     sample_irq_handler(); // 采集数据转换
+    GetADC_Driver_Result();
+    sample_irq_handler(); // 采集数据转换
 
 #if CLOOS_LOOP_MODE      // 闭环开启保护
-     Scan_System_Fault(); // 保护
+    Scan_System_Fault(); // 保护
 #else
                           //  OpenLoopDebugPwm();
 #endif
 
-   
+    System_CloseLoop_Status();
 
-
+    Updata_EPWM_Handle();
 
     System_DBUGGPIO_LOW_LEVEL;
     System_LED1_LOW_LEVEL;

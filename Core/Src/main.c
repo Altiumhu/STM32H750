@@ -179,7 +179,7 @@ int main(void)
     AppUser_PortocolRecv(); // MCU通讯协议包
     AppDebug_vTask();
     //        AppUser_temp_sample();
-    Read_GPIO_vTask();
+    // Read_GPIO_vTask();
 
 #if 0
         // 主循环 - 发送定期状态更新

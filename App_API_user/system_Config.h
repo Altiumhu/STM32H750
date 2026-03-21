@@ -24,11 +24,14 @@
 #define GD32A50X 1
 
 /*************主板配置*************/
-#define BOARD_CHANNEL_NUM 1 // 主板通道数
+#define BOARD_CHANNEL_NUM 16// 主板通道数
 #define BOARD_CELL_NUM 16    // 主板电池数
 #define BOARD_TEMP_NUM 1     // 主板温度数
 
 #define SS_START_MODE 0 //  软启动1--启动轨迹控制 0---表示正常高频启动
+
+
+#define  BOARD_OUT_VOLT   4.2f    //输出电压
 
 #define DBUG_EN 1 // 调试使能-----
 

@@ -361,7 +361,7 @@ void Debug_HandlePID(void)
 
 #if 1
 
-    for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
+    for (ch = 0; ch < 4; ch++)
     {
         printf("\r\nCH[%d] I_Set=%fmA I_FB=%fmA i_pid_out=%f ", ch + 1, gHandle_PID[ch].i_ref, gHandle_PID[ch].i_fdb, gHandle_PID[ch].i_pid_out);
         printf("\r\nCH[%d]Set=%fV FB=%fV pid_out=%f ", ch + 1, gHandle_PID[ch].v_ref, gHandle_PID[ch].v_fdb, gHandle_PID[ch].v_pid_out);

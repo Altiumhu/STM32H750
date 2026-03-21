@@ -242,7 +242,7 @@ void Debug_PWM(void)
 	// 	// pwm_start(channel, 0);
 	// }
 
-	pwm_start(0, 0);
+	// pwm_start(0, 0);
 }
 
 void shell_Debug_PWM(int argc, char *argv[])
