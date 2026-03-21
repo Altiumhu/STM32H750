@@ -25,6 +25,8 @@ void App_GPIO_Init(void);
 #define System_LED1_HIGH_LEVEL   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET); //PD10
 #define System_LED1_LOW_LEVEL     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_RESET); //PD10
 
+void Set_ULock_GPIO(void);
+
 #endif
 
 

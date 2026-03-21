@@ -153,6 +153,8 @@ void AppUser_prvSetupHardware(void)
   HAL_ADCEx_Calibration_Start(&hadc3, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
   // 启动ADC转换
   ADC3_StartConversion();
+
+  Set_ULock_GPIO();//解除硬件保护
 }
 void Display_PeriphCLKFreq(void)
 {
