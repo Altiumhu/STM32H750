@@ -80,7 +80,7 @@ void GetADC_Driver_Result(void)
         Samp_ChnumTimer++;
         if (Samp_ChnumTimer >= g_SanSampTimer)
         {
-            CD4052_Chnum = 0;
+            CD4052_Chnum =1;
             Samp_ChnumTimer = 0;
             delayTimer = 0;
         }
