@@ -101,7 +101,8 @@ void AppUser_Device_InitData(void)
 
     g_Channelinfo[ch].Set_PreDC = -1.0f; // 设置放电5.0A
 
-    g_Channelinfo[ch].Set_PreCV = 3.5f; // 5.0V 电压值
+    g_Channelinfo[ch].Set_PreCV = BOARD_OUT_VOLT; // 5.0V 电压值
+    g_Channelinfo[ch].Set_CV = 3.0f; // 5.0V 电压值
 
     g_Channelinfo[ch].Set_CC = 1.0;
 

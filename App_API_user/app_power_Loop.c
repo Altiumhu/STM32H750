@@ -109,7 +109,7 @@ void System_CloseLoop_Status(void)
 
             // 电压环
             //  gHandle_PID[ch].v_ref = 2.5f;
-            gHandle_PID[ch].v_ref = 3.0;
+            gHandle_PID[ch].v_ref = g_Channelinfo[ch].Set_CV;
 
             // gHandle_PID[i].v_ref = gHandle_PID[i].v_ref + 0.001f;
             // 软启功率输出电容电压作为反馈值，电池端电压作为给定值
@@ -133,7 +133,7 @@ void System_CloseLoop_Status(void)
 
             {
                 g_Channelinfo[ch].SS_Timer++;
-                if (g_Channelinfo[ch].SS_Timer >= 10)
+                if (g_Channelinfo[ch].SS_Timer >= 10)//开机一瞬间误动作
                 {
                     g_Channelinfo[ch].SS_Timer = 0;
                     // ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
@@ -161,7 +161,14 @@ void System_CloseLoop_Status(void)
                 gHandle_PID[ch].v_ki = 0.1f;
 
             // 电压环
-            gHandle_PID[ch].v_ref = g_Channelinfo[ch].Set_PreCV;
+            g_Channelinfo[ch].Set_CV=g_Channelinfo[ch].Set_CV+0.01f;
+            if(g_Channelinfo[ch].Set_CV>=g_Channelinfo[ch].Set_PreCV)
+            {
+                 g_Channelinfo[ch].Set_CV=g_Channelinfo[ch].Set_PreCV;
+            }
+
+            gHandle_PID[ch].v_ref = g_Channelinfo[ch].Set_CV;
+
             gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
             pid_V_Loop_calc(&gHandle_PID[ch]);
 

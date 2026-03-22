@@ -105,7 +105,7 @@ void AppDebug_vTask(void)
     //  ex_595_write(0, EX_595_PIN_0, 1);
     //  ex_595_write(2, EX_595_PIN_0, 1);
 
-     g_Channelinfo[chnum].fault.all = 0;
+   //  g_Channelinfo[chnum].fault.all = 0;
     //  pwm_start(0, 0);
     //  Set_PWM_Channel_CH595_EN(2, chnum, EX_595_SET); // 打开MOS驱动使能
 
