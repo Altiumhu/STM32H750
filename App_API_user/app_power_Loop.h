@@ -29,7 +29,7 @@ typedef enum power_state_define
     POWER_RUN_CHARGE,    // 充电运行6
     POWER_RUN,           // 运行状态7
     POWER_BURST,         // 打嗝模式8
-    POWER_Mode_Change,   // 9
+    POWER_GET_V_PORT,   // 9
     POWER_TEST,          // 10
 
     POWER_SoftStart, // 软启动 11

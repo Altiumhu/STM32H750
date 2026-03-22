@@ -51,8 +51,9 @@ typedef struct
      float Set_CV;    // 恒压值
      float Set_PreCV; // 恒压值
 
+     uint16_t SS_Timer;    // ADC跟新中断
 
-     uint16_t ADC_UPTimer;    // ADC跟新中断
+     uint16_t GetPortTimer;    // ADC跟新中断
 
 } ChannelInfo;
 

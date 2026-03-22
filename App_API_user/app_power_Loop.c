@@ -55,19 +55,32 @@ void System_CloseLoop_Status(void)
                 if (g_DEVICE_Information.workMode == POWER_SET_CHARGE)
                 {
                 }
-                g_Channelinfo[ch].workMode = POWER_INIT;
+                g_Channelinfo[ch].workMode = POWER_GET_V_PORT;
+
+                g_Channelinfo[ch].GetPortTimer = 0;
             }
             else
             { // 说明有故障，关闭 PRT管 输出低关闭
             }
         }
         break;
+
+        case POWER_GET_V_PORT: //
+            g_Channelinfo[ch].GetPortTimer++;
+            if (g_Channelinfo[ch].GetPortTimer >= 12)
+            {
+                g_Channelinfo[ch].GetPortTimer = 0;
+                g_Channelinfo[ch].workMode = POWER_INIT;
+            }
+
+            break;
+
         case POWER_INIT: //
         {
 
             PIDInit(ch);
             HAL_EPWM_Config(ch);
-            Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
+            // Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
 
             g_Channelinfo[ch].workMode = POWER_PRECHARGE;
             //            if ((g_Channelinfo[i].voltage_port - g_Channelinfo[i].Cap_voltage) >= -0.05f) //端口电压-电容电压》=0.05V 防止开机电容有电
@@ -80,6 +93,7 @@ void System_CloseLoop_Status(void)
             //                g_Channelinfo[i].fault.bit.CAP_BAT = 1; //容压大于电池电压
             //            }
             g_Channelinfo[ch].run = 0x0;
+            g_Channelinfo[ch].SS_Timer = 0;
 
             pwm_start(ch, 0);
             Set_PWM_Channel_CH595_EN(2, ch, EX_595_SET); // 打开MOS驱动使能
@@ -94,12 +108,14 @@ void System_CloseLoop_Status(void)
             pid_I_Loop_calc(&gHandle_PID[ch]);                 // 电流换
 
             // 电压环
-            gHandle_PID[ch].v_ref = 1.5f;
+            //  gHandle_PID[ch].v_ref = 2.5f;
+            gHandle_PID[ch].v_ref = 3.0;
+
             // gHandle_PID[i].v_ref = gHandle_PID[i].v_ref + 0.001f;
             // 软启功率输出电容电压作为反馈值，电池端电压作为给定值
             // gHandle_PID[i].v_ref = fmin(gHandle_PID[i].v_ref, g_Channelinfo[i].voltage);
 
-            gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
+            gHandle_PID[ch].v_fdb = g_Channelinfo[ch].Cap_voltage; // 设置反馈值
             pid_V_Loop_calc(&gHandle_PID[ch]);
 
             if (gHandle_PID[ch].v_pid_out <= gHandle_PID[ch].i_pid_out)
@@ -110,112 +126,27 @@ void System_CloseLoop_Status(void)
             {
                 g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
             }
-            g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
+
             g_epwmHandle[ch].High_MOS_STA = 1;
 
-            if (g_Channelinfo[ch].current >= 1.0|| g_Channelinfo[ch].voltage>0.5f)
+            if (g_Channelinfo[ch].Cap_voltage >= 3.0f)
+
             {
-                // ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
-                Set_PWM_Channel_CH595_EN(0, ch, EX_595_SET); // 打开PRT
-                g_Channelinfo[ch].workMode = POWER_RUN_CHARGE;
+                g_Channelinfo[ch].SS_Timer++;
+                if (g_Channelinfo[ch].SS_Timer >= 10)
+                {
+                    g_Channelinfo[ch].SS_Timer = 0;
+                    // ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
+                    Set_PWM_Channel_CH595_EN(0, ch, EX_595_SET); // 打开PRT
+                    g_Channelinfo[ch].workMode = POWER_RUN_CHARGE;
+                }
             }
+
             //		 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
         }
         break;
         case POWER_SoftStart: // 软启动
         {
-            //            // 电压环环PID参数缓慢加到 kp=5.0  ki=1.0
-            gHandle_PID[ch].v_kp = gHandle_PID[ch].v_kp + 0.1;
-            if (gHandle_PID[ch].v_kp >= 5.0f)
-                gHandle_PID[ch].v_kp = 5.0f;
-            gHandle_PID[ch].v_ki = gHandle_PID[ch].v_ki + 0.01;
-            if (gHandle_PID[ch].v_ki >= 1.0f)
-                gHandle_PID[ch].v_ki = 1.0f;
-#if CLOOS_LOOP_MODE // 闭环开启保护
-
-            if (g_Channelinfo[ch].Cap_voltage >= (BOARD_OUT_VOLT * 0.90f))
-            {
-                //                g_epwmHandle[0].High_MOS_Timer_TBPRD_MAX = APT_0_RRE_35KHZ;
-                //                gHandle_PID[0].v_up = (APT_0_RRE_35KHZ); //
-                //                gHandle_PID[0].v_max_out_value = gHandle_PID[0].v_up;
-
-                //                DebugLED_LOW_LEVEL;
-                //                g_apt0.tmrInterrupt.tmrInterruptScale = 1;
-                //                USER_API_APT_SetTimerInterrupt(&g_apt0);
-                //                g_Handle_REC_Device.V_Ref_REC_Vaule = BOARD_OUT_VOLT;
-                //                g_Protect_handle[0].SR_Current = 5.0f;
-                //                g_Channelinfo[0].workMode = POWER_RUN_CHARGE;
-
-                // if (gHandle_PID[0].loop == I_LOOP)
-                //     gHandle_PID[0].v_err_sum = gHandle_PID[0].i_pid_out;
-            }
-
-#if DBUG_EN // 调试使能
-
-#else
-            // 电压环
-            g_Handle_REC_Device.V_Ref_REC_Vaule = g_Handle_REC_Device.V_Ref_REC_Vaule + 0.1f;
-            if (g_Handle_REC_Device.V_Ref_REC_Vaule = g_Handle_REC_Device.V_Ref_REC_Vaule >= BOARD_OUT_VOLT)
-                g_Handle_REC_Device.V_Ref_REC_Vaule = BOARD_OUT_VOLT;
-
-            Power_PID_Updata(g_Channelinfo[0].Cap_voltage, Set_Ref_5ms_lowpass(12.0f, 0));
-            // Power_PID_Updata(g_Channelinfo[0].Cap_voltage,  12.0f);
-
-            g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].v_pid_out;
-#if 0
-            /// 电流环
-            g_Handle_REC_Device.I_Ref_REC_Vaule = g_Handle_REC_Device.I_Ref_REC_Vaule + 0.1f;
-            if (g_Handle_REC_Device.I_Ref_REC_Vaule >= 70.0f)
-                g_Handle_REC_Device.I_Ref_REC_Vaule = 70.0f;
-
-            gHandle_PID[0].i_ref = g_Handle_REC_Device.I_Ref_REC_Vaule;
-            gHandle_PID[0].i_fdb = g_Channelinfo[0].current; // 设置反馈值
-            pid_I_Loop_calc(&gHandle_PID[0]);
-
-            if (g_Channelinfo[0].voltage > (BOARD_OUT_VOLT * 0.90f)) // 大于0.9
-            {
-                   g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].v_pid_out;
-                // if (gHandle_PID[0].v_pid_out <= gHandle_PID[0].i_pid_out)
-                // {
-                //       DebugLED_LOW_LEVEL;
-                //     gHandle_PID[0].loop = V_LOOP;
-                //     g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].v_pid_out;
-                // }
-                // else
-                // {
-                //        DebugLED_HIGH_LEVEL;
-                //     gHandle_PID[0].loop = I_LOOP;
-                //     g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].i_pid_out;
-                // }
-            }
-            else // 低于0.90使用的时候电流环
-            {
-                DebugLED_HIGH_LEVEL;
-                gHandle_PID[0].loop = I_LOOP;
-              ///  g_epwmHandle[0].High_MOS_Timer_TBPRD = gHandle_PID[0].i_pid_out;
-            }
-#endif
-            if (g_Channelinfo[0].voltage > (5.0f)) // 软启动9.0V开始降低频率
-            {
-                g_Handle_REC_Device.I_Ref_REC_Vaule = 70.0f;
-                gHandle_PID[0].v_ui = gHandle_PID[0].v_ui + 80.0f;
-
-                if (gHandle_PID[0].v_ui >= APT_0_RRE_RUN_LOOP_KHZ) /// 稳态
-                {
-                    gHandle_PID[0].v_ui = APT_0_RRE_RUN_LOOP_KHZ;
-                }
-
-                gHandle_PID[0].i_ui = gHandle_PID[0].v_ui;
-            }
-
-#endif
-
-#else
-            //   OpenLoopDebugPwm();
-            // g_Channelinfo[0].workMode = POWER_TEST;
-
-            g_Channelinfo[0].workMode = POWER_BURST;
-#endif
         }
         break;
 
@@ -247,19 +178,16 @@ void System_CloseLoop_Status(void)
             if (gHandle_PID[ch].v_pid_out < gHandle_PID[ch].i_pid_out) // 双环竞争
             {
                 g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].v_pid_out;
-
-
             }
             else
             {
                 g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
-
             }
 
-                if( g_Channelinfo[ch].current>=gHandle_PID[ch].i_ref)
-                {
-                    gHandle_PID[ch].i_err_sum = g_epwmHandle[ch].High_MOS_DUTY;
-                }
+            if (g_Channelinfo[ch].current >= gHandle_PID[ch].i_ref)
+            {
+                gHandle_PID[ch].i_err_sum = g_epwmHandle[ch].High_MOS_DUTY;
+            }
         }
         break;
         case POWER_RUN_DISCHARGE: // 放电模式
@@ -291,8 +219,8 @@ void System_CloseLoop_Status(void)
 
 void TIMER0CallbackFunction(void *handle)
 {
-    System_LED1_HIGH_LEVEL;
-    System_DBUGGPIO_HIGH_LEVEL;
+    // System_LED1_HIGH_LEVEL;
+    // System_DBUGGPIO_HIGH_LEVEL;
 
     GetADC_Driver_Result();
     sample_irq_handler(); // 采集数据转换
@@ -307,8 +235,8 @@ void TIMER0CallbackFunction(void *handle)
 
     Updata_EPWM_Handle();
 
-    System_DBUGGPIO_LOW_LEVEL;
-    System_LED1_LOW_LEVEL;
+    // System_DBUGGPIO_LOW_LEVEL;
+    // System_LED1_LOW_LEVEL;
     /* USER CODE END TIMER1 ITCallBackFunc */
 }
 

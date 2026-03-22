@@ -75,8 +75,8 @@ void PIDInit(uint16_t ch)
 
     gHandle_PID[ch].i_fdb = 0.0f;              // 反馈值
     gHandle_PID[ch].i_err = 0.0f;              // 误差
-    gHandle_PID[ch].i_kp = 0.5f;               // 比例系数500
-    gHandle_PID[ch].i_ki = 0.055f;               // 积分系数100-30a
+    gHandle_PID[ch].i_kp =  0.1f;               // 比例系数500
+    gHandle_PID[ch].i_ki = 0.01f;               // 积分系数100-30a
     gHandle_PID[ch].i_ref = 0.5f;              // 电压环基准复位，进行软起动
     gHandle_PID[ch].i_up = (3000);  //
     gHandle_PID[ch].i_ui = (0); //
@@ -361,7 +361,7 @@ void Debug_HandlePID(void)
 
 #if 1
 
-    for (ch = 4; ch < 8; ch++)
+    for (ch = 0; ch <4; ch++)
     {
         printf("\r\nCH[%d] I_Set=%fmA I_FB=%fmA i_pid_out=%f ", ch + 1, gHandle_PID[ch].i_ref, gHandle_PID[ch].i_fdb, gHandle_PID[ch].i_pid_out);
         printf("\r\nCH[%d]Set=%fV FB=%fV pid_out=%f ", ch + 1, gHandle_PID[ch].v_ref, gHandle_PID[ch].v_fdb, gHandle_PID[ch].v_pid_out);

@@ -97,9 +97,9 @@ void AppUser_Device_InitData(void)
 
     g_Channelinfo[ch].run = Worke_OFF;
 
-    g_Channelinfo[ch].Set_PreCC = 5.0f; // 5.0A设置CC电5.0A
+    g_Channelinfo[ch].Set_PreCC = 1.0f; // 5.0A设置CC电5.0A
 
-    g_Channelinfo[ch].Set_PreDC = -5.0f; // 设置放电5.0A
+    g_Channelinfo[ch].Set_PreDC = -1.0f; // 设置放电5.0A
 
     g_Channelinfo[ch].Set_PreCV = 3.5f; // 5.0V 电压值
 

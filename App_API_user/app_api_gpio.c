@@ -165,7 +165,7 @@ void Sys_Power_INPUT_OVP(void)
 
 void Sys_Run_Led(void)
 {
-    HAL_GPIO_TogglePin(GPIOC, SYS_LED1_Pin | SYS_LED2_Pin);
+   // HAL_GPIO_TogglePin(GPIOC, SYS_LED1_Pin | SYS_LED2_Pin);
 }
 #if 0
 // 设置GPIO控制和气缸控制
