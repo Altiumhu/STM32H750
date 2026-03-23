@@ -7,6 +7,13 @@
 
 #define Timer_GetClock HAL_GetTick
 
+
+typedef struct
+{
+	unsigned int second;
+	unsigned short miliSencond;
+}SystemTime_t;
+
 /****************************************************************************************************/
 /* 定时器 定义 */
 

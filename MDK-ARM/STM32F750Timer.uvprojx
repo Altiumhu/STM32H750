@@ -1573,6 +1573,16 @@
               <FileType>5</FileType>
               <FilePath>..\CAN\CanFr.h</FilePath>
             </File>
+            <File>
+              <FileName>UserSlave.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CAN\UserSlave.c</FilePath>
+            </File>
+            <File>
+              <FileName>UserSlave.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CAN\UserSlave.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -164,7 +164,7 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 //#include "UserMain.h"
 
 #include "CanFr.h"
-
+#include "UserSlave.h"
 
 
 //#include "large_data_transfer.h"
@@ -174,7 +174,7 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 
 //#include "message_queue.h"
 //#include "modbus_config.h"
-//#include "modbus_master.h"
+
 
 
 #include "shell_cmd_list.h"

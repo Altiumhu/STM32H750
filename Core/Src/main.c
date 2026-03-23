@@ -168,14 +168,11 @@ int main(void)
   while (1)
   {
 
-    //        User_Update();
+    UserSlave_Update();
     AppUser_PortocolRecv(); // MCU通讯协议包
     AppDebug_vTask();
     //        AppUser_temp_sample();
     // Read_GPIO_vTask();
-
-
-
   }
 
   /* USER CODE END 2 */
