@@ -160,10 +160,6 @@ int main(void)
   uint8_t init_msg[4] = {0xAA, 0x55, 0x01, 0x23};
   FDCAN_SendMessage(FC_BROADCAST, BROADCAST_DEVICE_ID, 0x000, init_msg, sizeof(init_msg));
   CAN1_Send_TEST();
-
-
-
-
 #endif
 
   App_Drive_InitTimer_7(); // 100ms

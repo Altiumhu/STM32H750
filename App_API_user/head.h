@@ -163,7 +163,7 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 //#include "UserTempCap.h"
 //#include "UserMain.h"
 
-//#include "./MALLOC/malloc.h"
+#include "CanFr.h"
 
 
 

@@ -19,6 +19,24 @@
 #include "stm32h7xx_hal.h"
 
 
+
+
+#define U8TOU32(X) ((uint32_t)(X)[0]|(((uint32_t)(X)[1])<<8)|(((uint32_t)(X)[2])<<16)|(((uint32_t)(X)[3])<<24))
+#define U8TOU24(X) ((uint32_t)(X)[0]|(((uint32_t)(X)[1])<<8)|(((uint32_t)(X)[2])<<16))
+#define U8TOU16(X) ((uint32_t)(X)[0]|(((uint32_t)(X)[1])<<8)) 
+#define U32TOU8(U32DATA,U8POIN) do{U8POIN[0]=	(U32DATA)&0xff; \
+												U8POIN[1]=((U32DATA)>>8)&0xff;\
+												U8POIN[2]=((U32DATA)>>16)&0xff;\
+												U8POIN[3]=((U32DATA)>>24)&0xff;\
+								}while(0)
+#define U24TOU8(U32DATA,U8POIN) do{U8POIN[0]=	(U32DATA)&0xff; \
+												U8POIN[1]=((U32DATA)>>8)&0xff;\
+												U8POIN[2]=((U32DATA)>>16)&0xff;\
+								}while(0)
+#define U16TOU8(U16DATA,U8POIN) do{U8POIN[0]=	(U16DATA)&0xff; \
+												U8POIN[1]=((U16DATA)>>8)&0xff;\
+								}while(0)
+
 /**
  * SYS_SUPPORT_OS用于定义系统文件夹是否支持OS
  * 0,不支持OS

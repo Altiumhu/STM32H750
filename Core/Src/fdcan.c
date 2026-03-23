@@ -38,113 +38,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "system_can_config.h"
 
-#include "message_handler.h"
-#include "system_can_config.h"
-#include "large_data_transfer.h"
-#include "crc.h"
-#include "message_handler.h"
 #include "head.h"
 FDCAN_TxHeaderTypeDef g_fdcanx_txheade;
 FDCAN_RxHeaderTypeDef g_fdcanx_rxheade;
 
 
-Can_Data g_Can_DataHandler;//
+
 /* USER CODE END 0 */
 
-FDCAN_HandleTypeDef hfdcan1;
-
-int Can_SetFilter(uint8_t addrSlave, bool direct)
-{
-	//配置接收过滤器
-
-    FDCAN_FilterTypeDef fdcan_filterconfig;
+FDCAN_HandleTypeDef hfdcan1;/* FDCANx句柄 */
 
 
 
-	PackHeader_t receiveFileter;
-
-    if(addrSlave>16)
-    {
-      printf("Can_SetFilter addrSlave error\r\n");
-      return -1;
-    }
-
-	
-	//清零过滤器
-	receiveFileter.dWordData=0;
-	receiveFileter.userItemp.addrSlave = addrSlave;
-	if(direct)
-		receiveFileter.userItemp.direct = 1;
-	//只接收扩展的数据帧
-   /* 过滤器配置 --滤波器索引 只接收扩展的数据帧 */
-    fdcan_filterconfig.IdType = FDCAN_EXTENDED_ID;             /* 标准扩展ID */
-    fdcan_filterconfig.FilterIndex = 0;                        //* 滤波器索引 */
-    fdcan_filterconfig.FilterType = FDCAN_FILTER_MASK;         /* 滤波器类型：传统位过滤 */
-    fdcan_filterconfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0; /* 过滤配置：当过滤匹配以后存储在Rx FIFO0中 */
-    fdcan_filterconfig.FilterID1 = receiveFileter.dWordData;   /* 过滤ID1：29位标准ID */
-    fdcan_filterconfig.FilterID2 = 0x0000007FF;                 /* 过滤ID2：配置为传统位过滤，ID2是29位掩码
-                                                                *   这里表示过滤接收和FilterID1完全一样的消息ID
-                                                                */
-
-    if (HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan_filterconfig) != HAL_OK)
-    {
-         printf("Can_SetFilter addrSlave error=%d\r\n",fdcan_filterconfig.FilterIndex);
-        return -1;
-    }
-	
-   //只接收广播消息--0xFF
-    /* 过滤器配置 */
-    fdcan_filterconfig.IdType = FDCAN_EXTENDED_ID;             /* 标准ID */
-    fdcan_filterconfig.FilterIndex = 1;                        //* 滤波器索引 */
-    fdcan_filterconfig.FilterType = FDCAN_FILTER_MASK;         /* 滤波器类型：传统位过滤 */
-    fdcan_filterconfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0; /* 过滤配置：当过滤匹配以后存储在Rx FIFO0中 */
-    fdcan_filterconfig.FilterID1 = 0x00000000FF;                      /* 过滤ID1：29位标准ID 配置广播ID:0xFFF*/
-    fdcan_filterconfig.FilterID2 = 0x00000000FF;                 /* 过滤ID2：配置为传统位过滤，ID2是29位掩码
-                                                                *   这里表示过滤接收和FilterID1完全一样的消息ID
-                                                                */
-
-    if (HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan_filterconfig) != HAL_OK)
-    {
-         printf("Can_SetFilter addrSlave error=%d\r\n",fdcan_filterconfig.FilterIndex);
-        return -1;
-    }
-	
-	return 0;
-}
-int CanFr_Init(void)
-{
-	
-	memset(&g_Can_DataHandler,0 ,sizeof(Can_Data));	
-
-	g_Can_DataHandler.recStruct.shortFrame.data = g_Can_DataHandler.recStruct.spData;
-	
-	#if CANMASTER
-	Can_Data.addrSelf = 0;							//设置本机地址为0，表示主机	
-	//主机只接收来自分机的信息，分机地址不过滤
-	Can_SetFilter(0,1);
-	#else
-	g_Can_DataHandler.addrSelf = BoardInfo_GetID();							
-	//分机只接收来自主机的广播信息和只发送给本机的信息
-	Can_SetFilter(g_Can_DataHandler.addrSelf,0);
-
-	#endif
-    /* 配置全局过滤器，拒收所有不匹配的帧和远程帧 */
-    HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_FILTER_REMOTE, FDCAN_FILTER_REMOTE);
-
-    /* 开启FDCAN */
-    if (HAL_FDCAN_Start(&hfdcan1) != HAL_OK)
-    {
-       // printf("CanFr_Init error\r\n");
-       // return -1;
-    }
-
-    /* 使能接收FIFO 0新消息中断 */
-    HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
-    HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_TX_COMPLETE, 0);
-    return 0;
-}
 
 /* FDCAN1 init function */
 void MX_FDCAN1_Init(void)
@@ -365,7 +271,7 @@ uint8_t fdcan_receive_msg(uint8_t *buf)
 //{
 //     HAL_FDCAN_IRQHandler(&hfdcan1);
 // }
-
+#if 0
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {
     uint8_t i = 0;
@@ -412,7 +318,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 
 #endif
 }
-
+#endif
 #endif
 
 uint8_t g_CAN_TX_MSG[8] = {0xAA, 0x55, 0x66, 0X77, 0x88, 0x99, 0xCC, 0x11};
@@ -442,30 +348,5 @@ HAL_StatusTypeDef FDCAN_SendMessage(uint8_t fc, uint16_t dest_did, uint16_t sub,
     return HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, data);
 }
 
-// 用户实现示例（在自定义文件中）
-void HAL_FDCAN_TxFifoEmptyCallback(FDCAN_HandleTypeDef *hfdcan)
-{
-    // 1. 填充新数据到发送队列
-    // 2. 重启数据传输
-    // 3. 更新发送状态标志
-    printf("\r\nFDCAN1=  ");
-    if (hfdcan->Instance == FDCAN1)
-    {
-    }
-}
-
-void HAL_FDCAN_TxBufferCompleteCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t BufferIndexes)
-{
-    /* Prevent unused argument(s) compilation warning */
-    UNUSED(hfdcan);
-    UNUSED(BufferIndexes);
-    printf("\r\n123  FDCAN1=  ");
-    if (hfdcan->Instance == FDCAN1)
-    {
-    }
-    /* NOTE: This function Should not be modified, when the callback is needed,
-              the HAL_FDCAN_TxBufferCompleteCallback could be implemented in the user file
-     */
-}
 
 /* USER CODE END 1 */
