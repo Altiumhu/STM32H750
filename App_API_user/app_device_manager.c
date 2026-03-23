@@ -54,8 +54,10 @@ void Calibration_DeviceInit(void)
 // 初始化REC数据结构
 void AppUser_Init_REC_Device(void)
 {
+   
+    memset(&g_Handle_REC_Device, 0, sizeof(g_Handle_REC_Device)); // 初始化存储数据结构体
 
-//    memset(&g_Handle_REC_Device, 0, sizeof(g_Handle_REC_Device)); // 初始化存储数据结构体
+    g_Handle_REC_Device.dev_id = 1;
 
 //    Read_REC_Device_Date(FLASH_SAMPLE_READ_START_ADDR);
 //    // AppUser_Write_Init_REC_Device();
@@ -108,4 +110,12 @@ void AppUser_Write_Init_REC_Device(void)
 
     // DBG_PRINTF("dev_id=%d\r\n", g_Handle_REC_Device.dev_id);
     // DBG_PRINTF("ka=%f kb=%f\r\n", g_Calibration_Device[Caltype_Current].ka, g_Calibration_Device[Caltype_Current].kb);
+}
+
+
+uint16_t BoardInfo_GetID()
+{
+
+
+    return g_Handle_REC_Device.dev_id ;
 }

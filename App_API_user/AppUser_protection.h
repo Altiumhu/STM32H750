@@ -39,7 +39,7 @@ typedef union power_fault_define
 
         uint32_t CMD_ERR : 1; // 指令错误
         uint32_t CTR_ERR : 1; // 继电器
-        uint32_t rsvd1 : 1;   // 保留位
+        uint32_t res : 1;   // 
         uint32_t LLC_OCP : 1; // 峰值过流标志位
 
         uint32_t Boost_ERR : 1; // boost故障
@@ -63,6 +63,7 @@ typedef union system_fault_define
         uint32_t L_OVP : 1;   //  电池电压保护
         uint32_t L_UVP : 1;   //  电池电压保护
         uint32_t Cap_OVP : 1; //  电容电压保护
+        uint32_t CanID_ERR : 1;   //CANID错误
 
     } bit;
 } system_fault_define;

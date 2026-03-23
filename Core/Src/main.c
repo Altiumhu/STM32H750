@@ -154,6 +154,7 @@ int main(void)
 
   AppUser_Device_InitData();
 
+
 #if 1
   // 发送初始消息 (设备上线通知)   ad failed with erro
   uint8_t init_msg[4] = {0xAA, 0x55, 0x01, 0x23};
@@ -181,7 +182,7 @@ int main(void)
     //        AppUser_temp_sample();
     // Read_GPIO_vTask();
 
-#if 0
+#if 1
         // 主循环 - 发送定期状态更新
         static uint32_t last_tick = 0;
         if (HAL_GetTick() - last_tick > 1000)
@@ -189,9 +190,9 @@ int main(void)
             last_tick = HAL_GetTick();
 
             // 发送状态更新
-            uint8_t status[8] = {0};
+            uint8_t status[8] = {05,0xAA,0x55,0x01,0x23,0x11,0x11,0x99};
             // 填充状态数据...
-            FDCAN_SendMessage(FC_DIAGNOSTICS, 0x000, 0x000, status, sizeof(status));
+            FDCAN_SendMessage(FC_DIAGNOSTICS, 0x001, 0x001, status, sizeof(status));
         }
 #else
 

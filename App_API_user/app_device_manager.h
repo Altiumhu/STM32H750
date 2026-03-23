@@ -129,6 +129,8 @@ extern void AppUser_Init_REC_Device(void);
 
 extern void AppUser_Write_Init_REC_Device(void);
 
+extern uint16_t BoardInfo_GetID();
+
 #endif
 
 

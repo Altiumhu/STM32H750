@@ -50,10 +50,9 @@ void BSP_DMA_Init(void)
 void AppUser_Device_InitData(void)
 {
   uint16_t ch, type;
-  //  memset( &g_Handle_Fault,0,sizeof(power_fault_define));
-  //   g_Handle_Fault[0].all = 0x0;
 
-  //    Initdata_g_DEVICE_Information();
+    AppUser_Init_REC_Device();
+    Initdata_g_DEVICE_Information();
 
   AppUuser_InitTempData(); // 温度采集数据初始化
   debug_init();
@@ -113,6 +112,9 @@ void AppUser_Device_InitData(void)
     PIDInit(ch);
     pwm_stop(ch);
   }
+
+
+  CanFr_Init();//配置
 }
 
 /**********************************************************************
