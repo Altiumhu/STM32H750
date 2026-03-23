@@ -44,7 +44,7 @@
 
 // 设备ID定义
 #define NODE_DEVICE_ID 0x123      // 本设备ID
-#define BROADCAST_DEVICE_ID 0x7FF // 广播地址
+#define BROADCAST_DEVICE_ID 0xFF // 广播地址
 
 // 功能码定义
 #define FC_SYSTEM_CONTROL 0x0

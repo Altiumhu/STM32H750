@@ -68,7 +68,7 @@ int Can_SetFilter(uint8_t addrSlave, bool direct)
     if(addrSlave>16)
     {
       printf("Can_SetFilter addrSlave error\r\n");
-     return -1;
+      return -1;
     }
 
 	
@@ -90,6 +90,7 @@ int Can_SetFilter(uint8_t addrSlave, bool direct)
 
     if (HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan_filterconfig) != HAL_OK)
     {
+         printf("Can_SetFilter addrSlave error=%d\r\n",fdcan_filterconfig.FilterIndex);
         return -1;
     }
 	
@@ -106,6 +107,7 @@ int Can_SetFilter(uint8_t addrSlave, bool direct)
 
     if (HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan_filterconfig) != HAL_OK)
     {
+         printf("Can_SetFilter addrSlave error=%d\r\n",fdcan_filterconfig.FilterIndex);
         return -1;
     }
 	
@@ -134,8 +136,8 @@ int CanFr_Init(void)
     /* 开启FDCAN */
     if (HAL_FDCAN_Start(&hfdcan1) != HAL_OK)
     {
-        printf("FDCAN1_Init error\r\n");
-        return -1;
+       // printf("CanFr_Init error\r\n");
+       // return -1;
     }
 
     /* 使能接收FIFO 0新消息中断 */
@@ -274,6 +276,7 @@ void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef *fdcanHandle)
         /* FDCAN1 interrupt Init */
         HAL_NVIC_SetPriority(FDCAN1_IT0_IRQn, 0, 0);
         HAL_NVIC_EnableIRQ(FDCAN1_IT0_IRQn);
+				
         HAL_NVIC_SetPriority(FDCAN1_IT1_IRQn, 0, 0);
         HAL_NVIC_EnableIRQ(FDCAN1_IT1_IRQn);
         /* USER CODE BEGIN FDCAN1_MspInit 1 */

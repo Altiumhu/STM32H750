@@ -194,13 +194,15 @@ int main(void)
             // 填充状态数据...
             FDCAN_SendMessage(FC_DIAGNOSTICS, 0x001, 0x001, status, sizeof(status));
         }
+
+        //    // 处理发送超时
+    LargeDataTransfer_TimeoutHandler();
+
+    // 处理接收会话超时
+    LargeDataTransfer_SessionTimeoutHandler();
 #else
 
-//    // 处理发送超时
-//    LargeDataTransfer_TimeoutHandler();
 
-//    // 处理接收会话超时
-//    LargeDataTransfer_SessionTimeoutHandler();
 #endif
 
   }

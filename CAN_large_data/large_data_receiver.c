@@ -276,8 +276,8 @@ void LargeDataTransfer_SessionTimeoutHandler(void)
 
     for (int i = 0; i < MAX_SESSIONS; i++)
     {
-        if (sessions[i].active &&
-                (current_time - sessions[i].last_receive_time) > SESSION_TIMEOUT)
+        if (sessions[i].active && (current_time - sessions[i].last_receive_time) > SESSION_TIMEOUT)
+               
         {
 
             // 会话超时，清理资源
