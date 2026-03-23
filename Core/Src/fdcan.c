@@ -78,18 +78,22 @@ void MX_FDCAN1_Init(void)
     hfdcan1.Init.DataSyncJumpWidth = 1;
     hfdcan1.Init.DataTimeSeg1 = 1;
     hfdcan1.Init.DataTimeSeg2 = 1;
+		
     hfdcan1.Init.MessageRAMOffset = 0;
     hfdcan1.Init.StdFiltersNbr = 0;
     hfdcan1.Init.ExtFiltersNbr = 10;
+		
     hfdcan1.Init.RxFifo0ElmtsNbr = 16;
     hfdcan1.Init.RxFifo0ElmtSize = FDCAN_DATA_BYTES_8;
+		
     hfdcan1.Init.RxFifo1ElmtsNbr = 16;
     hfdcan1.Init.RxFifo1ElmtSize = FDCAN_DATA_BYTES_8;
+		
     hfdcan1.Init.RxBuffersNbr = 8;
     hfdcan1.Init.RxBufferSize = FDCAN_DATA_BYTES_8;
     hfdcan1.Init.TxEventsNbr = 10;
     hfdcan1.Init.TxBuffersNbr = 10;
-    hfdcan1.Init.TxFifoQueueElmtsNbr = 1;
+    hfdcan1.Init.TxFifoQueueElmtsNbr = 16;
     hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
     hfdcan1.Init.TxElmtSize = FDCAN_DATA_BYTES_8;
     if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
@@ -141,6 +145,15 @@ void MX_FDCAN1_Init(void)
     /* 使能接收FIFO 0新消息中断 */
     HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
     HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_TX_COMPLETE, 0);
+		
+		
+		//功能：使能发送完成中断。
+///当 FDCAN 成功发送一个报文（包括自动重传成功），并且该报文对应的发送缓冲区或 FIFO 索引被标记为完成时，触发中断。应用程序可在中断中释放发送缓冲区，或更新发送状态。
+
+//参数 0：这里 BufferIndex 实际上用于指定是哪个发送缓冲区或 FIFO 元素的中断。但 FDCAN_IT_TX_COMPLETE 是一个全局中断（任何发送完成都会触发），所以此参数通常也填 0。
+//需要注意的是，如果使能了 FDCAN_IT_TX_BUFFER_COMPLETE 或 FDCAN_IT_TX_FIFO_COMPLETE 等具体的中断，BufferIndex 才有意义（表示第几个缓冲区或 FIFO 元素）。但对于 FDCAN_IT_TX_COMPLETE，它是整个发送完成事件的总中断，无需指定具体索引。
+
+//使用场景：常用于需要知道报文何时真正发送到总线（如周期性报文发送的时序控制），或需要重用发送缓冲区时。
     /* USER CODE END FDCAN1_Init 2 */
 }
 

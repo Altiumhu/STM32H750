@@ -113,7 +113,7 @@ void AppUser_Device_InitData(void)
     pwm_stop(ch);
   }
 
-
+  InitBorad_Device();
   CanFr_Init();//配置
 }
 

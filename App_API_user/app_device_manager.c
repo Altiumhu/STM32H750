@@ -23,9 +23,24 @@ volatile DEVICE_State_Information g_DEVICE_Information;
 
 volatile RED_Device_Data g_Handle_REC_Device; // 存储需要保存的数据
 
-union MODBUS_DATA_UNION Modbus_data;
 
-union LLC_MODBUS_DATA_UNION LLC_Modbus_data; // 电压
+Borad_Device g_Borad_Device;
+
+void InitBorad_Device(void)
+{
+    g_Borad_Device.byte.currMax=6;
+    g_Borad_Device.byte.voltMax=0x05;
+
+    g_Borad_Device.byte.softVersion=0x85;
+    g_Borad_Device.byte.Channel=0x10;
+}
+uint8_t * GetBorad_Device(void)
+{
+    printf("\r\n currMax =%d voltMax=%d softVersion=% Channel=%d", g_Borad_Device.byte.currMax,g_Borad_Device.byte.voltMax,g_Borad_Device.byte.softVersion, g_Borad_Device.byte.Channel);
+    return (uint8_t *)&g_Borad_Device.data[0];
+}
+
+
 
 void AppUser_Write_Init_REC_Device(void);
 
