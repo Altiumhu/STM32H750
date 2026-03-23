@@ -160,13 +160,9 @@ int main(void)
   uint8_t init_msg[4] = {0xAA, 0x55, 0x01, 0x23};
   FDCAN_SendMessage(FC_BROADCAST, BROADCAST_DEVICE_ID, 0x000, init_msg, sizeof(init_msg));
   CAN1_Send_TEST();
-  LargeDataTransfer_InitSender();
-  LargeDataTransfer_InitReceiver();
 
-  // 设置回调
-  LargeDataTransfer_SetCompleteCallback(OnTransferComplete);
-  LargeDataTransfer_SetReceivedCallback(OnDataReceived);
-  LargeDataTransfer_SetFailedCallback(OnTransferFailed);
+
+
 
 #endif
 
@@ -182,28 +178,7 @@ int main(void)
     //        AppUser_temp_sample();
     // Read_GPIO_vTask();
 
-#if 1
-        // 主循环 - 发送定期状态更新
-        static uint32_t last_tick = 0;
-        if (HAL_GetTick() - last_tick > 1000)
-        {
-            last_tick = HAL_GetTick();
 
-            // 发送状态更新
-            uint8_t status[8] = {05,0xAA,0x55,0x01,0x23,0x11,0x11,0x99};
-            // 填充状态数据...
-            FDCAN_SendMessage(FC_DIAGNOSTICS, 0x001, 0x001, status, sizeof(status));
-        }
-
-        //    // 处理发送超时
-    LargeDataTransfer_TimeoutHandler();
-
-    // 处理接收会话超时
-    LargeDataTransfer_SessionTimeoutHandler();
-#else
-
-
-#endif
 
   }
 

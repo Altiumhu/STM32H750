@@ -94,7 +94,7 @@ int Can_SetFilter(uint8_t addrSlave, bool direct)
         return -1;
     }
 	
-   //只接收广播消息--0x7FF
+   //只接收广播消息--0xFF
     /* 过滤器配置 */
     fdcan_filterconfig.IdType = FDCAN_EXTENDED_ID;             /* 标准ID */
     fdcan_filterconfig.FilterIndex = 1;                        //* 滤波器索引 */
@@ -398,40 +398,13 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
             if (RxHeader.IdType == FDCAN_EXTENDED_ID) // 接收扩展帧
             {
                 uint32_t id = RxHeader.Identifier;
-                uint8_t fc = (id >> ID_FC_POS) & 0x0F;      // 功能码位置 [28:25]
-                uint16_t did = (id >> ID_DID_POS) & 0x1FFF; // 设备ID位置 [24:12]
+                uint8_t fc = (id >> 25) & 0x0F;      // 功能码位置 [28:25]
+                uint16_t did = (id >> 12) & 0x1FFF; // 设备ID位置 [24:12]
                 uint16_t sub = id & 0x0FFF;                 //// 子地址位置 [11:0]
 
                 printf("\r\n Identifier= 0x%X DataLength= %d  \r\n",RxHeader.Identifier , RxHeader.DataLength);
 
-                // 处理大数据传输
-                if ((fc == FC_DATA_TRANSFER) && (RxHeader.DataLength == sizeof(LargeDataFrame)))
-                {
-                    printf(" big_code \r\n");
-                    LargeDataFrame *frame = (LargeDataFrame *)RxData;
 
-                    if (frame->frame_type == ACK_FRAME)
-                    {
-                        // 发送端处理ACK
-                        LargeDataTransfer_HandleACK(did, frame);
-                    }
-                    else
-                    {
-                        // 接收端处理数据帧
-                        LargeDataTransfer_HandleFrame(did, frame);
-                    }
-                }
-                else
-                {
-                    printf(" shortcode \r\n");
-
-                    for (i = 0; i < 8; i++)
-                    {
-                        printf("rxdata[%d]:%d\r\n", i, RxData[i]);
-                    }
-                    // 其他功能码处理
-                    ProcessCANMessage(fc, did, sub, RxData, RxHeader.DataLength);
-                }
             }
         }
         HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
