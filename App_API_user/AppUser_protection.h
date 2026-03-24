@@ -25,7 +25,7 @@ typedef union power_fault_define
         uint32_t ctrlonoff : 1;
         uint32_t stop : 1;  // 急停故障
         uint32_t H_OVP : 1; // 输入过压
-        uint32_t Bar : 1;   // 传感器
+        uint32_t TIMER_OUT : 1;   // 工步时间到
 
         uint32_t DC_OCP : 1; // 欠压压标志位
         uint32_t L_OVP : 1;  //  电池电压保护
@@ -42,7 +42,7 @@ typedef union power_fault_define
         uint32_t res : 1;   // 
         uint32_t LLC_OCP : 1; // 峰值过流标志位
 
-        uint32_t Boost_ERR : 1; // boost故障
+        uint32_t TIMER_ : 1; // boost故障
         uint32_t FAN_ERR : 1;   // 风机故障
                                 //        uint16_t rsvd2:4;  // 保留位
     } bit;

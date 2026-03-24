@@ -33,7 +33,8 @@ typedef enum power_state_define
     POWER_TEST,          // 10
 
     POWER_SoftStart, // 软启动 11
-    POWER_SET_CHARGE,    // 设置充电12
+	  POWER_SET_CHARGE,
+    POWER_SET_PARAM,    // 设置工步参数
 
 } power_state_define;
 
@@ -64,7 +65,7 @@ typedef struct
 
 extern debugNUmer g_debugNUmer;
 
-extern void APT0TimerCallback(void *aptHandle);
+
 
 extern void TIMER0CallbackFunction(void *handle);
 

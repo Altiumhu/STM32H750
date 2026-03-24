@@ -17,7 +17,7 @@
 #include "app_power_Loop.h"
 
 void TIMER0CallbackFunction(void *handle);
-void APT0TimerCallback(void *aptHandle);
+
 void System_CloseLoop_Status(void);
 
 /**********************************************************************
@@ -47,7 +47,7 @@ void System_CloseLoop_Status(void)
 
         switch (g_Channelinfo[ch].workMode)
         {
-        case POWER_OFF:   // 关闭驱动
+        case POWER_OFF: // 关闭驱动    
         case POWER_FAULT: // 关闭驱动
         {
             if (g_Channelinfo[ch].fault.all == 0) // 判断故障  没有故障进入正常启动程序
@@ -55,7 +55,7 @@ void System_CloseLoop_Status(void)
                 if (g_DEVICE_Information.workMode == POWER_SET_CHARGE)
                 {
                 }
-                g_Channelinfo[ch].workMode = POWER_GET_V_PORT;
+                g_Channelinfo[ch].workMode = POWER_SET_PARAM;
 
                 g_Channelinfo[ch].GetPortTimer = 0;
             }
@@ -64,6 +64,12 @@ void System_CloseLoop_Status(void)
             }
         }
         break;
+
+        case POWER_SET_PARAM://设置工步参数
+
+            g_Channelinfo[ch].workMode = POWER_GET_V_PORT;
+
+            break;
 
         case POWER_GET_V_PORT: //
             g_Channelinfo[ch].GetPortTimer++;
@@ -133,7 +139,7 @@ void System_CloseLoop_Status(void)
 
             {
                 g_Channelinfo[ch].SS_Timer++;
-                if (g_Channelinfo[ch].SS_Timer >= 10)//开机一瞬间误动作
+                if (g_Channelinfo[ch].SS_Timer >= 10) // 开机一瞬间误动作
                 {
                     g_Channelinfo[ch].SS_Timer = 0;
                     // ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
@@ -161,10 +167,10 @@ void System_CloseLoop_Status(void)
                 gHandle_PID[ch].v_ki = 0.1f;
 
             // 电压环
-            g_Channelinfo[ch].Set_CV=g_Channelinfo[ch].Set_CV+0.01f;
-            if(g_Channelinfo[ch].Set_CV>=g_Channelinfo[ch].Set_PreCV)
+            g_Channelinfo[ch].Set_CV = g_Channelinfo[ch].Set_CV + 0.01f;
+            if (g_Channelinfo[ch].Set_CV >= g_Channelinfo[ch].Set_PreCV)
             {
-                 g_Channelinfo[ch].Set_CV=g_Channelinfo[ch].Set_PreCV;
+                g_Channelinfo[ch].Set_CV = g_Channelinfo[ch].Set_PreCV;
             }
 
             gHandle_PID[ch].v_ref = g_Channelinfo[ch].Set_CV;
