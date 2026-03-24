@@ -1,0 +1,128 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_:
+
+
+BO_ 2409891327 Worke_end: 8 Vector__XXX
+ SG_ SetUP : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ RUN_num : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_3 : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_2 : 16|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_1 : 8|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum1 : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 2148795903 Worke03: 8 Vector__XXX
+ SG_ Chnum_Copy_7 : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_6 : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_5 : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_4 : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_3 : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_2 : 16|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_1 : 8|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum1 : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 2148271615 Worke02: 8 Vector__XXX
+ SG_ Chnum_Copy_7 : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_6 : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_5 : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_4 : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_3 : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_2 : 16|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_1 : 8|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum1 : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 2147747327 Worke01: 8 Vector__XXX
+ SG_ Chnum_Copy_7 : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_6 : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_5 : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_4 : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_3 : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_2 : 16|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_1 : 8|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum1 : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 2409760255 Worke_Setup: 8 Vector__XXX
+ SG_ CRC : 16|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Datalen : 0|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Chnum_Copy_3 : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_2 : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum_Copy_1 : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Chnum1 : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 2409693439 EMTOSCMD_Link: 1 Vector__XXX
+ SG_ LINK : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+
+
+
+CM_ SG_ 2409891327 SetUP "运行工步号";
+CM_ SG_ 2409891327 RUN_num "运行循环号";
+CM_ SG_ 2409891327 Chnum_Copy_3 "通道数量";
+CM_ SG_ 2409891327 Chnum_Copy_2 "通道数量";
+CM_ SG_ 2409891327 Chnum_Copy_1 "通道数量";
+CM_ SG_ 2409891327 Chnum1 "通道数量";
+CM_ SG_ 2148795903 Chnum_Copy_7 "通道数量";
+CM_ SG_ 2148795903 Chnum_Copy_6 "通道数量";
+CM_ SG_ 2148795903 Chnum_Copy_5 "通道数量";
+CM_ SG_ 2148795903 Chnum_Copy_4 "通道数量";
+CM_ SG_ 2148795903 Chnum_Copy_3 "通道数量";
+CM_ SG_ 2148795903 Chnum_Copy_2 "通道数量";
+CM_ SG_ 2148795903 Chnum_Copy_1 "通道数量";
+CM_ SG_ 2148795903 Chnum1 "通道数量";
+CM_ SG_ 2148271615 Chnum_Copy_7 "通道数量";
+CM_ SG_ 2148271615 Chnum_Copy_6 "通道数量";
+CM_ SG_ 2148271615 Chnum_Copy_5 "通道数量";
+CM_ SG_ 2148271615 Chnum_Copy_4 "通道数量";
+CM_ SG_ 2148271615 Chnum_Copy_3 "通道数量";
+CM_ SG_ 2148271615 Chnum_Copy_2 "通道数量";
+CM_ SG_ 2148271615 Chnum_Copy_1 "通道数量";
+CM_ SG_ 2148271615 Chnum1 "通道数量";
+CM_ SG_ 2147747327 Chnum_Copy_7 "通道数量";
+CM_ SG_ 2147747327 Chnum_Copy_6 "通道数量";
+CM_ SG_ 2147747327 Chnum_Copy_5 "通道数量";
+CM_ SG_ 2147747327 Chnum_Copy_4 "通道数量";
+CM_ SG_ 2147747327 Chnum_Copy_3 "通道数量";
+CM_ SG_ 2147747327 Chnum_Copy_2 "通道数量";
+CM_ SG_ 2147747327 Chnum_Copy_1 "通道数量";
+CM_ SG_ 2147747327 Chnum1 "通道数量";
+CM_ SG_ 2409760255 Chnum_Copy_3 "通道数量";
+CM_ SG_ 2409760255 Chnum_Copy_2 "通道数量";
+CM_ SG_ 2409760255 Chnum_Copy_1 "通道数量";
+CM_ SG_ 2409760255 Chnum1 "通道数量";
+BA_DEF_  "MultiplexExtEnabled" ENUM  "No","Yes";
+BA_DEF_  "BusType" STRING ;
+BA_DEF_DEF_  "MultiplexExtEnabled" "No";
+BA_DEF_DEF_  "BusType" "CAN";
+
