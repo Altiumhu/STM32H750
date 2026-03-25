@@ -101,6 +101,8 @@ void AppDebug_vTask(void)
     printf("\r\nDebug Run=%d\r\n", poll_time++);
     debug_show_workMode(); // 显示故障和运行模式
 
+
+        printf("\r\nTimer_GetClock =%d \r\n", Timer_GetClock() );
     //
     //  ex_595_write(0, EX_595_PIN_0, 1);
     //  ex_595_write(2, EX_595_PIN_0, 1);

@@ -58,7 +58,7 @@ void AppUser_Device_InitData(void)
   debug_init();
   //  Init_Master_Hand();
 
-  //  Smoke_Init_Data();
+   UserSlave_Init();
   //     Init_Protect_handle();
   // memset( &g_DEVICE_Information,0,sizeof(DEVICE_State_Information));  //  这个编译器使用memset会有问题
 

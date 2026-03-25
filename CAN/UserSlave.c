@@ -18,21 +18,19 @@
 #include "head.h"
 #include "UserSlave.h"
 
-
-
 #define TIME_SLAVEDISCONNECT 700
 #define TIME_SLAVEPULSE 1500
-#define TIMEOUT_WAITACK 100 // µÈ´ı·µ»ØÊı¾İÊ±¼ä³¬Ê±
+#define TIMEOUT_WAITACK 100 // ç­‰å¾…è¿”å›æ•°æ®æ—¶é—´è¶…æ—¶
 
-WorkStepInfoStream_t g_WorkStepInfoStream[BOARD_CHANNEL_NUM][MAX_SETUP_WORKE]; // ¹¤²½ĞÅÏ¢×î´ó32¸ö
+WorkStepInfoStream_t g_WorkStepInfoStream[BOARD_CHANNEL_NUM][MAX_SETUP_WORKE]; // å·¥æ­¥ä¿¡æ¯æœ€å¤§32ä¸ª
 
-StartWorkeChanne g_SetChanneWorke; // ÉèÖÃÆô¶¯Í¨µÀ
+StartWorkeChanne g_SetChanneWorke; // è®¾ç½®å¯åŠ¨é€šé“
 
 enum ESlaveSampleStatus_t
 {
-    ESlaveSampleStatus_Empty = 0,     // ¿Õ
-    ESlaveSampleStatus_WaitSlaveData, // ÒÑ¾­Ïò·Ö»úÇëÇóÊı¾İ£¬ÕıÔÚµÈ´ı·Ö»ú·µ»ØÊı¾İ
-    ESlaveSampleStatus_Ready,         // ×¼±¸ºÃÊı¾İ
+    ESlaveSampleStatus_Empty = 0,     // ç©º
+    ESlaveSampleStatus_WaitSlaveData, // å·²ç»å‘åˆ†æœºè¯·æ±‚æ•°æ®ï¼Œæ­£åœ¨ç­‰å¾…åˆ†æœºè¿”å›æ•°æ®
+    ESlaveSampleStatus_Ready,         // å‡†å¤‡å¥½æ•°æ®
 };
 
 #pragma pack(4)
@@ -47,19 +45,17 @@ typedef struct
 {
     SlaveSampleData_t sample;
 
-  
+    uint32_t sampleErrorStatus; // sampleErrorä¸­æ˜¯å¦æœ‰ä¿å­˜æˆªæ­¢æ¡ä»¶åˆ°
+    uint8_t Total_steps;        // æ€»å·¥æ­¥æ•°
 
-    uint32_t sampleErrorStatus; // sampleErrorÖĞÊÇ·ñÓĞ±£´æ½ØÖ¹Ìõ¼şµ½
-    uint8_t Total_steps;        // ×Ü¹¤²½Êı
-
-    // Ã¿¸öÍ¨µÀµÄÆô¶¯¹¤²½Ê±¼ä
+    // æ¯ä¸ªé€šé“çš„å¯åŠ¨å·¥æ­¥æ—¶é—´
     SystemTime_t timeStartWorkStep[MaxNumChannel];
 
     uint32_t timeLastRec;
 
     uint32_t error;
 
-    uint16_t channelWorkStepSet; // ¸÷Í¨µÀÊÇ·ñÒÑ¾­½¨Á¢¹¤ÒÕĞÅÏ¢
+    uint16_t channelWorkStepSet; // å„é€šé“æ˜¯å¦å·²ç»å»ºç«‹å·¥è‰ºä¿¡æ¯
 
     uint8_t status;
     uint8_t isLinked;
@@ -69,8 +65,8 @@ typedef struct
 
 struct
 {
-    uint8_t canFrameData[NumMaxTpCanData]; // canFrameSendµÄÊı¾İ²¿·Ö
-    SlaveS_t slave;                        // ¸÷·Ö»úÊı¾İ
+    uint8_t canFrameData[NumMaxTpCanData]; // canFrameSendçš„æ•°æ®éƒ¨åˆ†
+    SlaveS_t slave;                        // å„åˆ†æœºæ•°æ®
 
     uint32_t timeLastSendLink;
     uint32_t logicVoltMax;
@@ -85,15 +81,25 @@ struct
 } UserSlave_Data;
 #pragma pack()
 
+// ä¸‹ä½æœºæ•°æ®åˆå§‹åŒ–
 int UserSlave_Init(void)
 {
+    memset(&UserSlave_Data, 0, sizeof(UserSlave_Data));
+    for (uint16_t i = 0; i < 16; i++)
+    {
+        memset(&g_WorkStepInfoStream[i], 0, sizeof(WorkStepInfoStream_t));
+    }
+
+    memset(&g_SetChanneWorke.chnum[0], 0xFF, 32);
+    g_SetChanneWorke.Run_Cyc_indx = 1;
+    g_SetChanneWorke.runWorke_indx = 0;
 }
 
 void UserSlave_SendLink(void)
 {
 }
 
-uint8_t GetTotal_steps(void )
+uint8_t GetTotal_steps(void)
 {
 
     return UserSlave_Data.slave.Total_steps;
@@ -101,8 +107,9 @@ uint8_t GetTotal_steps(void )
 void UserSlave_UpdateSlaveRec(void)
 {
 #if 1
+    uint32_t tempdata;
     uint16_t tmep[2];
-    uint16_t SetCh_Activity = 0; // ÉèÖÃÓĞĞ§µÄÍ¨µÀ¹¤²½²ÎÊı
+    uint16_t SetCh_Activity = 0; // è®¾ç½®æœ‰æ•ˆçš„é€šé“å·¥æ­¥å‚æ•°
 
     uint8_t devid = 1;
     uint8_t index, setindex, ch;
@@ -116,7 +123,7 @@ void UserSlave_UpdateSlaveRec(void)
         index = pFrame->addrSlave - 1;
         if (index > 16 && pFrame->addrSlave != 0xFF)
         {
-            printf("\r\nÖĞÎ»»ú·¢ËÍµØÖ·´íÎó=%d ", index);
+            printf("\r\nä¸­ä½æœºå‘é€åœ°å€é”™è¯¯=%d ", index);
             return;
         }
         UserSlave_Data.slave.isLinked = 1;
@@ -124,28 +131,28 @@ void UserSlave_UpdateSlaveRec(void)
         pSlave = &(UserSlave_Data.slave);
         switch (pFrame->cmd)
         {
-        case EMTOSCMD_Link: // Á¬½ÓÃüÁî
+        case EMTOSCMD_Link: // è¿æ¥å‘½ä»¤
 
             CanFr_SendData(BoardInfo_GetID(), EMTOSCMD_Link, GetBorad_Device(), 8);
             printf("\r\n Link ID=%d", BoardInfo_GetID());
             break;
-        case EMTOSCMD_Setpar: // ÉèÖÃ²ÎÊı
+        case EMTOSCMD_Setpar: // è®¾ç½®å‚æ•°
             break;
 
-        case EMTOSCMD_SampleStart: // ¿ªÊ¼²ÉÑù
+        case EMTOSCMD_SampleStart: // å¼€å§‹é‡‡æ ·
 
             break;
-        case EMTOSCMD_SampleQuest: // ÇëÇó²ÉÑùÊı¾İ
+        case EMTOSCMD_SampleQuest: // è¯·æ±‚é‡‡æ ·æ•°æ®
             break;
 
-        case EMTOSCMD_SendWorkStepInfo: // ÏÂ·¢¹¤²½ĞÅÏ¢
+        case EMTOSCMD_SendWorkStepInfo: // ä¸‹å‘å·¥æ­¥ä¿¡æ¯
             printf("\r\n SendWorkStepInfo_dataLen=%d ", pFrame->dataLen);
             devid = BoardInfo_GetID();
-            pSlave->Total_steps = pFrame->data[32]; // ×Ü¹¤²½Êı
-            printf("\r\n Total_steps =%d ", pSlave->Total_steps);
+            pSlave->Total_steps = pFrame->data[32]; // æ€»å·¥æ­¥æ•°
+            printf("\r\n Total_steps =%d  %d", pSlave->Total_steps, pFrame->data[33]);
             if (pSlave->Total_steps > MAX_SETUP_WORKE)
             {
-                printf("\r\n×Ü¹¤²½ÊıÁ¿´íÎó=%d ", pSlave->Total_steps);
+                printf("\r\n Total_steps ERR!!!=%d ", pSlave->Total_steps);
                 return;
             }
 
@@ -154,31 +161,52 @@ void UserSlave_UpdateSlaveRec(void)
             SetCh_Activity = tmep[0] | (tmep[1] << 8);
             printf("\r\n SetCh_Activity=0x%X ", SetCh_Activity);
 
-            for (setindex = 0; setindex < pSlave->Total_steps; setindex++) // Ã¿¸öÍ¨µÀ¹¤²½ÊıÁ¿
+            for (setindex = 0; setindex < pSlave->Total_steps; setindex++) // åˆ¤æ–­å“ªä¸ªé€šé“è¢«æ¿€æ´» é€šé“å·¥æ­¥æ•°æ®// æ¯ä¸ªé€šé“å·¥æ­¥æ•°é‡
             {
-                for (ch = 0; ch < BOARD_CHANNEL_NUM; ch) // ÅĞ¶ÏÄÄ¸öÍ¨µÀ±»¼¤»î Í¨µÀ¹¤²½Êı¾İ
+
+                for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
                 {
                     if (SetCh_Activity >> ch & 0x0001)
                     {
-                        printf("\r\n ch=%d ", ch);
-                        memcpy(&(g_WorkStepInfoStream[ch][setindex]), pFrame->data + 34 + ch * 16, 16);
-                        ch++;
+
+                        memcpy(&(g_WorkStepInfoStream[ch][setindex]), pFrame->data + 33 + 16 * setindex, 16);
+
+                        // è®¾ç½®å·¥ä½œå¯åŠ¨ç”µæµ
+                        tempdata = U8TOU32(g_WorkStepInfoStream[ch][setindex].currentStart);
+                        g_Channelinfo[ch].RunningWorkSetup.currentStart = (float)tempdata;
+                        g_Channelinfo[ch].RunningWorkSetup.currentStart = g_Channelinfo[ch].RunningWorkSetup.currentStart * 0.0001f; // 10000mA=10.0A
+                        // printf("\r\nch=%d å¯åŠ¨ç”µæµ=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
+
+                        tempdata = U8TOU16(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_indx].voltLimit);
+                        g_Channelinfo[ch].RunningWorkSetup.voltLimit = (float)tempdata;
+                        g_Channelinfo[ch].RunningWorkSetup.voltLimit = g_Channelinfo[ch].RunningWorkSetup.voltLimit * 0.001f; // 1500mV=1.5V
+                        // printf("\r\nch=%d æˆªæ­¢ç”µæµ=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
+
+                        // è®¾ç½®å·¥ä½œæˆªæ­¢ç”µæµ
+                        tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_indx].currentLimit);
+                        g_Channelinfo[ch].RunningWorkSetup.currentLimit = (float)tempdata;
+                        g_Channelinfo[ch].RunningWorkSetup.currentLimit = g_Channelinfo[ch].RunningWorkSetup.currentLimit * 0.0001f; // 10000mA=10.0A
+                        // printf("\r\nch=%d currentLimit=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentLimit);
+                        // è®¾ç½®å·¥ä½œæˆªæ­¢æ—¶é—´
+                        tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_indx].timeLimit);
+                        g_Channelinfo[ch].RunningWorkSetup.timeLimit = tempdata;
+                        // printf("\r\nch=%d timeLimit=%d ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
                     }
                 }
             }
 
             break;
 
-        case EMTOSCMD_StartWorkStep: // Æô¶¯¹¤²½
+        case EMTOSCMD_StartWorkStep: // å¯åŠ¨å·¥æ­¥
             printf("\r\n EMTOSCMD_dataLen=%d ", pFrame->dataLen);
             memcpy(&(g_SetChanneWorke), pFrame->data, pFrame->dataLen);
 
             devid = BoardInfo_GetID();
 
-            printf("\r\n¿ªÊ¼ÔËĞĞ¹¤²½ºÅ=%d ", g_SetChanneWorke.runWorke_indx);
+            printf("\r\nrunWorke_indx=%d ", g_SetChanneWorke.runWorke_indx);
             if (g_SetChanneWorke.runWorke_indx > MAX_SETUP_WORKE)
             {
-                printf("\r\n ÔËĞĞ¹¤²½ºÅ´íÎó=%d ", g_SetChanneWorke.runWorke_indx);
+                printf("\r\n runWorke_indx=%d ", g_SetChanneWorke.runWorke_indx);
                 return;
             }
 
@@ -187,40 +215,57 @@ void UserSlave_UpdateSlaveRec(void)
             SetCh_Activity = tmep[0] | (tmep[1] << 8);
             printf("\r\n SetCh_Activity=0x%X ", SetCh_Activity);
 
-            for (ch = 0; ch < BOARD_CHANNEL_NUM; ch) // ÅĞ¶ÏÄÄ¸öÍ¨µÀ±»¼¤»î Í¨µÀ¹¤²½Êı¾İ
+            for (ch = 0; ch < BOARD_CHANNEL_NUM;) // åˆ¤æ–­å“ªä¸ªé€šé“è¢«æ¿€æ´» é€šé“å·¥æ­¥æ•°æ®
             {
                 if ((SetCh_Activity >> ch) & 0x0001)
                 {
-                    g_Channelinfo[ch].RunningWorkSetup.index = g_SetChanneWorke.runWorke_indx; // ÔËĞĞ¹¤²½ºÅ
-                    printf("\r\n ch=%d ", ch);
-                    g_Channelinfo[ch].WorkeStartup = 1; // Æô¶¯¹¤²½
-                    g_Channelinfo[ch].fault.all = 0;   // Çå³ı¹ÊÕÏ
+                    g_Channelinfo[ch].RunningWorkSetup.index = g_SetChanneWorke.runWorke_indx; // è¿è¡Œå·¥æ­¥å·
+                    // printf("\r\n ch=%d ", ch);
+                    g_Channelinfo[ch].WorkeStartup = 1; // å¯åŠ¨å·¥æ­¥
+                    g_Channelinfo[ch].fault.all = 0;    // æ¸…é™¤æ•…éšœ
                     ch++;
                 }
+                else
+                {
+                    g_Channelinfo[ch].WorkeStartup = 0; // åœæ­¢å·¥æ­¥
+                }
             }
+            //            for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++) // åˆ¤æ–­å“ªä¸ªé€šé“è¢«æ¿€æ´» é€šé“å·¥æ­¥æ•°æ®
+            //            {
+            //                if (g_Channelinfo[ch].WorkeStartup == 1)
+            //                {
+            //                    // è®¾ç½®å·¥ä½œå¯åŠ¨ç”µæµ
+            ////                    tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_indx].currentStart);
+            ////                    g_Channelinfo[ch].RunningWorkSetup.currentStart = (float)tempdata;
+            ////                    g_Channelinfo[ch].RunningWorkSetup.currentStart = g_Channelinfo[ch].RunningWorkSetup.currentStart * 0.0001f; // 10000mA=10.0A
+            //                     printf("\r\nch=%d currentStart=%fA ",ch+1,g_Channelinfo[ch].RunningWorkSetup.currentStart );
+            //                    // é™åˆ¶ç”µå‹ æ”¾ç”µæ˜¯ä¸‹é™ç”µå‹ï¼›å……ç”µæ˜¯ä¸Šé™ç”µå‹
 
-            printf("\r\n Æô¶¯¹¤²½  ÔËĞĞÑ­»·ºÅ =%d ", g_SetChanneWorke.Run_Cyc_indx);
+            //                }
+            //            }
+
+            printf("\r\n å¯åŠ¨å·¥æ­¥=%d  è¿è¡Œå¾ªç¯å· =%d ", g_SetChanneWorke.runWorke_indx, g_SetChanneWorke.Run_Cyc_indx);
 
             break;
-        case EMTOSCMD_StopWorkStep: // Í£Ö¹¹¤²½
+        case EMTOSCMD_StopWorkStep: // åœæ­¢å·¥æ­¥
             break;
-        case EMTOSCMD_ContinueWorkStep: // ¼ÌĞø¹¤²½
-            break;
-
-        case EMTOSCMD_JumpWorkStep: // ¹¤²½Ìø×ª
-
-            break;
-        case EMTOSCMD_StopWorkStepw: // ²¿·ÖÍ¨µÀÍ£Ö¹Í£Ö¹¹¤²½
-
+        case EMTOSCMD_ContinueWorkStep: // ç»§ç»­å·¥æ­¥
             break;
 
-        ///////////////////////////////////ÒÔÏÂÊÇĞŞµ÷ÃüÁî
+        case EMTOSCMD_JumpWorkStep: // å·¥æ­¥è·³è½¬
+
+            break;
+        case EMTOSCMD_StopWorkStepw: // éƒ¨åˆ†é€šé“åœæ­¢åœæ­¢å·¥æ­¥
+
+            break;
+
+        ///////////////////////////////////ä»¥ä¸‹æ˜¯ä¿®è°ƒå‘½ä»¤
         case EMTOSCMDCALIBRATE_SAMPLE:
             printf("\r\n CAN Calibrate ");
             // UserCalibrate_SendSample(index, pFrame->data[8], U8TOU32(pFrame->data), U8TOU32((pFrame->data + 4)));
             break;
 
-        ////////////////////////////////// ÒÔÏÂÊÇ¸¨Öú¹¤¾ßÃüÁî Éı¼¶ÏÂÎ»»ú»Ø¸´ÖĞÉÏÎ»»ú
+        ////////////////////////////////// ä»¥ä¸‹æ˜¯è¾…åŠ©å·¥å…·å‘½ä»¤ å‡çº§ä¸‹ä½æœºå›å¤ä¸­ä¸Šä½æœº
         case EMTOSCMDIAP_UpGradeInfo:
             // UserHelpTool_UpGradeSlaveInfoAck(1, index, pFrame->data[0]);
             break;

@@ -69,8 +69,8 @@ typedef struct
      uint16_t GetPortTimer;    // ADC跟新中断
 
      uint16_t WorkeStartup;//运行启动工步
+     uint32_t WorkeRunStartTimer;//开始工步运行时间
      uint32_t WorkeRunTimer;//工步运行时间
-
      RuningWorkSetup_t RunningWorkSetup;//运行设置
 
 
