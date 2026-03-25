@@ -36,7 +36,7 @@ void InitBorad_Device(void)
 }
 uint8_t * GetBorad_Device(void)
 {
-    printf("\r\n currMax =%d voltMax=%d softVersion=% Channel=%d", g_Borad_Device.byte.currMax,g_Borad_Device.byte.voltMax,g_Borad_Device.byte.softVersion, g_Borad_Device.byte.Channel);
+    printf("\r\n currMax =%d voltMax=%d softVersion=%d Channel=%d", g_Borad_Device.byte.currMax,g_Borad_Device.byte.voltMax,g_Borad_Device.byte.softVersion, g_Borad_Device.byte.Channel);
     return (uint8_t *)&g_Borad_Device.data[0];
 }
 

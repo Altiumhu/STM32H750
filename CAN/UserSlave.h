@@ -8,6 +8,8 @@
 #define DEFAULTCURRENTMAX 16
 #define MaxNumSamplesFifo 4 // 3 600  600---10分钟
 
+#define MAX_SETUP_WORKE 32
+
 typedef enum
 {
 	EChannelError_OK = 0,
@@ -128,8 +130,15 @@ typedef struct
 	uint8_t error;
 	uint8_t loopSn;
 } SampleData_t;
+
+
+
+
 #pragma pack()
 
+
+extern WorkStepInfoStream_t g_WorkStepInfoStream[BOARD_CHANNEL_NUM][MAX_SETUP_WORKE]; // 工步信息最大32个
+extern StartWorkeChanne g_SetChanneWorke; // 设置启动通道
 int UserSlave_Init(void);
 
 void UserSlave_Update(void);
@@ -137,5 +146,7 @@ void UserSlave_Update(void);
 void UserSlave_SendLink(void);
 
 void UserSlave_Update(void);
+
+extern uint8_t GetTotal_steps(void );//获取总工步数
 
 #endif

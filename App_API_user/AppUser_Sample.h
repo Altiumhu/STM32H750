@@ -12,6 +12,19 @@
 
 #define CC_CAL_Ka 0.0003329f
 #define CC_CAL_Kb -0.043701f
+
+
+typedef struct
+{
+	uint8_t index;			 // 工步索引号
+	uint8_t type;			 // 工步类型
+	float currentStart; // 启动电流
+	float voltLimit;	 // 限制电压
+	float currentLimit; // 终止电流
+	uint32_t timeLimit;	 // 终止时间
+} RuningWorkSetup_t;
+
+
 // 单通道数据数据结构
 typedef struct
 {
@@ -54,6 +67,14 @@ typedef struct
      uint16_t SS_Timer;    // ADC跟新中断
 
      uint16_t GetPortTimer;    // ADC跟新中断
+
+     uint16_t WorkeStartup;//运行启动工步
+     uint32_t WorkeRunTimer;//工步运行时间
+
+     RuningWorkSetup_t RunningWorkSetup;//运行设置
+
+
+
 
 } ChannelInfo;
 

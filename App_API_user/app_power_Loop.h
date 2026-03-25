@@ -5,8 +5,6 @@
 #include "AppUser_protection.h"
 #include "system_Config.h"
 
-
-
 #if SS_START_MODE
 #define PWM_SOTC_CNT 5 //  轨迹控制软启动
 #else
@@ -14,8 +12,6 @@
 
 #define PWM_BURST_CNT 3 //  高频软启动
 #endif
-
-
 
 // 电源闭环控制控制状态机状态定义枚举
 typedef enum power_state_define
@@ -29,12 +25,14 @@ typedef enum power_state_define
     POWER_RUN_CHARGE,    // 充电运行6
     POWER_RUN,           // 运行状态7
     POWER_BURST,         // 打嗝模式8
-    POWER_GET_V_PORT,   // 9
+    POWER_GET_V_PORT,    // 9
     POWER_TEST,          // 10
 
     POWER_SoftStart, // 软启动 11
-	  POWER_SET_CHARGE,
-    POWER_SET_PARAM,    // 设置工步参数
+    POWER_SET_CHARGE,
+    POWER_SET_PARAM, // 设置工步参数
+
+    POWER_IDLE, // 空闲模式
 
 } power_state_define;
 
@@ -49,31 +47,20 @@ typedef enum power_Worke_define
 
 } power_Worke_define;
 
-
-
-
-
 typedef struct
 {
-    float     debugNUmer1;
-    float     temp;
-    uint16_t  debug1;
-    uint16_t  debug2;
-    uint16_t  debug3;
+    float debugNUmer1;
+    float temp;
+    uint16_t debug1;
+    uint16_t debug2;
+    uint16_t debug3;
 
-}debugNUmer;
+} debugNUmer;
 
 extern debugNUmer g_debugNUmer;
 
-
-
 extern void TIMER0CallbackFunction(void *handle);
 
- extern void Debug_Loop(void);
-
+extern void Debug_Loop(void);
 
 #endif
-
-
-
-

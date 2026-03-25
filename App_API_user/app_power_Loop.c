@@ -35,6 +35,7 @@ void System_CloseLoop_Status(void);
 void System_CloseLoop_Status(void)
 {
     uint16_t ch = 0;
+    uint32_t tempdata;
 
     for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
     {
@@ -47,7 +48,7 @@ void System_CloseLoop_Status(void)
 
         switch (g_Channelinfo[ch].workMode)
         {
-        case POWER_OFF: // 关闭驱动    
+        case POWER_OFF:   // 关闭驱动
         case POWER_FAULT: // 关闭驱动
         {
             if (g_Channelinfo[ch].fault.all == 0) // 判断故障  没有故障进入正常启动程序
@@ -65,13 +66,64 @@ void System_CloseLoop_Status(void)
         }
         break;
 
-        case POWER_SET_PARAM://设置工步参数
+        case POWER_SET_PARAM: // 设置工步参数
 
-            g_Channelinfo[ch].workMode = POWER_GET_V_PORT;
+            if (g_Channelinfo[ch].RunningWorkSetup.index >= GetTotal_steps()) // 运行工步号大于总工步数
+            {
+                g_SetChanneWorke.Run_Cyc_indx = 0; // 运行工步号归零
+            }
+
+            if (g_Channelinfo[ch].WorkeStartup == 1) // 启动工步开始
+            {
+
+                //   g_WorkStepInfoStream[ch][g_SetChanneWorke.Run_Cyc_indx].currentLimit; // 工步信息最大32个
+
+                //  g_Channelinfo[ch].RunningWorkSetup.index = g_SetChanneWorke.Run_Cyc_indx; // 运行工步号
+                // 设置工作启动电流
+                tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.Run_Cyc_indx].currentStart);
+                g_Channelinfo[ch].RunningWorkSetup.currentStart = (float)tempdata;
+                g_Channelinfo[ch].RunningWorkSetup.currentStart = g_Channelinfo[ch].RunningWorkSetup.currentStart * 0.0001f; // 10000mA=10.0A
+
+                // 限制电压 放电是下限电压；充电是上限电压
+                tempdata = U8TOU16(g_WorkStepInfoStream[ch][g_SetChanneWorke.Run_Cyc_indx].voltLimit);
+                g_Channelinfo[ch].RunningWorkSetup.voltLimit = (float)tempdata;
+                g_Channelinfo[ch].RunningWorkSetup.voltLimit = g_Channelinfo[ch].RunningWorkSetup.voltLimit * 0.001f; // 1500mV=1.5V
+
+                // 设置工作截止电流
+                tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.Run_Cyc_indx].currentLimit);
+                g_Channelinfo[ch].RunningWorkSetup.currentLimit = (float)tempdata;
+                g_Channelinfo[ch].RunningWorkSetup.currentLimit = g_Channelinfo[ch].RunningWorkSetup.currentLimit * 0.0001f; // 10000mA=10.0A
+
+                // 设置工作截止时间
+                tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.Run_Cyc_indx].timeLimit);
+                g_Channelinfo[ch].RunningWorkSetup.timeLimit = tempdata;
+
+                switch (g_Channelinfo[ch].RunningWorkSetup.type)
+                {
+                case 0x44: // 跳转搁置阶段 静置(D) 工步名称
+                    /* code */
+                    g_Channelinfo[ch].workMode = POWER_IDLE; // 获得端口电压状态
+                    break;
+                case 0x41: // 恒流恒压充电（A）
+                    /* code */
+                    break;
+                case 0x43: // 恒流放电(C) 工步名称
+                    /* code */
+                    break;
+                case 0x52: // 循环(R) 工步名称
+                    /* code */
+                    break;
+                default:
+                    break;
+                }
+            }
+
+            break;
+        case POWER_IDLE: // 待机状态 搁置阶段
 
             break;
 
-        case POWER_GET_V_PORT: //
+        case POWER_GET_V_PORT: // 获得端口电压
             g_Channelinfo[ch].GetPortTimer++;
             if (g_Channelinfo[ch].GetPortTimer >= 12)
             {
