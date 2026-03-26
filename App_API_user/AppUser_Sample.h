@@ -68,7 +68,7 @@ typedef struct
      uint32_t WorkeRunTimer;             // 工步运行时间
      RuningWorkSetup_t RunningWorkSetup; // 运行设置
 
-     uint16_t Run_Cyc_indx; // 工步循环号
+     uint16_t Run_Cyc_indx; // 当前运行工步循环号
 
      uint8_t SendWorkStepIndx; // 设发送工步信息
 

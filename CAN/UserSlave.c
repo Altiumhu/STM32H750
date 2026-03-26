@@ -149,28 +149,28 @@ void UserSlave_UpdateSlaveRec(void)
             for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++) // 获取通道数据
             {
                 // 电流
-                 tempdata =(uint32_t)(g_Channelinfo[ch].current*10000.0f);
-                 tempdata = 10000;
+                tempdata = (uint32_t)(g_Channelinfo[ch].current * 10000.0f);
+                tempdata = 10000;
                 index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
                 // 电压
-                index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage*1000.0f), &canFrameData[index]);
+                index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage * 1000.0f), &canFrameData[index]);
                 // 温度
                 index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
                 // 工步索引号 运行的工步号
                 canFrameData[index++] = g_Channelinfo[ch].RunningWorkSetup.index; // 工步索引号
                 // 通道状态
-                canFrameData[index++] = g_Channelinfo[ch].RunningWorkSetup.type; //通道的工作在哪个工步中
+                canFrameData[index++] = g_Channelinfo[ch].RunningWorkSetup.type; // 通道的工作在哪个工步中
                 // 错误状态
-                canFrameData[index++] = 0;                  
-                // loopSn 循环号
-                canFrameData[index++] = g_Channelinfo[ch].loopSn; 
-               // memcpy(&(pSlave->sample.sampleData[ch]), &canFrameData[ch], index);
+                canFrameData[index++] = 0;
+                // 当前运行工步循环号
+                canFrameData[index++] = g_Channelinfo[ch].Run_Cyc_indx;
+                // memcpy(&(pSlave->sample.sampleData[ch]), &canFrameData[ch], index);
             }
 
             CanFr_SendData(BoardInfo_GetID(), EMTOSCMD_SampleQuest, canFrameData, index);
 
             printf("\r\n 请求采样数据 =%d ", index);
- 
+
             break;
 
         case EMTOSCMD_SendWorkStepInfo: // 下发工步信息
@@ -183,7 +183,7 @@ void UserSlave_UpdateSlaveRec(void)
                 printf("\r\n Total_steps ERR!!!=%d ", pSlave->Total_steps);
                 return;
             }
-           //  g_Channelinfo[ch].SendWorkStepIndx = pFrame->data[33]; // 工步索引号 工步索引号，从0工步开始
+            //  g_Channelinfo[ch].SendWorkStepIndx = pFrame->data[33]; // 工步索引号 工步索引号，从0工步开始
 
             tmep[0] = pFrame->data[(devid - 1) * 2];
             tmep[1] = pFrame->data[(devid - 1) * 2 + 1];
@@ -197,7 +197,7 @@ void UserSlave_UpdateSlaveRec(void)
                 {
                     if (SetCh_Activity >> ch & 0x0001)
                     {
-                    
+
                         memcpy(&(g_WorkStepInfoStream[ch][setindex]), pFrame->data + 33 + 16 * setindex, 16);
 
                         // 设置工作启动电流
@@ -244,12 +244,10 @@ void UserSlave_UpdateSlaveRec(void)
                 printf("\r\n Run_Cyc_indxx=%d ", g_SetChanneWorke.Run_Cyc_indx);
                 return;
             }
-             for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 
-             {
-                g_Channelinfo[ch].Run_Cyc_indx = 0;// 初始化工步号
-             }
-          
-     
+            for (ch = 0; ch < BOARD_CHANNEL_NUM;) //
+            {
+                g_Channelinfo[ch].Run_Cyc_indx = 0; //  初始化工步循环号 循环号，表示工艺流程，重复执行几次
+            }
 
             tmep[0] = pFrame->data[(devid - 1) * 2];
             tmep[1] = pFrame->data[(devid - 1) * 2 + 1];
@@ -260,7 +258,7 @@ void UserSlave_UpdateSlaveRec(void)
             {
                 if ((SetCh_Activity >> ch) & 0x0001)
                 {
-                   
+
                     g_Channelinfo[ch].RunningWorkSetup.index = g_SetChanneWorke.runWorke_indx; // 运行工步号
                     // printf("\r\n ch=%d ", ch);
                     g_Channelinfo[ch].WorkeStartup = 1; // 启动工步
@@ -300,7 +298,7 @@ void UserSlave_UpdateSlaveRec(void)
 
             break;
         case EMTOSCMD_StopWorkStep: // 停止工步
-            printf("\r\n EMTOSCMD_StopWorkStep=%d ", pFrame->dataLen);  
+            printf("\r\n EMTOSCMD_StopWorkStep=%d ", pFrame->dataLen);
             memcpy(&(g_SetChanneWorke), pFrame->data, pFrame->dataLen);
 
             devid = BoardInfo_GetID();

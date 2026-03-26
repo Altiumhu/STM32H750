@@ -282,62 +282,8 @@ void PeriphCommonClock_Config(void)
 // uint8_t rx_data;
 // HAL_UART_Receive_IT(&huart1, &rx_data, 1);
 
-#if 0
 
 
-
-extern void CAN1_Send_TEST(void);
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-    if (htim->Instance == TIM3)
-    {
-
-        Timer3Cunt++;
-        if (Timer3Cunt < 10)
-        {
-            HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, 0);
-        }
-        else if (Timer3Cunt < 20)
-        {
-            HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, 1);
-        }
-        else
-        {
-            Timer3Cunt = 0;
-        }
-        CAN1_Send_TEST();
-        // printf("\r\n  ADC1 %d  %d  %d  %d ", adcBuffer[0], adcBuffer[1], adcBuffer[2], adcBuffer[3]);
-
-    }
-}
-#endif
-
-// 传输完成回调
-void OnTransferComplete(TransferStatus status)
-{
-  if (status == TRANSFER_COMPLETE)
-  {
-    // 大数据传输成功
-  }
-  else
-  {
-    // 处理错误
-  }
-}
-
-// 数据接收回调
-void OnDataReceived(uint16_t src_did, uint16_t session_id,
-                    uint8_t *data, uint32_t size)
-{
-  // 处理接收到的完整数据
-  // 注意: 数据指针在会话结束后可能失效，需要立即复制数据
-}
-
-// 传输失败回调
-void OnTransferFailed(uint16_t session_id, TransferStatus reason)
-{
-  // 处理传输失败
-}
 
 /* USER CODE END 4 */
 
