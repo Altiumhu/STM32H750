@@ -93,7 +93,7 @@ void debug_show_workMode(void)
 void AppDebug_vTask(void)
 {
     static uint32_t poll_time = 0;
-    static uint16_t chnum =1;
+    static uint16_t chnum = 1;
 
     if (debug.msg == 0)
         return;
@@ -101,17 +101,16 @@ void AppDebug_vTask(void)
     printf("\r\nDebug Run=%d\r\n", poll_time++);
     debug_show_workMode(); // 显示故障和运行模式
 
-
-        printf("\r\nTimer_GetClock =%d \r\n", Timer_GetClock() );
+    printf("\r\nTimer_GetClock =%d \r\n", Timer_GetClock());
     //
     //  ex_595_write(0, EX_595_PIN_0, 1);
     //  ex_595_write(2, EX_595_PIN_0, 1);
 
-   //  g_Channelinfo[chnum].fault.all = 0;
+    //  g_Channelinfo[chnum].fault.all = 0;
     //  pwm_start(0, 0);
     //  Set_PWM_Channel_CH595_EN(2, chnum, EX_595_SET); // 打开MOS驱动使能
 
-  ///   Set_PWM_Channel_CH595_EN(0, chnum, EX_595_SET); // 打开PRT
+    ///   Set_PWM_Channel_CH595_EN(0, chnum, EX_595_SET); // 打开PRT
 
     //		  g_Channelinfo[0].fault.all= 0;
     //  UserSlave_SendLink();
@@ -120,7 +119,7 @@ void AppDebug_vTask(void)
     // DebugLED_LOW_LEVEL ;
     // DBG_PRINTF("\r\ng_debugNUmer.debug1 %d \r\n",  g_debugNUmer.debug1);
     AppUser_Sample_Debug();
-     Debug_HandlePID();
+    Debug_HandlePID();
     CAN1_Send_TEST();
     //     Debug_PWM();
     Debug_Loop();

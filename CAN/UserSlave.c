@@ -50,9 +50,6 @@ typedef struct
     uint32_t sampleErrorStatus; // sampleError中是否有保存截止条件到
     uint8_t Total_steps;        // 总工步数
 
-    // 每个通道的启动工步时间
-    SystemTime_t timeStartWorkStep[MaxNumChannel];
-
     uint32_t timeLastRec;
 
     uint32_t error;
