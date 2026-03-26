@@ -107,7 +107,7 @@ void MX_FDCAN1_Init(void)
     fdcan_filterconfig.FilterType = FDCAN_FILTER_MASK;         /* 滤波器类型：传统位过滤 */
     fdcan_filterconfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0; /* 过滤配置：当过滤匹配以后存储在Rx FIFO0中 */
     fdcan_filterconfig.FilterID1 = 0x00000004;                      /* 过滤ID1：29位标准ID */
-    fdcan_filterconfig.FilterID2 = 0x0000007FF;                 /* 过滤ID2：配置为传统位过滤，ID2是29位掩码
+    fdcan_filterconfig.FilterID2 = 0x0000000FF<<3;                 /* 过滤ID2：配置为传统位过滤，ID2是29位掩码
                                                                 *   这里表示过滤接收和FilterID1完全一样的消息ID
                                                                 */
 
@@ -123,7 +123,7 @@ void MX_FDCAN1_Init(void)
     fdcan_filterconfig.FilterType = FDCAN_FILTER_MASK;         /* 滤波器类型：传统位过滤 */
     fdcan_filterconfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0; /* 过滤配置：当过滤匹配以后存储在Rx FIFO0中 */
     fdcan_filterconfig.FilterID1 = 0x00000000FF;                      /* 过滤ID1：29位标准ID 配置广播ID:0xFFF*/
-    fdcan_filterconfig.FilterID2 = 0x000000007FF;                 /* 过滤ID2：配置为传统位过滤，ID2是29位掩码
+    fdcan_filterconfig.FilterID2 = 0x000000000FF;                 /* 过滤ID2：配置为传统位过滤，ID2是29位掩码
                                                                 *   这里表示过滤接收和FilterID1完全一样的消息ID
                                                                 */
 

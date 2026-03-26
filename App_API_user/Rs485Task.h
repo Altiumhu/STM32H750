@@ -77,6 +77,9 @@ extern INT32U AppUser_CharTo_uint32_Big(INT8U *data);
 
 extern INT16U AppUser_uint32_CharTo_Samll(INT32U num, INT8U *data);
 
+
+extern INT16U AppUser_uint32_CharTo_Big(INT32U num, INT8U *data);
+
 extern INT16U AppUser_CharTo_uint16_Samll(INT8U *data);
 extern INT16U AppUser_CharTo_uint16_Big(INT8U *data);
 

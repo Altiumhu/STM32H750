@@ -3,27 +3,22 @@
 #include "head.h"
 #include "system_Config.h"
 
-
-
 #define V_CAL_Ka 0.000050354772f
 
 // #define V_CAL_Ka 0.050354772f
 
-
 #define CC_CAL_Ka 0.0003329f
 #define CC_CAL_Kb -0.043701f
 
-
 typedef struct
 {
-	uint8_t index;			 // 工步索引号
-	uint8_t type;			 // 工步类型
-	float currentStart; // 启动电流
-	float voltLimit;	 // 限制电压
-	float currentLimit; // 终止电流
-	uint32_t timeLimit;	 // 终止时间
+     uint8_t index;      // 工步索引号
+     uint8_t type;       // 工步类型
+     float currentStart; // 启动电流
+     float voltLimit;    // 限制电压
+     float currentLimit; // 终止电流
+     uint32_t timeLimit; // 终止时间
 } RuningWorkSetup_t;
-
 
 // 单通道数据数据结构
 typedef struct
@@ -59,40 +54,32 @@ typedef struct
      float Set_CC;    // 充电恒流值
      float Set_PreCC; // 预充设置充电恒流值
 
-    float  Set_PreDC;
+     float Set_PreDC;
 
      float Set_CV;    // 恒压值
      float Set_PreCV; // 恒压值
 
-     uint16_t SS_Timer;    // ADC跟新中断
+     uint16_t SS_Timer; // ADC跟新中断
 
-     uint16_t GetPortTimer;    // ADC跟新中断
+     uint16_t GetPortTimer; // ADC跟新中断
 
-     uint16_t WorkeStartup;//运行启动工步
-     uint32_t WorkeRunStartTimer;//开始工步运行时间
-     uint32_t WorkeRunTimer;//工步运行时间
-     RuningWorkSetup_t RunningWorkSetup;//运行设置
+     uint16_t WorkeStartup;              // 运行启动工步
+     uint32_t WorkeRunStartTimer;        // 开始工步运行时间
+     uint32_t WorkeRunTimer;             // 工步运行时间
+     RuningWorkSetup_t RunningWorkSetup; // 运行设置
 
+     uint16_t Run_Cyc_indx; // 工步循环号
 
-
+     uint8_t SendWorkStepIndx; // 设发送工步信息
 
 } ChannelInfo;
 
 extern volatile ChannelInfo g_Channelinfo[BOARD_CHANNEL_NUM];
 
-
 extern void AppUser_Sample_Debug(void);
 
-extern  void sample_irq_handler(void);
+extern void sample_irq_handler(void);
 
 extern void Get_Send_dev_Data(void);
 
-
-
-
 #endif
-
-
-
-
-

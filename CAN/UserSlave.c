@@ -26,6 +26,8 @@ WorkStepInfoStream_t g_WorkStepInfoStream[BOARD_CHANNEL_NUM][MAX_SETUP_WORKE]; /
 
 StartWorkeChanne g_SetChanneWorke; // 设置启动通道
 
+uint8_t canFrameData[NumMaxTpCanData]; // canFrameSend的数据部分
+
 enum ESlaveSampleStatus_t
 {
     ESlaveSampleStatus_Empty = 0,     // 空
@@ -65,8 +67,8 @@ typedef struct
 
 struct
 {
-    uint8_t canFrameData[NumMaxTpCanData]; // canFrameSend的数据部分
-    SlaveS_t slave;                        // 各分机数据
+
+    SlaveS_t slave; // 各分机数据
 
     uint32_t timeLastSendLink;
     uint32_t logicVoltMax;
@@ -111,7 +113,7 @@ void UserSlave_UpdateSlaveRec(void)
     uint16_t tmep[2];
     uint16_t SetCh_Activity = 0; // 设置有效的通道工步参数
 
-    uint8_t devid = 1;
+    uint8_t devid = 1, loopSn;
     uint8_t index, setindex, ch;
     CanFrame_t *pFrame;
     SlaveS_t *pSlave;
@@ -143,6 +145,32 @@ void UserSlave_UpdateSlaveRec(void)
 
             break;
         case EMTOSCMD_SampleQuest: // 请求采样数据
+            index = 0;
+            for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++) // 获取通道数据
+            {
+                // 电流
+                 tempdata =(uint32_t)(g_Channelinfo[ch].current*10000.0f);
+                 tempdata = 10000;
+                index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
+                // 电压
+                index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage*1000.0f), &canFrameData[index]);
+                // 温度
+                index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
+                // 工步索引号 运行的工步号
+                canFrameData[index++] = g_Channelinfo[ch].RunningWorkSetup.index; // 工步索引号
+                // 通道状态
+                canFrameData[index++] = g_Channelinfo[ch].RunningWorkSetup.type; //通道的工作在哪个工步中
+                // 错误状态
+                canFrameData[index++] = 0;                  
+                // loopSn 循环号
+                canFrameData[index++] = g_Channelinfo[ch].loopSn; 
+               // memcpy(&(pSlave->sample.sampleData[ch]), &canFrameData[ch], index);
+            }
+
+            CanFr_SendData(BoardInfo_GetID(), EMTOSCMD_SampleQuest, canFrameData, index);
+
+            printf("\r\n 请求采样数据 =%d ", index);
+ 
             break;
 
         case EMTOSCMD_SendWorkStepInfo: // 下发工步信息
@@ -155,6 +183,7 @@ void UserSlave_UpdateSlaveRec(void)
                 printf("\r\n Total_steps ERR!!!=%d ", pSlave->Total_steps);
                 return;
             }
+           //  g_Channelinfo[ch].SendWorkStepIndx = pFrame->data[33]; // 工步索引号 工步索引号，从0工步开始
 
             tmep[0] = pFrame->data[(devid - 1) * 2];
             tmep[1] = pFrame->data[(devid - 1) * 2 + 1];
@@ -168,7 +197,7 @@ void UserSlave_UpdateSlaveRec(void)
                 {
                     if (SetCh_Activity >> ch & 0x0001)
                     {
-
+                    
                         memcpy(&(g_WorkStepInfoStream[ch][setindex]), pFrame->data + 33 + 16 * setindex, 16);
 
                         // 设置工作启动电流
@@ -209,6 +238,18 @@ void UserSlave_UpdateSlaveRec(void)
                 printf("\r\n runWorke_indx=%d ", g_SetChanneWorke.runWorke_indx);
                 return;
             }
+            printf("\r\n Run_Cyc_indx=%d ", g_SetChanneWorke.Run_Cyc_indx);
+            if (g_SetChanneWorke.runWorke_indx > MAX_SETUP_WORKE)
+            {
+                printf("\r\n Run_Cyc_indxx=%d ", g_SetChanneWorke.Run_Cyc_indx);
+                return;
+            }
+             for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 
+             {
+                g_Channelinfo[ch].Run_Cyc_indx = 0;// 初始化工步号
+             }
+          
+     
 
             tmep[0] = pFrame->data[(devid - 1) * 2];
             tmep[1] = pFrame->data[(devid - 1) * 2 + 1];
@@ -219,6 +260,7 @@ void UserSlave_UpdateSlaveRec(void)
             {
                 if ((SetCh_Activity >> ch) & 0x0001)
                 {
+                   
                     g_Channelinfo[ch].RunningWorkSetup.index = g_SetChanneWorke.runWorke_indx; // 运行工步号
                     // printf("\r\n ch=%d ", ch);
                     g_Channelinfo[ch].WorkeStartup = 1; // 启动工步
@@ -230,24 +272,55 @@ void UserSlave_UpdateSlaveRec(void)
                     g_Channelinfo[ch].WorkeStartup = 0; // 停止工步
                 }
             }
-            //            for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++) // 判断哪个通道被激活 通道工步数据
-            //            {
-            //                if (g_Channelinfo[ch].WorkeStartup == 1)
-            //                {
-            //                    // 设置工作启动电流
-            ////                    tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_indx].currentStart);
-            ////                    g_Channelinfo[ch].RunningWorkSetup.currentStart = (float)tempdata;
-            ////                    g_Channelinfo[ch].RunningWorkSetup.currentStart = g_Channelinfo[ch].RunningWorkSetup.currentStart * 0.0001f; // 10000mA=10.0A
-            //                     printf("\r\nch=%d currentStart=%fA ",ch+1,g_Channelinfo[ch].RunningWorkSetup.currentStart );
-            //                    // 限制电压 放电是下限电压；充电是上限电压
 
-            //                }
-            //            }
+            for (setindex = 0; setindex < 0; setindex++) // 判断哪个通道被激活 通道工步数据// 每个通道工步数量
+            {
+
+                for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
+                {
+                    if (SetCh_Activity >> ch & 0x0001)
+                    {
+
+                        // 设置工作启动电流
+                        printf("\r\nch=%d 启动电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
+
+                        g_Channelinfo[ch].RunningWorkSetup.voltLimit = g_Channelinfo[ch].RunningWorkSetup.voltLimit * 0.001f; // 1500mV=1.5V
+                        printf("\r\nch=%d 截止电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
+
+                        // 设置工作截止电流
+                        printf("\r\nch=%d currentLimit=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentLimit);
+                        // 设置工作截止时间
+
+                        printf("\r\nch=%d timeLimit=%d ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
+                    }
+                }
+            }
 
             printf("\r\n 启动工步=%d  运行循环号 =%d ", g_SetChanneWorke.runWorke_indx, g_SetChanneWorke.Run_Cyc_indx);
 
             break;
         case EMTOSCMD_StopWorkStep: // 停止工步
+            printf("\r\n EMTOSCMD_StopWorkStep=%d ", pFrame->dataLen);  
+            memcpy(&(g_SetChanneWorke), pFrame->data, pFrame->dataLen);
+
+            devid = BoardInfo_GetID();
+
+            tmep[0] = pFrame->data[(devid - 1) * 2];
+            tmep[1] = pFrame->data[(devid - 1) * 2 + 1];
+            SetCh_Activity = tmep[0] | (tmep[1] << 8);
+            printf("\r\n SetCh_Activity=0x%X ", SetCh_Activity);
+
+            for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 判断哪个通道被激活 通道工步数据
+            {
+                if ((SetCh_Activity >> ch) & 0x0001)
+                {
+
+                    // printf("\r\n ch=%d ", ch);
+                    g_Channelinfo[ch].WorkeStartup = 0; // 启动工步
+                    g_Channelinfo[ch].fault.all = 1;    // 停止工步
+                    ch++;
+                }
+            }
             break;
         case EMTOSCMD_ContinueWorkStep: // 继续工步
             break;
@@ -256,6 +329,11 @@ void UserSlave_UpdateSlaveRec(void)
 
             break;
         case EMTOSCMD_StopWorkStepw: // 部分通道停止停止工步
+
+            break;
+
+        case EMTOSCMD_SampleQuestAck: // // 发送采样数据确认
+            printf("\r\n 发送采样数据确认 ");
 
             break;
 

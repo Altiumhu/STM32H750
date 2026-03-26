@@ -113,12 +113,25 @@ INT16U AppUser_uint16_CharTo_Big(INT16U num, INT8U *data)
 }
 INT16U AppUser_uint16_CharTo_Samll(INT16U num, INT8U *data)
 {
-    data[1] = num & 0x00FF;
-    data[0] = (num) >> 8;
+    data[0] = num & 0x00FF;
+    data[1] = (num) >> 8;
     return sizeof(num);
 }
 
 INT16U AppUser_uint32_CharTo_Samll(INT32U num, INT8U *data)
+{
+    //  data[1] = num & 0x00FF;
+    //  data[0] = (num) >> 8;
+
+    data[0] = num & 0xff;
+    data[1] = (num >> 8) & 0xff;
+    data[2] = (num >> 16) & 0xff;
+    data[3] = (num >> 24) & 0xff;
+
+    return 4;
+}
+
+INT16U AppUser_uint32_CharTo_Big(INT32U num, INT8U *data)
 {
     //  data[1] = num & 0x00FF;
     //  data[0] = (num) >> 8;
