@@ -136,6 +136,7 @@ void UserSlave_UpdateSlaveRec(void)
             printf("\r\n Link ID=%d", BoardInfo_GetID());
             break;
         case EMTOSCMD_Setpar: // 设置参数
+
             break;
 
         case EMTOSCMD_SampleStart: // 开始采样
@@ -317,18 +318,82 @@ void UserSlave_UpdateSlaveRec(void)
                 }
             }
             break;
+
+        case EMTOSCMD_StartSomeChannelWorkStep:
         case EMTOSCMD_ContinueWorkStep: // 继续工步
+
+            uint16_t channelBitSelect;
+            uint8_t indexWorkStep; // 续接的工步号
+            uint8_t snLoop;
+            uint32_t timeLeft; // 运行的通道剩余时间  单位：ms
+
+            tmep[0] = pFrame->data[0];
+            tmep[1] = pFrame->data[1];
+            indexWorkStep = pFrame->data[2];
+
+            snLoop = pFrame->data[3]; // 续接的循环号
+
+            timeLeft = U8TOU32(pFrame->data[4]);
+
+            channelBitSelect = tmep[0] | (tmep[1] << 8); // 续接的通道号
+
+            printf("\r\n 续接的通道号 =%d ", channelBitSelect);
+            printf("\r\n 续接的工步号 =%d ", indexWorkStep);
+            printf("\r\n 续接的循环号=%d ", snLoop);
+            printf("\r\n 运行的通道剩余时间 =%d ms", timeLeft);
+            for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 判断哪个通道被续接
+            {
+                if ((channelBitSelect >> ch) & 0x0001)
+                {
+                    g_Channelinfo[ch].RunningWorkSetup.index = indexWorkStep; // 修改续接的工步号
+                    //  g_SetChanneWorke.runWorke_indx =indexWorkStep;; // 续接的工步号
+                    g_Channelinfo[ch].Run_Cyc_indx = snLoop; // 续接的循环号
+                    g_Channelinfo[ch].RunningWorkSetup.timeLimit = timeLeft;
+                    // printf("\r\n ch=%d ", ch);
+                    g_Channelinfo[ch].WorkeStartup = 1; // 启动工步
+                    g_Channelinfo[ch].fault.all = 0;    // 清除故障
+                }
+            }
+
+            // 续接的工步号
+
             break;
 
         case EMTOSCMD_JumpWorkStep: // 工步跳转
 
             break;
-        case EMTOSCMD_StopWorkStepw: // 部分通道停止停止工步
+        case EMTOSCMD_StopWorkStepw: // 部分通道停止停止工步  托盘通道单点停止的命令。
 
+      
+            tmep[0] = pFrame->data[0];
+            tmep[1] = pFrame->data[1];
+            SetCh_Activity = tmep[0] | (tmep[1] << 8);
+            printf("\r\n 部分通道停止停止工步 =%d ", pFrame->dataLen);
+            printf("\r\n SetCh_Activity=0x%X ", SetCh_Activity);
+
+            for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 判断哪个通道被激活 通道工步数据
+            {
+                if ((SetCh_Activity >> ch) & 0x0001)
+                {
+                    // printf("\r\n ch=%d ", ch);
+                    g_Channelinfo[ch].WorkeStartup = 0; // 启动工步
+                    g_Channelinfo[ch].fault.all = 1;    // 停止工步
+                    ch++;
+                }
+            }
             break;
 
         case EMTOSCMD_SampleQuestAck: // // 发送采样数据确认
             printf("\r\n 发送采样数据确认 ");
+
+            break;
+        case EMTOSCMD_LEDControl: // // 
+            printf("\r\n 设置指示灯控制模式命令 ");
+
+            break;
+
+        case EMTOSCMD_LEDStatus: // // 
+            printf("\r\n 指示灯状态命令 ");
 
             break;
 
