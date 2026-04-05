@@ -322,38 +322,38 @@ void UserSlave_UpdateSlaveRec(void)
         case EMTOSCMD_StartSomeChannelWorkStep:
         case EMTOSCMD_ContinueWorkStep: // 继续工步
 
-            uint16_t channelBitSelect;
-            uint8_t indexWorkStep; // 续接的工步号
-            uint8_t snLoop;
-            uint32_t timeLeft; // 运行的通道剩余时间  单位：ms
+//            uint16_t channelBitSelect;
+//            uint8_t indexWorkStep; // 续接的工步号
+//            uint8_t snLoop;
+//            uint32_t timeLeft; // 运行的通道剩余时间  单位：ms
 
-            tmep[0] = pFrame->data[0];
-            tmep[1] = pFrame->data[1];
-            indexWorkStep = pFrame->data[2];
+//            tmep[0] = pFrame->data[0];
+//            tmep[1] = pFrame->data[1];
+//            indexWorkStep = pFrame->data[2];
 
-            snLoop = pFrame->data[3]; // 续接的循环号
+//            snLoop = pFrame->data[3]; // 续接的循环号
 
-            timeLeft = U8TOU32(pFrame->data[4]);
+//            timeLeft = U8TOU32(pFrame->data[4]);
 
-            channelBitSelect = tmep[0] | (tmep[1] << 8); // 续接的通道号
+//            channelBitSelect = tmep[0] | (tmep[1] << 8); // 续接的通道号
 
-            printf("\r\n 续接的通道号 =%d ", channelBitSelect);
-            printf("\r\n 续接的工步号 =%d ", indexWorkStep);
-            printf("\r\n 续接的循环号=%d ", snLoop);
-            printf("\r\n 运行的通道剩余时间 =%d ms", timeLeft);
-            for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 判断哪个通道被续接
-            {
-                if ((channelBitSelect >> ch) & 0x0001)
-                {
-                    g_Channelinfo[ch].RunningWorkSetup.index = indexWorkStep; // 修改续接的工步号
-                    //  g_SetChanneWorke.runWorke_indx =indexWorkStep;; // 续接的工步号
-                    g_Channelinfo[ch].Run_Cyc_indx = snLoop; // 续接的循环号
-                    g_Channelinfo[ch].RunningWorkSetup.timeLimit = timeLeft;
-                    // printf("\r\n ch=%d ", ch);
-                    g_Channelinfo[ch].WorkeStartup = 1; // 启动工步
-                    g_Channelinfo[ch].fault.all = 0;    // 清除故障
-                }
-            }
+//            printf("\r\n 续接的通道号 =%d ", channelBitSelect);
+//            printf("\r\n 续接的工步号 =%d ", indexWorkStep);
+//            printf("\r\n 续接的循环号=%d ", snLoop);
+//            printf("\r\n 运行的通道剩余时间 =%d ms", timeLeft);
+//            for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 判断哪个通道被续接
+//            {
+//                if ((channelBitSelect >> ch) & 0x0001)
+//                {
+//                    g_Channelinfo[ch].RunningWorkSetup.index = indexWorkStep; // 修改续接的工步号
+//                    //  g_SetChanneWorke.runWorke_indx =indexWorkStep;; // 续接的工步号
+//                    g_Channelinfo[ch].Run_Cyc_indx = snLoop; // 续接的循环号
+//                    g_Channelinfo[ch].RunningWorkSetup.timeLimit = timeLeft;
+//                    // printf("\r\n ch=%d ", ch);
+//                    g_Channelinfo[ch].WorkeStartup = 1; // 启动工步
+//                    g_Channelinfo[ch].fault.all = 0;    // 清除故障
+//                }
+//            }
 
             // 续接的工步号
 

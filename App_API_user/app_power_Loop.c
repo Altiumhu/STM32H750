@@ -54,7 +54,11 @@ void System_CloseLoop_Status(void)
             if (g_Channelinfo[ch].fault.all == 0) // 判断故障  没有故障进入正常启动程序
             {
 
-                g_Channelinfo[ch].workMode = POWER_SET_PARAM;
+               // g_Channelinfo[ch].workMode = POWER_SET_PARAM;
+							
+							    g_Channelinfo[ch].workMode = POWER_GET_V_PORT;
+							
+							
 
                 g_Channelinfo[ch].GetPortTimer = 0;
             }
