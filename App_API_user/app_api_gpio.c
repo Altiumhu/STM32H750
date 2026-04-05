@@ -402,27 +402,37 @@ void Set_PWM_Channel_CH595_EN(uint32_t chip, uint16_t ch, uint32_t value)
         ex_595_write(chip, EX_595_PIN_7, value);
         break;
     case 8:
-        ex_595_write(chip, EX_595_PIN_0, value);
+             chip=chip+1;
+             ex_595_write(chip, EX_595_PIN_0, value);
+
         break;
     case 9:
+         chip=chip+1;
         ex_595_write(chip, EX_595_PIN_1, value);
         break;
     case 10:
+         chip=chip+1;
         ex_595_write(chip, EX_595_PIN_2, value);
         break;
     case 11:
+         chip=chip+1;
         ex_595_write(chip, EX_595_PIN_3, value);
         break;
     case 12:
+
+          chip=chip+1;
         ex_595_write(chip, EX_595_PIN_4, value);
         break;
     case 13:
+         chip=chip+1;
         ex_595_write(chip, EX_595_PIN_5, value);
         break;
     case 14:
+         chip=chip+1;
         ex_595_write(chip, EX_595_PIN_6, value);
         break;
     case 15:
+        chip=chip+1;
         ex_595_write(chip, EX_595_PIN_7, value);
         break;
     case 16:

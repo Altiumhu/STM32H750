@@ -137,7 +137,7 @@ void GetADC_Driver_Result(void)
 
                 g_Channelinfo[0 + ch * 4].Cap_voltage = g_Channelinfo[0 + ch * 4].Cap_voltage_ADC * V_CAL_Ka * 3.0333333f;
             }
-            else if (g_Channelinfo[ch * 4].workMode == POWER_GET_V_PORT || g_Channelinfo[ ch * 4].workMode == POWER_FAULT|| g_Channelinfo[ch * 4].workMode == POWER_RUN_CHARGE)
+            else if (g_Channelinfo[ch * 4].workMode == POWER_GET_V_PORT ||  g_Channelinfo[ch * 4].workMode == POWER_RUN_CHARGE)
             {
                 Set_Sample_Channel_VPortGPIO(AD_V_PORT);            // 切换到端口电压采样
                 g_Channelinfo[0].voltage_port_ADC = adc1Result[12]; // 通道1 端口电压
@@ -217,7 +217,7 @@ void GetADC_Driver_Result(void)
 
                     g_Channelinfo[1 + ch * 4].Cap_voltage = g_Channelinfo[1 + ch * 4].Cap_voltage_ADC * V_CAL_Ka * 3.0333333f;
                 }
-                else if (g_Channelinfo[1 + ch * 4].workMode == POWER_GET_V_PORT|| g_Channelinfo[1 + ch * 4].workMode == POWER_FAULT || g_Channelinfo[1 + ch * 4].workMode == POWER_RUN_CHARGE)
+                else if (g_Channelinfo[1 + ch * 4].workMode == POWER_GET_V_PORT || g_Channelinfo[1 + ch * 4].workMode == POWER_RUN_CHARGE)
                 {
                     Set_Sample_Channel_VPortGPIO(AD_V_PORT);
                     g_Channelinfo[1].voltage_port_ADC = adc1Result[12];  // 通道2 端口电压
@@ -296,7 +296,7 @@ void GetADC_Driver_Result(void)
 
                     g_Channelinfo[2 + ch * 4].Cap_voltage = g_Channelinfo[2 + ch * 4].Cap_voltage_ADC * V_CAL_Ka * 3.0333333f;
                 }
-                else if (g_Channelinfo[2 + ch * 4].workMode == POWER_GET_V_PORT || g_Channelinfo[2 + ch * 4].workMode == POWER_FAULT|| g_Channelinfo[2 + ch * 4].workMode == POWER_RUN_CHARGE)
+                else if (g_Channelinfo[2 + ch * 4].workMode == POWER_GET_V_PORT ||  g_Channelinfo[2 + ch * 4].workMode == POWER_RUN_CHARGE)
                 {
                     Set_Sample_Channel_VPortGPIO(AD_V_PORT);
                     g_Channelinfo[2].voltage_port_ADC = adc1Result[12]; // 通道3 端口电压
@@ -376,7 +376,7 @@ void GetADC_Driver_Result(void)
 
                 g_Channelinfo[3 + ch * 4].Cap_voltage = g_Channelinfo[3 + ch * 4].Cap_voltage_ADC * V_CAL_Ka * 3.0333333f;
             }
-            else if (g_Channelinfo[3 + ch * 4].workMode == POWER_GET_V_PORT|| g_Channelinfo[3 + ch * 4].workMode == POWER_FAULT || g_Channelinfo[3 + ch * 4].workMode == POWER_RUN_CHARGE)
+            else if (g_Channelinfo[3 + ch * 4].workMode == POWER_GET_V_PORT|| g_Channelinfo[3 + ch * 4].workMode == POWER_RUN_CHARGE)
             {
                 Set_Sample_Channel_VPortGPIO(AD_V_PORT);
                 g_Channelinfo[3].voltage_port_ADC = adc1Result[12];  // 通道3 端口电压
