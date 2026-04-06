@@ -163,7 +163,7 @@ void GetADC_Driver_Result(void)
         }
         delayTimer++;
 
-           CD4052_Chnum = 1;
+        
         SetCD4052(CD4052_Chnum); // 延时够了再切换
 
         if (delayTimer >= g_samptimer) // 延时一个开关周期 等待CD4052开关稳定
