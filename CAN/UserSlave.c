@@ -98,12 +98,12 @@ int UserSlave_Init(void)
         g_Channelinfo[ch].RunningWorkSetup.currentStart = 1.0f;
         g_Channelinfo[ch].RunningWorkSetup.voltLimit = 4.2f;
 
-        g_Channelinfo[ch].RunningWorkSetup.timeLimit = 260000;
+        g_Channelinfo[ch].RunningWorkSetup.timeLimit = 160000;
         g_Channelinfo[ch].RunningWorkSetup.currentLimit = 0.0010f;
         g_Channelinfo[ch].WorkeStartup = 1;
 
-      g_Channelinfo[ch].RunningWorkSetup.type = WORKE_SETUP_CC_CV;
-    //   g_Channelinfo[ch].RunningWorkSetup.type = WORKE_SETUP_DC;
+      //g_Channelinfo[ch].RunningWorkSetup.type = WORKE_SETUP_CC_CV;
+      g_Channelinfo[ch].RunningWorkSetup.type = WORKE_SETUP_DC;
 
         
     }

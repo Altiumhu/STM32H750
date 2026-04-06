@@ -417,7 +417,7 @@ void System_CloseLoop_Status(void)
             }
 
            // g_epwmHandle[ch].High_MOS_DUTY =TIMER_PREIOD_MIN- g_epwmHandle[ch].High_MOS_DUTY;
-#if 0
+#if 1
             // 1. 工步时间到
             g_Channelinfo[ch].WorkeRunTimer = Timer_GetClock() - g_Channelinfo[ch].WorkeRunStartTimer;
 
