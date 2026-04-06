@@ -539,6 +539,11 @@ void AppUser_ChannelInfo_Debug(void)
         printf(" ch=[%d] voltage=%f--ADC=%d current=%f--ADC%d Cap_voltage=%f voltage_port=%f\r\n", ch + 1, g_Channelinfo[ch].voltage, g_Channelinfo[ch].voltage_ADC,
                g_Channelinfo[ch].current, g_Channelinfo[ch].current_ADC, g_Channelinfo[ch].Cap_voltage, g_Channelinfo[ch].voltage_port);
         printf(" ch=[%d] fault=0x%X \r\n", ch + 1, g_Channelinfo[ch].fault.all);
+
+        printf("CH[%d] I_Set=%fmA I_FB=%fmA i_pid_out=%f \r\n", ch + 1, gHandle_PID[ch].i_ref, gHandle_PID[ch].i_fdb, gHandle_PID[ch].i_pid_out);
+        printf("CH[%d]Set=%fV FB=%fV pid_out=%f \r\n", ch + 1, gHandle_PID[ch].v_ref, gHandle_PID[ch].v_fdb, gHandle_PID[ch].v_pid_out);
+        printf(" HOMSduty=%d low=%d \r\n", g_epwmHandle[ch].High_MOS_DUTY, g_epwmHandle[ch].Low_MOS_DUTY);
+
     }
 }
 

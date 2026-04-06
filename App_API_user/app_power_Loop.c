@@ -43,7 +43,7 @@ void System_CloseLoop_Status(void)
         if (g_Channelinfo[ch].fault.all) // 判断故障
         {
             g_Channelinfo[ch].workMode = POWER_FAULT;
-            // pwm_stop(ch); /// 出现故障就关闭pwm
+             pwm_stop(ch); /// 出现故障就关闭pwm
         }
 
         switch (g_Channelinfo[ch].workMode)
@@ -175,7 +175,7 @@ void System_CloseLoop_Status(void)
 
             // 电压环
             //  gHandle_PID[ch].v_ref = 2.5f;
-            gHandle_PID[ch].v_ref =  g_Channelinfo[ch].voltage+0.1;
+            gHandle_PID[ch].v_ref =  g_Channelinfo[ch].voltage+0.5;
 
             // gHandle_PID[i].v_ref = gHandle_PID[i].v_ref + 0.001f;
             // 软启功率输出电容电压作为反馈值，电池端电压作为给定值
@@ -195,7 +195,7 @@ void System_CloseLoop_Status(void)
 
             g_epwmHandle[ch].High_MOS_STA = 1;
 
-            if (g_Channelinfo[ch].Cap_voltage >=  g_Channelinfo[ch].voltage)
+            if (g_Channelinfo[ch].Cap_voltage >=  (g_Channelinfo[ch].voltage+0.3f))
             {
                 g_Channelinfo[ch].SS_Timer++;
                 if (g_Channelinfo[ch].SS_Timer >= 10) // 开机一瞬间误动作
@@ -240,11 +240,11 @@ void System_CloseLoop_Status(void)
         {
 
             gHandle_PID[ch].v_kp = gHandle_PID[ch].v_kp + 0.1;
-            if (gHandle_PID[ch].v_kp >= 10.1f)
-                gHandle_PID[ch].v_kp = 10.1f;
+            if (gHandle_PID[ch].v_kp >= 1.1f)
+                gHandle_PID[ch].v_kp = 1.1f;
             gHandle_PID[ch].v_ki = gHandle_PID[ch].v_ki + 0.1;
-            if (gHandle_PID[ch].v_ki >= 2.1f)
-                gHandle_PID[ch].v_ki = 2.1f;
+            if (gHandle_PID[ch].v_ki >= 0.5f)
+                gHandle_PID[ch].v_ki = 0.5f;
 
             // 电压环
             g_Channelinfo[ch].Set_CV = g_Channelinfo[ch].Set_CV + 0.01f;

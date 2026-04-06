@@ -25,7 +25,7 @@ void HAL_EPWM_Config(uint16_t ch)
 		g_epwmHandle[ch].High_MOS_DTB = 10; // 285ns
 		// g_epwmHandle[ch].High_MOS_DUTY_MAX = g_epwmHandle[ch].High_MOS_Timer_TBPRD>>1 202752;
 		g_epwmHandle[ch].High_MOS_DUTY_MAX = TIMER_DUTY_MAX; // 36.40% 97750
-		g_epwmHandle[ch].High_MOS_DUTY_MIN = 10;   // 5200
+		g_epwmHandle[ch].High_MOS_DUTY_MIN = 10;			 // 5200
 		g_epwmHandle[ch].High_MOS_STA = 0;
 		// g_epwmHandle[ch].High_MOS_OpenFlag = 0;
 
@@ -116,6 +116,8 @@ void Updata_EPWM_Handle(void)
 void pwm_stop(uint16_t channel)
 {
 
+	// Set_PWM_Channel_CH595_EN(2, channel, EX_595_RESET); // 打开PRT
+
 	switch (channel)
 	{
 	case 0:
@@ -130,44 +132,45 @@ void pwm_stop(uint16_t channel)
 		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_3);
 		break;
 	case 3:
-		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);
+		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_4);
 		break;
 	case 4:
-		__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
+
+		HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
 		break;
 	case 5:
-		__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
+		HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
 		break;
 	case 6:
-		__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, 0);
+		HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
 		break;
 	case 7:
-		__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
+		HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_4);
 		break;
 
 	case 8:
-		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
+		HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
 		break;
 	case 9:
-		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
+		HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_2);
 		break;
 	case 10:
-		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 0);
+		HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_3);
 		break;
 	case 11:
-		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_4, 0);
+		HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_4);
 		break;
 	case 12:
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 0);
+		HAL_TIM_PWM_Stop(&htim8, TIM_CHANNEL_1);
 		break;
 	case 13:
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_2, 0);
+		HAL_TIM_PWM_Stop(&htim8, TIM_CHANNEL_2);
 		break;
 	case 14:
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, 0);
+			HAL_TIM_PWM_Stop(&htim8, TIM_CHANNEL_3);
 		break;
 	case 15:
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_4, 0);
+			HAL_TIM_PWM_Stop(&htim8, TIM_CHANNEL_4);
 		break;
 	}
 }
@@ -259,18 +262,24 @@ void shell_Debug_PWM(int argc, char *argv[])
 	// 参数个数（不含命令本身）
 	int num_params = argc - 1;
 	// 字符串转整型
-	num[0] = atoi(argv[1])-1;
+	num[0] = atoi(argv[1]) - 1;
 	num[1] = atoi(argv[2]);
 
 	if (num[1] == 1)
 	{
 		printf("\r\n 启动pwm=%d %d  ", num[0], num[1]);
 		pwm_start(num[0], num[1]);
-		g_Channelinfo[num[0]].fault.all =0;
+		g_Channelinfo[num[0]].fault.all = 0;
 	}
 	else
 	{
+		// printf("\r\n停止pwm=%d %d  ", num[0], num[1]);
+
+		Set_PWM_Channel_CH595_EN(2, num[0], EX_595_RESET); // 打开PRT
+
+		Set_PWM_Channel_CH595_EN(0, num[0], EX_595_RESET); // 打开PRT
 		printf("\r\n停止pwm=%d %d  ", num[0], num[1]);
+		g_Channelinfo[num[0]].fault.bit.ctrlonoff = 1;
 		pwm_stop(num[0]);
 	}
 }
