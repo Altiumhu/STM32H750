@@ -54,21 +54,21 @@ void System_CloseLoop_Status(void)
             if (g_Channelinfo[ch].fault.all == 0) // 判断故障  没有故障进入正常启动程序
             {
 
-                // g_Channelinfo[ch].workMode = POWER_SET_PARAM;
+                g_Channelinfo[ch].workMode = POWER_SET_PARAM;
 
-                g_Channelinfo[ch].workMode = POWER_GET_V_PORT;
+               /// g_Channelinfo[ch].workMode = POWER_GET_V_PORT;
 
                 g_Channelinfo[ch].GetPortTimer = 0;
             }
-            // else if (g_Channelinfo[ch].fault.bit.CV_Limit_OUT == 1 || g_Channelinfo[ch].fault.bit.CC_Limit_OUT == 1 || g_Channelinfo[ch].fault.bit.TIMER_OUT == 1)
-            // {
-            //     g_Channelinfo[ch].workMode = POWER_SET_PARAM;
+            else if (g_Channelinfo[ch].fault.bit.CV_Limit_OUT == 1 || g_Channelinfo[ch].fault.bit.CC_Limit_OUT == 1 || g_Channelinfo[ch].fault.bit.TIMER_OUT == 1)
+            {
+                g_Channelinfo[ch].workMode = POWER_SET_PARAM;
 
-            //     g_Channelinfo[ch].GetPortTimer = 0;
-            //     g_Channelinfo[ch].fault.bit.CV_Limit_OUT = 0; // 工步到达恒压值
-            //     g_Channelinfo[ch].fault.bit.CC_Limit_OUT = 0; // 工步到达恒流设置值
-            //     g_Channelinfo[ch].fault.bit.TIMER_OUT = 0;    // 工步时间到
-            // }
+                g_Channelinfo[ch].GetPortTimer = 0;
+                g_Channelinfo[ch].fault.bit.CV_Limit_OUT = 0; // 工步到达恒压值
+                g_Channelinfo[ch].fault.bit.CC_Limit_OUT = 0; // 工步到达恒流设置值
+                g_Channelinfo[ch].fault.bit.TIMER_OUT = 0;    // 工步时间到
+            }
         }
         break;
 
@@ -90,23 +90,23 @@ void System_CloseLoop_Status(void)
             {
                 switch (g_Channelinfo[ch].RunningWorkSetup.type)
                 {
-                case 0x44: // 跳转搁置阶段 静置(D) 工步名称
+                case WORKE_SETUP_IDLE: // 跳转搁置阶段 静置(D) 工步名称
 
                     g_Channelinfo[ch].workMode = POWER_IDLE;                 //  跳转搁置阶段
                     g_Channelinfo[ch].WorkeRunStartTimer = Timer_GetClock(); //  记录开始启动时间
 
                     break;
-                case 0x41: // 恒流恒压充电（A）
+                case WORKE_SETUP_CC_CV: // 恒流恒压充电（A）
 
                     g_Channelinfo[ch].workMode = POWER_GET_V_PORT;           // 获得端口电压状态
                     g_Channelinfo[ch].WorkeRunStartTimer = Timer_GetClock(); //  记录开始启动时间
                     break;
-                case 0x43: // 恒流放电(C) 工步名称
+                case WORKE_SETUP_DC: // 恒流放电(C) 工步名称
 
                     g_Channelinfo[ch].workMode = POWER_GET_V_PORT;           // 获得端口电压状态
                     g_Channelinfo[ch].WorkeRunStartTimer = Timer_GetClock(); //  记录开始启动时间
                     break;
-                case 0x52: // 循环(R) 工步名称
+                case WORKE_SETUP_LOOP: // 循环(R) 工步名称
                     // 起始工步：工步主参数1 ---电流值：工步主参数1
                     // 终止工步：工步主参数2---电压截止：工步主参数2
                     // 循环数：工步主参数3 -- 循环数：----终止电流
@@ -204,8 +204,8 @@ void System_CloseLoop_Status(void)
                     // ex_595_write(0, EX_595_PIN_0|EX_595_PIN_1, 1);
                     Set_PWM_Channel_CH595_EN(0, ch, EX_595_SET); // 打开PRT
                     g_Channelinfo[ch].workMode = POWER_RUN_CHARGE;
-#if 0
-                    g_Channelinfo[ch].Set_PreCC = g_Channelinfo[ch].RunningWorkSetup.currentStart;
+#if 1
+
                     g_Channelinfo[ch].Set_PreCV = g_Channelinfo[ch].RunningWorkSetup.voltLimit;
                     if (g_Channelinfo[ch].WorkeStartup == 1) // 启动工步开始
                     {
@@ -216,6 +216,7 @@ void System_CloseLoop_Status(void)
                             g_Channelinfo[ch].workMode = POWER_RUN_CHARGE;
                             break;
                         case 0x43: // 恒流放电(C) 工步名称
+                            g_Channelinfo[ch].Set_PreDC = g_Channelinfo[ch].RunningWorkSetup.currentStart;
                             g_Channelinfo[ch].workMode = POWER_RUN_DISCHARGE;
                             break;
                         case 0x52: // 循环(R) 工步名称

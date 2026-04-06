@@ -52,7 +52,7 @@ void AppUser_Device_InitData(void)
   uint16_t ch, type;
 
   AppUser_Init_REC_Device();
-  
+
   Initdata_g_DEVICE_Information();
 
   AppUuser_InitTempData(); // 温度采集数据初始化

@@ -92,6 +92,15 @@ int UserSlave_Init(void)
     memset(&g_SetChanneWorke.chnum[0], 0xFF, 32);
     g_SetChanneWorke.Run_Cyc_indx = 1;
     g_SetChanneWorke.runWorke_setup = 0xFF;
+
+    for (uint16_t ch = 0; ch < 16; ch++)
+    {
+        g_Channelinfo[ch].RunningWorkSetup.currentStart = 1.0f;
+        g_Channelinfo[ch].RunningWorkSetup.voltLimit = 4.2f;
+        g_Channelinfo[ch].WorkeStartup = 1;
+
+        g_Channelinfo[ch].RunningWorkSetup.type = WORKE_SETUP_CC_CV;
+    }
 }
 
 void UserSlave_SendLink(void)
@@ -203,31 +212,29 @@ void UserSlave_UpdateSlaveRec(void)
                         tempdata = U8TOU32(g_WorkStepInfoStream[ch][setindex].currentStart);
                         g_Channelinfo[ch].RunningWorkSetup.currentStart = (float)tempdata;
                         g_Channelinfo[ch].RunningWorkSetup.currentStart = g_Channelinfo[ch].RunningWorkSetup.currentStart * 0.0001f; // 10000mA=10.0A
-                      //  printf("\r\nch=%d 启动电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
+                                                                                                                                     //  printf("\r\nch=%d 启动电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
 
                         tempdata = U8TOU16(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_setup].voltLimit);
                         g_Channelinfo[ch].RunningWorkSetup.voltLimit = (float)tempdata;
                         g_Channelinfo[ch].RunningWorkSetup.voltLimit = g_Channelinfo[ch].RunningWorkSetup.voltLimit * 0.001f; // 1500mV=1.5V
-                       // printf("\r\nch=%d 截止电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
+                                                                                                                              // printf("\r\nch=%d 截止电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
 
                         // 设置工作截止电流
                         tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_setup].currentLimit);
                         g_Channelinfo[ch].RunningWorkSetup.currentLimit = (float)tempdata;
                         g_Channelinfo[ch].RunningWorkSetup.currentLimit = g_Channelinfo[ch].RunningWorkSetup.currentLimit * 0.0001f; // 10000mA=10.0A
-                       // printf("\r\nch=%d 设置工作截止电流 =%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentLimit);
+                                                                                                                                     // printf("\r\nch=%d 设置工作截止电流 =%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentLimit);
                         // 设置工作截止时间
                         tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_setup].timeLimit);
                         g_Channelinfo[ch].RunningWorkSetup.timeLimit = tempdata;
-                        //printf("\r\nch=%d 设置工作截止时间=%d ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
+                        // printf("\r\nch=%d 设置工作截止时间=%d ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
                     }
-
                 }
 
-                 printf("\r\n setindex=%d 启动电流=%fA ", setindex , g_Channelinfo[setindex].RunningWorkSetup.currentStart);
-                 printf("\r\n setindex=%d 截止电流=%fA ", setindex , g_Channelinfo[setindex].RunningWorkSetup.voltLimit);
-                 printf("\r\n setindex=%d 设置工作截止电流 =%fA ", setindex , g_Channelinfo[ch].RunningWorkSetup.currentLimit);
-                 printf("\r\n setindex=%d 设置工作截止时间=%d ", setindex , g_Channelinfo[ch].RunningWorkSetup.timeLimit);
-
+                printf("\r\n setindex=%d 启动电流=%fA ", setindex, g_Channelinfo[setindex].RunningWorkSetup.currentStart);
+                printf("\r\n setindex=%d 截止电流=%fA ", setindex, g_Channelinfo[setindex].RunningWorkSetup.voltLimit);
+                printf("\r\n setindex=%d 设置工作截止电流 =%fA ", setindex, g_Channelinfo[ch].RunningWorkSetup.currentLimit);
+                printf("\r\n setindex=%d 设置工作截止时间=%d ", setindex, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
             }
 
             break;

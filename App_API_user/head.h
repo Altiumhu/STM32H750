@@ -88,23 +88,6 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 //#include "spi.h"
 
 
-//#include "./SYSTEM/sys/sys.h"
-//#include "./SYSTEM/usart/uart.h"
-//#include "./SYSTEM/delay/delay.h"
-//#include "./BSP/LED/led.h"
-//#include "./BSP/MPU/mpu.h"
-//#include "./BSP/SDRAM/sdram.h"
-//#include "./USMART/usmart.h"
-//#include "./BSP/KEY/key.h"
-//#include "./BSP/FDCAN/fdcan.h"
-
-//#include "./BSP/PWR/pwr.h"
-//#include "./BSP/RTC/rtc.h"
-
-
-//#include "./BSP/NORFLASH/norflash.h"
-//#include "./BSP/SDMMC/sdmmc_sdcard.h"
-//#include "./FATFS/exfuns/exfuns.h"
 
 
 
