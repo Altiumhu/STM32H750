@@ -57,6 +57,7 @@ typedef struct
 
      float Set_CV;    // 恒压值
      float Set_PreCV; // 恒压值
+     float Set_SS_PreCV; // 软启动恒压值
 
      uint16_t SS_Timer; // ADC跟新中断
 
@@ -67,11 +68,9 @@ typedef struct
      uint32_t WorkeRunTimer;             // 工步运行时间
      RuningWorkSetup_t RunningWorkSetup; // 运行设置
 
-     uint16_t Run_Cyc_indx; // 当前运行工步循环号
 
      uint8_t SendWorkStepIndx; // 设发送工步信息
      uint16_t run;             // 通道状态
-     uint8_t err;             // 错误
 
 
 	uint8_t step; // 运行启动工步

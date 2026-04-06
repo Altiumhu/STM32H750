@@ -533,7 +533,7 @@ void AppUser_ChannelInfo_Debug(void)
     /* 电容电压 */
     printf("Cap_voltage =%f ADC1_A10=%d\r\n", g_Channelinfo[1].Cap_voltage, adc_values[12]);
 
-    for (ch = 0; ch < 16; ch++)
+    for (ch = 0; ch < 6; ch++)
     {
         printf("\r\n ch=[%d] workMode=%d \r\n", ch + 1, g_Channelinfo[ch].workMode);
         printf(" ch=[%d] voltage=%f--ADC=%d current=%f--ADC%d Cap_voltage=%f voltage_port=%f\r\n", ch + 1, g_Channelinfo[ch].voltage, g_Channelinfo[ch].voltage_ADC,
@@ -543,6 +543,8 @@ void AppUser_ChannelInfo_Debug(void)
         printf("CH[%d] I_Set=%fmA I_FB=%fmA i_pid_out=%f \r\n", ch + 1, gHandle_PID[ch].i_ref, gHandle_PID[ch].i_fdb, gHandle_PID[ch].i_pid_out);
         printf("CH[%d]Set=%fV FB=%fV pid_out=%f \r\n", ch + 1, gHandle_PID[ch].v_ref, gHandle_PID[ch].v_fdb, gHandle_PID[ch].v_pid_out);
         printf(" HOMSduty=%d low=%d \r\n", g_epwmHandle[ch].High_MOS_DUTY, g_epwmHandle[ch].Low_MOS_DUTY);
+        printf(" WorkeRunTimer =%d \r\n", g_Channelinfo[ch].WorkeRunTimer );
+        
 
     }
 }

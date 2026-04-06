@@ -81,7 +81,7 @@ void AppUser_Device_InitData(void)
 
     g_Channelinfo[ch].Set_CC = 1.0;
 
-    g_Channelinfo[ch].Run_Cyc_indx =0;
+    g_Channelinfo[ch].loopSn =0;
 
     //       g_Channelinfo[ch].Set_DC = g_Channelinfo[ch].Set_CC*(-1.0f);
     //       g_Channelinfo[ch].Set_CV = g_Channelinfo[ch].Set_PreCV;

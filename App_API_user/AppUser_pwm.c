@@ -267,6 +267,7 @@ void shell_Debug_PWM(int argc, char *argv[])
 
 	if (num[1] == 1)
 	{
+		g_SetChanneWorke.Run_Cyc_indx =1;
 		printf("\r\n 启动pwm=%d %d  ", num[0], num[1]);
 		// pwm_start(num[0], num[1]);
 		g_Channelinfo[num[0]].fault.all = 0;

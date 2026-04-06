@@ -97,10 +97,15 @@ int UserSlave_Init(void)
     {
         g_Channelinfo[ch].RunningWorkSetup.currentStart = 1.0f;
         g_Channelinfo[ch].RunningWorkSetup.voltLimit = 4.2f;
+
+        g_Channelinfo[ch].RunningWorkSetup.timeLimit = 10000;
+        g_Channelinfo[ch].RunningWorkSetup.currentLimit = 0.010f;
         g_Channelinfo[ch].WorkeStartup = 1;
 
         g_Channelinfo[ch].RunningWorkSetup.type = WORKE_SETUP_CC_CV;
     }
+
+   
 }
 
 void UserSlave_SendLink(void)
@@ -259,7 +264,7 @@ void UserSlave_UpdateSlaveRec(void)
             }
             for (ch = 0; ch < BOARD_CHANNEL_NUM;) //
             {
-                g_Channelinfo[ch].Run_Cyc_indx = 0; //  初始化工步循环号 循环号，表示工艺流程，重复执行几次
+                g_Channelinfo[ch].loopSn = 0; //  初始化工步循环号 循环号，表示工艺流程，重复执行几次
             }
 
             tmep[0] = pFrame->data[(devid - 1) * 2];
