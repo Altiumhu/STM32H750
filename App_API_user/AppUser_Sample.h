@@ -44,8 +44,7 @@ typedef struct
      float temp_channe;        // 温度通道0.1°C
      float temp_pre;           // 开始按下的温度值
      float temp_Clam;          // 温度补偿值
-     uint16_t run;             // 通道状态
-     uint8_t err;             // 错误
+
      power_fault_define fault; // 故障
      uint16_t workMode;        // 充电放电
      uint16_t prt_en;          // 使能和关闭PRT
@@ -71,7 +70,14 @@ typedef struct
      uint16_t Run_Cyc_indx; // 当前运行工步循环号
 
      uint8_t SendWorkStepIndx; // 设发送工步信息
+     uint16_t run;             // 通道状态
+     uint8_t err;             // 错误
 
+
+	uint8_t step; // 运行启动工步
+	uint8_t status; // 通道状态
+	uint8_t error; // 错误
+	uint8_t loopSn; // 当前运行工步循环号
 
 } ChannelInfo;
 

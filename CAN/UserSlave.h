@@ -109,36 +109,32 @@ typedef struct
 	uint8_t timeLimit[4];	 // 终止时间
 } WorkStepInfoStream_t;
 
-
 typedef struct
 {
 
-	uint8_t chnum[32]; // 通道数量
+	uint8_t chnum[32];		// 通道数量
 	uint8_t runWorke_setup; // 运行工步号
-	uint8_t Run_Cyc_indx; // 01 ----运行循环号
+	uint8_t Run_Cyc_indx;	// 01 ----运行循环号
 } StartWorkeChanne;
 
-
 typedef struct
 {
+
 	uint8_t adc_c[4];
 	uint8_t adc_v[2];
 	uint8_t adc_temp[2];
-	//	uint8_t adc_av[2];
+
 	uint8_t step;
 	uint8_t status;
 	uint8_t error;
 	uint8_t loopSn;
+
 } SampleData_t;
-
-
-
 
 #pragma pack()
 
-
 extern WorkStepInfoStream_t g_WorkStepInfoStream[BOARD_CHANNEL_NUM][MAX_SETUP_WORKE]; // 工步信息最大32个
-extern StartWorkeChanne g_SetChanneWorke; // 设置启动通道
+extern StartWorkeChanne g_SetChanneWorke;											  // 设置启动通道
 int UserSlave_Init(void);
 
 void UserSlave_Update(void);
@@ -147,6 +143,6 @@ void UserSlave_SendLink(void);
 
 void UserSlave_Update(void);
 
-extern uint8_t GetTotal_steps(void );//获取总工步数
+extern uint8_t GetTotal_steps(void); // 获取总工步数
 
 #endif
