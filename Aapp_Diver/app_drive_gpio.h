@@ -25,6 +25,12 @@ void App_GPIO_Init(void);
 #define System_LED1_HIGH_LEVEL   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET); //PD10
 #define System_LED1_LOW_LEVEL     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_RESET); //PD10
 
+
+#define System_LED2_TRG_LEVEL HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_15) // 测试中断频率目前100Khz
+
+#define System_LED2_HIGH_LEVEL   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET); //PD10
+#define System_LED2_LOW_LEVEL     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET); //PD10
+
 void Set_ULock_GPIO(void);
 
 #endif

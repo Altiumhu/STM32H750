@@ -63,7 +63,7 @@ void PIDInit(uint16_t ch)
     gHandle_PID[ch].v_err = 0.0f;                           // 误差
     gHandle_PID[ch].v_kp =1.0f;                            // 比例系数
     gHandle_PID[ch].v_ki = 0.1f;                            // 积分系数
-    gHandle_PID[ch].v_ref = 3000.0f;                          // 电压环基准复位，进行软起动
+    gHandle_PID[ch].v_ref = 3.0f;                          // 电压环基准复位，进行软起动
     gHandle_PID[ch].v_err_sum = (200);         //
     gHandle_PID[ch].v_up = (3000);               //
     gHandle_PID[ch].v_ui = (0);              //

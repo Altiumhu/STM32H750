@@ -123,7 +123,7 @@ void GetADC_Driver_Result(void)
             {
                 g_Channelinfo[0 + ch * 4].current = g_Channelinfo[0 + ch * 4].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
             }
-
+            g_Channelinfo[0 + ch * 4].current = fabsf( g_Channelinfo[0 + ch * 4].current);
             /* 电容端电压/端口电压采样 */
             if (g_Channelinfo[ch * 4].workMode == POWER_PRECHARGE || g_Channelinfo[ch * 4].workMode == POWER_INIT)
             {
@@ -199,10 +199,14 @@ void GetADC_Driver_Result(void)
                 if (g_Channelinfo[1 + ch * 4].workMode == POWER_RUN_DISCHARGE)
                 {
                     g_Channelinfo[1 + ch * 4].current = g_Channelinfo[1 + ch * 4].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                     g_Channelinfo[1 + ch * 4].current = fabsf( g_Channelinfo[1 + ch * 4].current);
+
                 }
                 else
                 {
+
                     g_Channelinfo[1 + ch * 4].current = g_Channelinfo[1 + ch * 4].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                     g_Channelinfo[1 + ch * 4].current = fabsf( g_Channelinfo[1 + ch * 4].current);
                 }
 
                 /* 电容端电压/端口电压采样 */
@@ -284,7 +288,7 @@ void GetADC_Driver_Result(void)
                 {
                     g_Channelinfo[2 + ch * 4].current = g_Channelinfo[2 + ch * 4].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
                 }
-
+                   g_Channelinfo[2 + ch * 4].current = fabsf( g_Channelinfo[2 + ch * 4].current);
                 /* 电容端电压/端口电压采样 */
                 if (g_Channelinfo[2 + ch * 4].workMode == POWER_PRECHARGE || g_Channelinfo[2 + ch * 4].workMode == POWER_INIT)
                 {
@@ -363,7 +367,7 @@ void GetADC_Driver_Result(void)
                 {
                     g_Channelinfo[3 + ch * 4].current = g_Channelinfo[3 + ch * 4].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
                 }
-           
+                  g_Channelinfo[3 + ch * 4].current = fabsf( g_Channelinfo[3 + ch * 4].current);
             /* 电容端电压/端口电压采样 */
             if (g_Channelinfo[3 + ch * 4].workMode == POWER_PRECHARGE || g_Channelinfo[3 + ch * 4].workMode == POWER_INIT)
             {
@@ -533,7 +537,7 @@ void AppUser_ChannelInfo_Debug(void)
     /* 电容电压 */
     printf("Cap_voltage =%f ADC1_A10=%d\r\n", g_Channelinfo[1].Cap_voltage, adc_values[12]);
 
-    for (ch = 0; ch < 6; ch++)
+    for (ch = 0; ch < 2; ch++)
     {
         printf("\r\n ch=[%d] workMode=%d \r\n", ch + 1, g_Channelinfo[ch].workMode);
         printf(" ch=[%d] voltage=%f--ADC=%d current=%f--ADC%d Cap_voltage=%f voltage_port=%f\r\n", ch + 1, g_Channelinfo[ch].voltage, g_Channelinfo[ch].voltage_ADC,

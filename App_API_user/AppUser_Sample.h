@@ -39,11 +39,11 @@ typedef struct
      uint16_t current_ADC;    // 电流        0.1mA
      uint16_t current_DC_ADC; // 放电电流ADC
 
-     float power;              // 功率
-     float res;                // 电阻
-     float temp_channe;        // 温度通道0.1°C
-     float temp_pre;           // 开始按下的温度值
-     float temp_Clam;          // 温度补偿值
+     float power;       // 功率
+     float res;         // 电阻
+     float temp_channe; // 温度通道0.1°C
+     float temp_pre;    // 开始按下的温度值
+     float temp_Clam;   // 温度补偿值
 
      power_fault_define fault; // 故障
      uint16_t workMode;        // 充电放电
@@ -55,11 +55,12 @@ typedef struct
 
      float Set_PreDC;
 
-     float Set_CV;    // 恒压值
-     float Set_PreCV; // 恒压值
+     float Set_CV;       // 恒压值
+     float Set_PreCV;    // 恒压值
      float Set_SS_PreCV; // 软启动恒压值
 
-     uint16_t SS_Timer; // ADC跟新中断
+     uint16_t SS_Timer;   // ADC跟新中断
+
 
      uint16_t GetPortTimer; // ADC跟新中断
 
@@ -68,15 +69,13 @@ typedef struct
      uint32_t WorkeRunTimer;             // 工步运行时间
      RuningWorkSetup_t RunningWorkSetup; // 运行设置
 
-
      uint8_t SendWorkStepIndx; // 设发送工步信息
      uint16_t run;             // 通道状态
 
-
-	uint8_t step; // 运行启动工步
-	uint8_t status; // 通道状态
-	uint8_t error; // 错误
-	uint8_t loopSn; // 当前运行工步循环号
+     uint8_t step;   // 运行启动工步
+     uint8_t status; // 通道状态
+     uint8_t error;  // 错误
+     uint8_t loopSn; // 当前运行工步循环号
 
 } ChannelInfo;
 

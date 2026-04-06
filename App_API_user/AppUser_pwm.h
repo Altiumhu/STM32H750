@@ -15,9 +15,12 @@
 
 // 设置开关频率显示 最高频率和最低频率
 #define TIMER_PREIOD_MAX 30             // 100Khez
-#define TIMER_PREIOD_MIN 180             //  600Khz
+#define TIMER_PREIOD_MIN 7999             //  
 
-#define TIMER_DUTY_MAX 3200             // // 36.40% 97750
+#define TIMER_DUTY_MAX 3000             // // 36.40% 97750
+
+#define TIMER_DC_DUTY_MAX 4000             // // 49% 周期值7999
+
 #define TIMER_DUTY_MIN 1             //  600Khz
 
 

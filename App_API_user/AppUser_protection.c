@@ -47,15 +47,15 @@ void AppUser_Debug_Protect(void)
               printf(" \r\n  ch%d: fault=0x%X", ch+1,g_Channelinfo[ch].fault.all);
               if(g_Channelinfo[ch].fault.bit.TIMER_OUT)
               {
-                printf("\r\n fault TIMER_OUT 工步到达设置完成");
+                printf("\r\n fault TIMER_OUT 工步到达设置完成 %d 秒 ",g_Channelinfo[ch].RunningWorkSetup.timeLimit/1000);
               }
               if(g_Channelinfo[ch].fault.bit.CV_Limit_OUT)
               {
-                printf("\r\n fault CV_Limit_OUT 工步到达恒压值 ");
+                printf("\r\n fault CV_Limit_OUT 工步到达恒压值=%f ",g_Channelinfo[ch].RunningWorkSetup.voltLimit);
               }
                if(g_Channelinfo[ch].fault.bit.CC_Limit_OUT)
               {
-                printf("\r\n fault CC_Limit_OUT 工步到达恒流设置值 ");
+                printf("\r\n fault CC_Limit_OUT 工步到达恒流设置值 =%f ",g_Channelinfo[ch].RunningWorkSetup.currentLimit);
               }
 
               if(g_Channelinfo[ch].fault.bit.Worke_Setup_OVER)

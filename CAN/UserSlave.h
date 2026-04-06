@@ -14,8 +14,9 @@
 enum WORKE_SETUP
 {
 	WORKE_SETUP_IDLE = 0x44, // 跳转搁置阶段 静置(D) 工步名称
+	WORKE_SETUP_CC = 0x4B,	 /// 0x41: // 恒流恒压充电（A）
 	WORKE_SETUP_CC_CV = 0x41,	 /// 0x41: // 恒流恒压充电（A）
-	WORKE_SETUP_DC = 43,	 // 0x43: // 恒流放电(C) 工步名称
+	WORKE_SETUP_DC = 0x43,	 // 0x43: // 恒流放电(C) 工步名称
 	WORKE_SETUP_LOOP =0x52,    // 0x52: // 循环(R) 工步名称
 	
 	WORKE_SETUP_NUM, // 还没有收到新的信息
