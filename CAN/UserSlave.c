@@ -91,7 +91,7 @@ int UserSlave_Init(void)
 
     memset(&g_SetChanneWorke.chnum[0], 0xFF, 32);
     g_SetChanneWorke.Run_Cyc_indx = 1;
-    g_SetChanneWorke.runWorke_indx = 0;
+    g_SetChanneWorke.runWorke_setup = 0xFF;
 }
 
 void UserSlave_SendLink(void)
@@ -205,18 +205,18 @@ void UserSlave_UpdateSlaveRec(void)
                         g_Channelinfo[ch].RunningWorkSetup.currentStart = g_Channelinfo[ch].RunningWorkSetup.currentStart * 0.0001f; // 10000mA=10.0A
                         printf("\r\nch=%d 启动电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
 
-                        tempdata = U8TOU16(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_indx].voltLimit);
+                        tempdata = U8TOU16(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_setup].voltLimit);
                         g_Channelinfo[ch].RunningWorkSetup.voltLimit = (float)tempdata;
                         g_Channelinfo[ch].RunningWorkSetup.voltLimit = g_Channelinfo[ch].RunningWorkSetup.voltLimit * 0.001f; // 1500mV=1.5V
                         printf("\r\nch=%d 截止电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
 
                         // 设置工作截止电流
-                        tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_indx].currentLimit);
+                        tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_setup].currentLimit);
                         g_Channelinfo[ch].RunningWorkSetup.currentLimit = (float)tempdata;
                         g_Channelinfo[ch].RunningWorkSetup.currentLimit = g_Channelinfo[ch].RunningWorkSetup.currentLimit * 0.0001f; // 10000mA=10.0A
                         printf("\r\nch=%d 设置工作截止电流 =%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentLimit);
                         // 设置工作截止时间
-                        tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_indx].timeLimit);
+                        tempdata = U8TOU32(g_WorkStepInfoStream[ch][g_SetChanneWorke.runWorke_setup].timeLimit);
                         g_Channelinfo[ch].RunningWorkSetup.timeLimit = tempdata;
                         printf("\r\nch=%d 设置工作截止时间=%d ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
                     }
@@ -231,14 +231,14 @@ void UserSlave_UpdateSlaveRec(void)
 
             devid = BoardInfo_GetID();
 
-            printf("\r\nrunWorke_indx=%d ", g_SetChanneWorke.runWorke_indx);
-            if (g_SetChanneWorke.runWorke_indx > MAX_SETUP_WORKE)
+            printf("\r\nrunWorke_indx=%d ", g_SetChanneWorke.runWorke_setup);
+            if (g_SetChanneWorke.runWorke_setup > MAX_SETUP_WORKE)
             {
-                printf("\r\n runWorke_indx=%d ", g_SetChanneWorke.runWorke_indx);
+                printf("\r\n runWorke_setup=%d ", g_SetChanneWorke.runWorke_setup);
                 return;
             }
             printf("\r\n Run_Cyc_indx=%d ", g_SetChanneWorke.Run_Cyc_indx);
-            if (g_SetChanneWorke.runWorke_indx > MAX_SETUP_WORKE)
+            if (g_SetChanneWorke.runWorke_setup > MAX_SETUP_WORKE)
             {
                 printf("\r\n Run_Cyc_indxx=%d ", g_SetChanneWorke.Run_Cyc_indx);
                 return;
@@ -258,7 +258,7 @@ void UserSlave_UpdateSlaveRec(void)
                 if ((SetCh_Activity >> ch) & 0x0001)
                 {
 
-                    g_Channelinfo[ch].RunningWorkSetup.index = g_SetChanneWorke.runWorke_indx; // 运行工步号
+                    g_Channelinfo[ch].RunningWorkSetup.index = g_SetChanneWorke.runWorke_setup; // 运行工步号
                     // printf("\r\n ch=%d ", ch);
                     g_Channelinfo[ch].WorkeStartup = 1; // 启动工步
                     g_Channelinfo[ch].fault.all = 0;    // 清除故障
@@ -306,7 +306,7 @@ void UserSlave_UpdateSlaveRec(void)
 
             printf("\r\nch=%d timeLimit=%d ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
 
-            printf("\r\n 启动工步=%d  运行循环号 =%d ", g_SetChanneWorke.runWorke_indx, g_SetChanneWorke.Run_Cyc_indx);
+            printf("\r\n 启动工步=%d  运行循环号 =%d ", g_SetChanneWorke.runWorke_setup, g_SetChanneWorke.Run_Cyc_indx);
 
             break;
         case EMTOSCMD_StopWorkStep: // 停止工步
@@ -360,7 +360,7 @@ void UserSlave_UpdateSlaveRec(void)
             //                if ((channelBitSelect >> ch) & 0x0001)
             //                {
             //                    g_Channelinfo[ch].RunningWorkSetup.index = indexWorkStep; // 修改续接的工步号
-            //                    //  g_SetChanneWorke.runWorke_indx =indexWorkStep;; // 续接的工步号
+            //                    //  g_SetChanneWorke.runWorke_setup =indexWorkStep;; // 续接的工步号
             //                    g_Channelinfo[ch].Run_Cyc_indx = snLoop; // 续接的循环号
             //                    g_Channelinfo[ch].RunningWorkSetup.timeLimit = timeLeft;
             //                    // printf("\r\n ch=%d ", ch);

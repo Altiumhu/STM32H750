@@ -6,7 +6,7 @@
 #define SLAVENUM_MAX 16
 #define DEFAULTVOLTMAX 5000
 #define DEFAULTCURRENTMAX 16
-#define MaxNumSamplesFifo 4 // 3 600  600---10·ÖÖÓ
+#define MaxNumSamplesFifo 4 // 3 600  600---10åˆ†é’Ÿ
 
 #define MAX_SETUP_WORKE 32
 
@@ -21,34 +21,34 @@ typedef enum
 	EChannelError_UserPause,
 	EChannelError_NetError,
 	EChannelError_DCZero,
-	EChannelError_WorkStep = 0x0c,		  // ¹¤²½Òì³£
-	EChannelError_NoBattery = 0x12,		  // ÎŞµç³Ø
-	EChannelError_OverReserveVolt = 0x20, // ³¬¹ı·´ÏòµçÑ¹Éè¶¨Öµ
-	EChannelError_ShutDown = 0x23,		  // ¶ÌÂ·
-	EChannelError_CCCVVERROR = 0x30,	  // CC-CV ºãÑ¹µçÑ¹Òì³£
+	EChannelError_WorkStep = 0x0c,		  // å·¥æ­¥å¼‚å¸¸
+	EChannelError_NoBattery = 0x12,		  // æ— ç”µæ± 
+	EChannelError_OverReserveVolt = 0x20, // è¶…è¿‡åå‘ç”µå‹è®¾å®šå€¼
+	EChannelError_ShutDown = 0x23,		  // çŸ­è·¯
+	EChannelError_CCCVVERROR = 0x30,	  // CC-CV æ’å‹ç”µå‹å¼‚å¸¸
 	EChannelError_CVVolt = 0x34,
 	EChannelError_MOSTEMPOVER = 0x68,
 	EChannelError_VOLTNOCALIBRATE = 0x69,
 	EChannelError_CCNOCALIBRATE = 0x6A,
 	EChannelError_DCNOCALIBRATE = 0x6B,
 	EChannelError_Can = 0x37,
-	EChannelError_OVProtect = 0x73, // ÏÂÎ»»ú°å¹ıÑ¹±£»¤
-	EChannelError_UVProTect,		// ÏÂÎ»»ú°åÇ·Ñ¹±£»¤
+	EChannelError_OVProtect = 0x73, // ä¸‹ä½æœºæ¿è¿‡å‹ä¿æŠ¤
+	EChannelError_UVProTect,		// ä¸‹ä½æœºæ¿æ¬ å‹ä¿æŠ¤
 	EChannelError_SLAVESTARTERROR = 0x88,
 } EChannelError_t;
 
-// Éı¼¶×´Ì¬
+// å‡çº§çŠ¶æ€
 enum ESTATUSUPGRADE_T
 {
 	ESTATUSUPGRADE_IDLE = 0,
 	ESTATUSUPGRADE_OK,
 	ESTATUSUPGRADE_CHECKFAILE,
 	ESTATUSUPGRADE_FAILE,
-	ESTATUSUPGRADE_Down,	  // ÏÂ·¢Íê³É
-	ESTATUSUPGRADE_NotUpdate, // »¹Ã»ÓĞÊÕµ½ĞÂµÄĞÅÏ¢
+	ESTATUSUPGRADE_Down,	  // ä¸‹å‘å®Œæˆ
+	ESTATUSUPGRADE_NotUpdate, // è¿˜æ²¡æœ‰æ”¶åˆ°æ–°çš„ä¿¡æ¯
 };
 
-// ÏÂÎ»»ú×´Ì¬Ã¶¾Ù
+// ä¸‹ä½æœºçŠ¶æ€æšä¸¾
 enum ESLAVESTATUS_t
 {
 	ESLAVESTATUS_IDLE = 0,
@@ -57,65 +57,65 @@ enum ESLAVESTATUS_t
 	ESLAVESTATUS_PAUSE,
 	ESLAVESTATUS_NUM
 };
-// ×ª·¢°åºÍÏÂÎ»»úÖ®¼äÍ¨ĞÅ·½Ê½ÈçÏÂ
-// ×ª·¢°åÖ÷¶¯ÏòÏÂÎ»»ú·¢ËÍÊı¾İ£¬ÏÂÎ»»ú±ØĞë·µ»Øack
-// ÏÂÎ»»ú·µ»ØµÄackÃüÁîÓëĞòÁĞºÅÓëÏÂ·¢µÄÒ»Ö±
-// Ö»ÓĞÒ»ÖÖÇé¿öÏÂÎ»»ú»áÖ÷¶¯·¢ËÍÊı¾İ¸ø×ª·¢°å£¬¾ÍÊÇÏÂÎ»»ú¶Ï¿ªÁ¬½ÓµÄÊ±ºò
-// »á¶¨Ê±·¢ËÍÁ¬½ÓÃüÁî¸ø×ª·¢°å
-// ×ª·¢°åºÍÏÂÎ»»úÖ®¼äµÄÍ¨ĞÅÃüÁî
+// è½¬å‘æ¿å’Œä¸‹ä½æœºä¹‹é—´é€šä¿¡æ–¹å¼å¦‚ä¸‹
+// è½¬å‘æ¿ä¸»åŠ¨å‘ä¸‹ä½æœºå‘é€æ•°æ®ï¼Œä¸‹ä½æœºå¿…é¡»è¿”å›ack
+// ä¸‹ä½æœºè¿”å›çš„ackå‘½ä»¤ä¸åºåˆ—å·ä¸ä¸‹å‘çš„ä¸€ç›´
+// åªæœ‰ä¸€ç§æƒ…å†µä¸‹ä½æœºä¼šä¸»åŠ¨å‘é€æ•°æ®ç»™è½¬å‘æ¿ï¼Œå°±æ˜¯ä¸‹ä½æœºæ–­å¼€è¿æ¥çš„æ—¶å€™
+// ä¼šå®šæ—¶å‘é€è¿æ¥å‘½ä»¤ç»™è½¬å‘æ¿
+// è½¬å‘æ¿å’Œä¸‹ä½æœºä¹‹é—´çš„é€šä¿¡å‘½ä»¤
 enum EMSCMD_t
 {
-	EMTOSCMD_Link = 0,				   // Á¬½ÓÏÂÎ»»ú
-	EMTOSCMD_Setpar,				   // ÉèÖÃ²ÎÊı
-	EMTOSCMD_SampleStart,			   // ¿ªÊ¼²ÉÑù
-	EMTOSCMD_SampleQuest,			   // ÇëÇó²ÉÑùÊı¾İ
-	EMTOSCMD_SendWorkStepInfo,		   // ÏÂ·¢¹¤²½ĞÅÏ¢
-	EMTOSCMD_StartWorkStep,			   // Æô¶¯¹¤²½
-	EMTOSCMD_StartSomeChannelWorkStep, // ²¿·ÖÍ¨µÀÆô¶¯¹¤²½
-	EMTOSCMD_StopWorkStep,			   // Í£Ö¹¹¤²½
-	EMTOSCMD_PauseWorkStep,			   // Ôİ¶¨¹¤²½
-	EMTOSCMD_ContinueWorkStep,		   // ¼ÌĞø¹¤²½
-	EMTOSCMD_JumpWorkStep,			   // ¹¤²½Ìø×ª
-	EMTOSCMD_StopWorkStepw,			   // ²¿·ÖÍ¨µÀÍ£Ö¹Í£Ö¹¹¤²½
+	EMTOSCMD_Link = 0,				   // è¿æ¥ä¸‹ä½æœº
+	EMTOSCMD_Setpar,				   // è®¾ç½®å‚æ•°
+	EMTOSCMD_SampleStart,			   // å¼€å§‹é‡‡æ ·
+	EMTOSCMD_SampleQuest,			   // è¯·æ±‚é‡‡æ ·æ•°æ®
+	EMTOSCMD_SendWorkStepInfo,		   // ä¸‹å‘å·¥æ­¥ä¿¡æ¯
+	EMTOSCMD_StartWorkStep,			   // å¯åŠ¨å·¥æ­¥
+	EMTOSCMD_StartSomeChannelWorkStep, // éƒ¨åˆ†é€šé“å¯åŠ¨å·¥æ­¥
+	EMTOSCMD_StopWorkStep,			   // åœæ­¢å·¥æ­¥
+	EMTOSCMD_PauseWorkStep,			   // æš‚å®šå·¥æ­¥
+	EMTOSCMD_ContinueWorkStep,		   // ç»§ç»­å·¥æ­¥
+	EMTOSCMD_JumpWorkStep,			   // å·¥æ­¥è·³è½¬
+	EMTOSCMD_StopWorkStepw,			   // éƒ¨åˆ†é€šé“åœæ­¢åœæ­¢å·¥æ­¥
 
-	EMTOSCMDIAP_UpGradeInfo, // ·¢ËÍÉı¼¶ĞÅÏ¢
-	EMTOSCMDIAP_UpGradeData, // ·¢ËÍÉı¼¶Êı¾İ
+	EMTOSCMDIAP_UpGradeInfo, // å‘é€å‡çº§ä¿¡æ¯
+	EMTOSCMDIAP_UpGradeData, // å‘é€å‡çº§æ•°æ®
 
-	EMTOSCMDCALIBRATE_ENTER,   // ½øÈëĞŞµ÷³ÌĞò£¬¹Ø±Õµ±Ç°µÄ¹¤²½
-	EMTOSCMDCALIBRATE_SETDA,   // ĞŞµ÷³ÌĞò·¢ËÍDA
-	EMTOSCMDCALIBRATE_STOP,	   // ĞŞµ÷³ÌĞòÍ£Ö¹
-	EMTOSCMDCALIBRATE_START,   // ĞŞµ÷³ÌĞòÆô¶¯
-	EMTOSCMDCALIBRATE_SAMPLE,  // ĞŞµ÷³ÌĞò²ÉÑù
-	EMTOSCMDCALIBRATE_SENDPAR, // ĞŞµ÷³ÌĞò·¢ËÍĞ£×¼²ÎÊı
-	EMTOSCMDCALIBRATE_CHECK,   // ĞŞµ÷³ÌĞò¸´¼ì
+	EMTOSCMDCALIBRATE_ENTER,   // è¿›å…¥ä¿®è°ƒç¨‹åºï¼Œå…³é—­å½“å‰çš„å·¥æ­¥
+	EMTOSCMDCALIBRATE_SETDA,   // ä¿®è°ƒç¨‹åºå‘é€DA
+	EMTOSCMDCALIBRATE_STOP,	   // ä¿®è°ƒç¨‹åºåœæ­¢
+	EMTOSCMDCALIBRATE_START,   // ä¿®è°ƒç¨‹åºå¯åŠ¨
+	EMTOSCMDCALIBRATE_SAMPLE,  // ä¿®è°ƒç¨‹åºé‡‡æ ·
+	EMTOSCMDCALIBRATE_SENDPAR, // ä¿®è°ƒç¨‹åºå‘é€æ ¡å‡†å‚æ•°
+	EMTOSCMDCALIBRATE_CHECK,   // ä¿®è°ƒç¨‹åºå¤æ£€
 
-	EMTOSCMD_LEDControl, // ÉèÖÃÖ¸Ê¾µÆ¿ØÖÆÄ£Ê½ÃüÁî
-	EMTOSCMD_LEDStatus,	 // Ö¸Ê¾µÆ×´Ì¬ÃüÁî
+	EMTOSCMD_LEDControl, // è®¾ç½®æŒ‡ç¤ºç¯æ§åˆ¶æ¨¡å¼å‘½ä»¤
+	EMTOSCMD_LEDStatus,	 // æŒ‡ç¤ºç¯çŠ¶æ€å‘½ä»¤
 
-	EMTOSCMD_SampleQuestAck, // ·¢ËÍ²ÉÑùÊı¾İÈ·ÈÏ
+	EMTOSCMD_SampleQuestAck, // å‘é€é‡‡æ ·æ•°æ®ç¡®è®¤
 
 	EMTOSCMD_Num
 };
 
 #pragma pack(1)
-// ¹¤²½²ÎÊıÊı¾İÁ÷¶¨Òå
+// å·¥æ­¥å‚æ•°æ•°æ®æµå®šä¹‰
 typedef struct
 {
-	uint8_t index;			 // ¹¤²½Ë÷ÒıºÅ
-	uint8_t type;			 // ¹¤²½ÀàĞÍ
-	uint8_t currentStart[4]; // Æô¶¯µçÁ÷
-	uint8_t voltLimit[2];	 // ÏŞÖÆµçÑ¹
-	uint8_t currentLimit[4]; // ÖÕÖ¹µçÁ÷
-	uint8_t timeLimit[4];	 // ÖÕÖ¹Ê±¼ä
+	uint8_t index;			 // å·¥æ­¥ç´¢å¼•å·
+	uint8_t type;			 // å·¥æ­¥ç±»å‹
+	uint8_t currentStart[4]; // å¯åŠ¨ç”µæµ
+	uint8_t voltLimit[2];	 // é™åˆ¶ç”µå‹
+	uint8_t currentLimit[4]; // ç»ˆæ­¢ç”µæµ
+	uint8_t timeLimit[4];	 // ç»ˆæ­¢æ—¶é—´
 } WorkStepInfoStream_t;
 
 
 typedef struct
 {
 
-	uint8_t chnum[32]; // Í¨µÀÊıÁ¿
-	uint8_t runWorke_indx; // ÔËĞĞ¹¤²½ºÅ
-	uint8_t Run_Cyc_indx; // 01 ----ÔËĞĞÑ­»·ºÅ
+	uint8_t chnum[32]; // é€šé“æ•°é‡
+	uint8_t runWorke_setup; // è¿è¡Œå·¥æ­¥å·
+	uint8_t Run_Cyc_indx; // 01 ----è¿è¡Œå¾ªç¯å·
 } StartWorkeChanne;
 
 
@@ -137,8 +137,8 @@ typedef struct
 #pragma pack()
 
 
-extern WorkStepInfoStream_t g_WorkStepInfoStream[BOARD_CHANNEL_NUM][MAX_SETUP_WORKE]; // ¹¤²½ĞÅÏ¢×î´ó32¸ö
-extern StartWorkeChanne g_SetChanneWorke; // ÉèÖÃÆô¶¯Í¨µÀ
+extern WorkStepInfoStream_t g_WorkStepInfoStream[BOARD_CHANNEL_NUM][MAX_SETUP_WORKE]; // å·¥æ­¥ä¿¡æ¯æœ€å¤§32ä¸ª
+extern StartWorkeChanne g_SetChanneWorke; // è®¾ç½®å¯åŠ¨é€šé“
 int UserSlave_Init(void);
 
 void UserSlave_Update(void);
@@ -147,6 +147,6 @@ void UserSlave_SendLink(void);
 
 void UserSlave_Update(void);
 
-extern uint8_t GetTotal_steps(void );//»ñÈ¡×Ü¹¤²½Êı
+extern uint8_t GetTotal_steps(void );//è·å–æ€»å·¥æ­¥æ•°
 
 #endif
