@@ -62,6 +62,10 @@ void AppUser_Debug_Protect(void)
               {
                 printf("\r\n fault  Worke_Setup_OVER 工艺流程结束 ");
               }
+              if(g_Channelinfo[ch].fault.bit.FAN_ERR)
+              {
+                printf("\r\n fault  风机故障 ");
+              }
         }
       
     }

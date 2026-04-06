@@ -99,7 +99,7 @@ void AppDebug_vTask(void)
         return;
 
     printf("\r\nDebug Run=%d\r\n", poll_time++);
-    debug_show_workMode(); // 显示故障和运行模式
+
 
     printf("\r\nTimer_GetClock =%d \r\n", Timer_GetClock());
     //
@@ -119,6 +119,7 @@ void AppDebug_vTask(void)
     // DebugLED_LOW_LEVEL ;
     // DBG_PRINTF("\r\ng_debugNUmer.debug1 %d \r\n",  g_debugNUmer.debug1);
     AppUser_Sample_Debug();
+    AppUser_Debug_Protect();
     // Debug_HandlePID();
 //    CAN1_Send_TEST();
     //     Debug_PWM();

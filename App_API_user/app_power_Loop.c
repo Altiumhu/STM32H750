@@ -76,10 +76,10 @@ void System_CloseLoop_Status(void)
 
             if (g_Channelinfo[ch].RunningWorkSetup.index >= GetTotal_steps()) // 运行工步号大于总工步数
             {
-                g_Channelinfo[ch].Run_Cyc_indx = g_Channelinfo[ch].Run_Cyc_indx + 1; // 当前运行工步循环号，表示当前工步需要循环工作几次
+                g_Channelinfo[ch].RunningWorkSetup.index  = g_Channelinfo[ch].RunningWorkSetup.index  + 1; // 当前运行工步循环号，表示当前工步需要循环工作几次
             }
-
-            if (g_Channelinfo[ch].Run_Cyc_indx >= g_SetChanneWorke.Run_Cyc_indx) // 运行工步号大于总工步数
+           //后续在完善功能
+            if (g_Channelinfo[ch].Run_Cyc_indx > g_SetChanneWorke.Run_Cyc_indx) // 运行工步号大于总工步数
             {
                 // g_SetChanneWorke.Run_Cyc_indx = 0; // 运行工步号归零
                 g_Channelinfo[ch].fault.bit.Worke_Setup_OVER = 1; // 工步大于工步数 整个工艺结束跳转故障

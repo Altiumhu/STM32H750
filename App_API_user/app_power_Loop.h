@@ -29,10 +29,10 @@ typedef enum power_state_define
     POWER_TEST,          // 10
 
     POWER_SoftStart, // 软启动 11
-    POWER_SET_CHARGE,
-    POWER_SET_PARAM, // 设置工步参数
+    POWER_SET_CHARGE,//12
+    POWER_SET_PARAM, // 设置工步参数 13
 
-    POWER_IDLE, // 空闲模式
+    POWER_IDLE, // 空闲模式14
 
 } power_state_define;
 
