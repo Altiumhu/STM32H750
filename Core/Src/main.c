@@ -173,6 +173,8 @@ int main(void)
     AppDebug_vTask();
     //        AppUser_temp_sample();
     // Read_GPIO_vTask();
+
+    Power_Stop_PWM();
   }
 
   /* USER CODE END 2 */

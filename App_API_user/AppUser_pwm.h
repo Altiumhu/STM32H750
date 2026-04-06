@@ -78,6 +78,6 @@ void Debug_PWM(void);
 void Updata_EPWM_Handle(void);
 
 
-
+void  Power_Stop_PWM(void);
 
 #endif /* APPAPI_APPUSER_PWM_H_ */

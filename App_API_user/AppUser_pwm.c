@@ -167,10 +167,10 @@ void pwm_stop(uint16_t channel)
 		HAL_TIM_PWM_Stop(&htim8, TIM_CHANNEL_2);
 		break;
 	case 14:
-			HAL_TIM_PWM_Stop(&htim8, TIM_CHANNEL_3);
+		HAL_TIM_PWM_Stop(&htim8, TIM_CHANNEL_3);
 		break;
 	case 15:
-			HAL_TIM_PWM_Stop(&htim8, TIM_CHANNEL_4);
+		HAL_TIM_PWM_Stop(&htim8, TIM_CHANNEL_4);
 		break;
 	}
 }
@@ -267,7 +267,7 @@ void shell_Debug_PWM(int argc, char *argv[])
 
 	if (num[1] == 1)
 	{
-		g_SetChanneWorke.Run_Cyc_indx =1;
+		g_SetChanneWorke.Run_Cyc_indx = 1;
 		printf("\r\n 启动pwm=%d %d  ", num[0], num[1]);
 		// pwm_start(num[0], num[1]);
 		g_Channelinfo[num[0]].fault.all = 0;
@@ -275,13 +275,14 @@ void shell_Debug_PWM(int argc, char *argv[])
 	else
 	{
 		// printf("\r\n停止pwm=%d %d  ", num[0], num[1]);
+  
+		Set_PWM_Channel_CH595_EN(2, num[0], EX_595_RESET); // 关闭PWM_EN
 
-		Set_PWM_Channel_CH595_EN(2, num[0], EX_595_RESET); // 打开PRT
-
-		Set_PWM_Channel_CH595_EN(0, num[0], EX_595_RESET); // 打开PRT
+		Set_PWM_Channel_CH595_EN(0, num[0], EX_595_RESET); // 关闭PRT
 		printf("\r\n停止pwm=%d %d  ", num[0], num[1]);
 		g_Channelinfo[num[0]].fault.bit.ctrlonoff = 1;
-		pwm_stop(num[0]);
+		 g_epwmHandle[num[0]].High_MOS_OpenFlag  =1;
+		// pwm_stop(num[0]);
 	}
 }
 
@@ -305,39 +306,30 @@ void Set_TIM8_PWM_Duty(uint32_t channel, float duty)
 	__HAL_TIM_SET_COMPARE(&htim8, channel, pulse);
 }
 
-// void UserMachine_Set_FAN_PWM_Ack(tcpProtocol *frameRec)
-//{
-//	uint8_t data[16];
-//	uint8_t dataIndex = 0,Fan1_num,Fan2_num;
+void Power_Stop_PWM(void)
+{
+	uint16_t ch;
 
-//	frameRec->streamNum[0] = frameRec->data[frameRec->indx-4]; // 流水号
-//    frameRec->streamNum[1] = frameRec->data[frameRec->indx-3]; // 流水号
-//    frameRec->encrypt = frameRec->data[frameRec->indx-2];      // 加密
+	for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
+	{
 
-//	Fan1_num=frameRec->data[0];
-//	Fan2_num=frameRec->data[1];
-//	// 组合连接应答的数据
-//	data[dataIndex++] = frameRec->boxNum;
-//	data[dataIndex++] = frameRec->cmd;
-//	data[dataIndex++] = 'O';
+		if (g_Channelinfo[ch].fault.all == 0 && g_epwmHandle[ch].High_MOS_STA == 1) // 判断无故障，可以启动pwm
+		{
+			if (g_epwmHandle[ch].High_MOS_OpenFlag == 0)
+			{
+				g_epwmHandle[ch].High_MOS_OpenFlag = 1;
+			}
+		}
+		else
+		{
+			if (g_epwmHandle[ch].High_MOS_OpenFlag == 1)
+			{
+				Set_PWM_Channel_CH595_EN(2, ch, EX_595_RESET); // 关闭PWM_EN
 
-// 	data[dataIndex++] =  frameRec->streamNum[0];//流水号
-//	data[dataIndex++] =  frameRec->streamNum[1];//流水号
-//	data[dataIndex++] = 0; // CRC
-//	memcpy(frameRec->data, data, dataIndex);
-
-//	frameRec->len=dataIndex;
-
-//	uint16_t fan_num = 0;
-//	Protocol *pProtocol;
-//	pProtocol = Get_gProtocolOBj();
-//	pProtocol->cmd = CMD_0x06;
-//	pProtocol->Reg = 0x4092;
-//	fan_num = Fan1_num;
-//	fan_num = fan_num << 8 | Fan2_num;
-//	pProtocol->Reg_Number = fan_num;
-
-//	AppUser_Msg_CmdAnalys(pProtocol);
-
-//	printf("\r\nboxSn=%X  cmd=%X   FAN=%X ", frameRec->boxNum, frameRec->cmd, pProtocol->Reg_Number);
-//}
+				Set_PWM_Channel_CH595_EN(0, ch, EX_595_RESET); // 关闭PRT
+				g_epwmHandle[ch].High_MOS_OpenFlag = 0;
+				pwm_stop(ch); // 原边主管
+			}
+		}
+	}
+}

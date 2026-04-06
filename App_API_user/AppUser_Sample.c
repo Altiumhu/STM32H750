@@ -19,7 +19,7 @@
 #include "head.h"
 #include "AppUser_Sample.h"
 
-uint32_t g_SanSampTimer = 20;
+uint32_t g_SanSampTimer = 45;
 uint32_t g_samptimer = 0; // 增加延时，让CD4052切换后充分稳定
 /*=================================================================================================
  * 全局变量定义
@@ -163,6 +163,7 @@ void GetADC_Driver_Result(void)
         }
         delayTimer++;
 
+           CD4052_Chnum = 1;
         SetCD4052(CD4052_Chnum); // 延时够了再切换
 
         if (delayTimer >= g_samptimer) // 延时一个开关周期 等待CD4052开关稳定

@@ -61,6 +61,7 @@ typedef struct
 
      uint16_t SS_Timer;   // ADC跟新中断
 
+     uint16_t Limit_Timer;   // ADC跟新中断
 
      uint16_t GetPortTimer; // ADC跟新中断
 
