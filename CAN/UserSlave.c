@@ -202,21 +202,22 @@ void UserSlave_UpdateSlaveRec(void)
                 // 温度
                 index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
                 // 工步索引号 运行的工步号step
-                // canFrameData[index++] = 0xFF; // 工步索引号  
+                canFrameData[index++] = 0xFF; // 工步索引号  
                 // // 通道状态
-                // canFrameData[index++] = 0x53; // 通道的工作在哪个工步中  g_Channelinfo[ch].status 
-                // // 错误状态
-                // canFrameData[index++] = 0;//
-                // // 当前运行工步循环号
-                // canFrameData[index++] = 0;//
 
-                canFrameData[index++] = g_Channelinfo[ch].WorkeStartup ; // 工步索引号 
-                // 通道状态
-                canFrameData[index++] =  g_Channelinfo[ch].status ; // 通道的工作在哪个工步中 
-                // 错误状态
-                canFrameData[index++] =  g_Channelinfo[ch].error ;//
-                // 当前运行工步循环号
-                canFrameData[index++] =g_Channelinfo[ch].loopSn;//
+                canFrameData[index++] = 0x53; // 通道的工作在哪个工步中  g_Channelinfo[ch].status 
+                // // 错误状态
+                 canFrameData[index++] = 0;//
+                // // 当前运行工步循环号
+                 canFrameData[index++] = 0;//
+
+                // canFrameData[index++] = g_Channelinfo[ch].WorkeStartup ; // 工步索引号 
+                // // 通道状态
+                // canFrameData[index++] =  g_Channelinfo[ch].status ; // 通道的工作在哪个工步中 
+                // // 错误状态
+                // canFrameData[index++] =  g_Channelinfo[ch].error ;//
+                // // 当前运行工步循环号
+                // canFrameData[index++] =g_Channelinfo[ch].loopSn;//
 
             }
 
@@ -229,8 +230,8 @@ void UserSlave_UpdateSlaveRec(void)
         case EMTOSCMD_SendWorkStepInfo: // 下发工步信息
             printf("\r\n 下发工步信息 _dataLen=%d ", pFrame->dataLen);
             devid = BoardInfo_GetID();
-            pSlave->Total_steps = pFrame->data[32]; // 总工步数
-            printf("\r\n Total_steps =%d  %d", pSlave->Total_steps, pFrame->data[33]);
+            pSlave->Total_steps = pFrame->data[32]+1; // 总工步数
+            printf("\r\n 总工步数 =%d  %d", pSlave->Total_steps, pFrame->data[33]);
             if (pSlave->Total_steps > MAX_SETUP_WORKE)
             {
                 printf("\r\n Total_steps ERR!!!=%d ", pSlave->Total_steps);
@@ -241,7 +242,7 @@ void UserSlave_UpdateSlaveRec(void)
             tmep[0] = pFrame->data[(devid - 1) * 2];
             tmep[1] = pFrame->data[(devid - 1) * 2 + 1];
             SetCh_Activity = tmep[0] | (tmep[1] << 8);
-            printf("\r\n SetCh_Activity=0x%X ", SetCh_Activity);
+            printf("\r\n 设置启动通道值=0x %X ", SetCh_Activity);
 
             for (setindex = 0; setindex < pSlave->Total_steps; setindex++) // 判断哪个通道被激活 通道工步数据// 每个通道工步数量
             {
@@ -285,7 +286,7 @@ void UserSlave_UpdateSlaveRec(void)
             break;
 
         case EMTOSCMD_StartWorkStep: // 启动工步
-            printf("\r\n 启动工步=%d ", pFrame->dataLen);
+            printf("\r\n 启动工步数据长度=%d ", pFrame->dataLen);
             memcpy(&(g_SetChanneWorke), pFrame->data, pFrame->dataLen);
 
             devid = BoardInfo_GetID();
@@ -297,12 +298,14 @@ void UserSlave_UpdateSlaveRec(void)
                 return;
             }
             printf("\r\n 运行循环号 默认是 1 当前设置=%d ", g_SetChanneWorke.Run_Cyc_indx);
+
+
             if (g_SetChanneWorke.runWorke_setup > MAX_SETUP_WORKE)
             {
                 printf("\r\n Run_Cyc_indxx=%d ", g_SetChanneWorke.Run_Cyc_indx);
                 return;
             }
-            for (ch = 0; ch < BOARD_CHANNEL_NUM;) //
+            for (ch = 0; ch < BOARD_CHANNEL_NUM;ch++) //
             {
                 g_Channelinfo[ch].loopSn = 0; //  初始化工步循环号 循环号，表示工艺流程，重复执行几次
             }
@@ -312,7 +315,7 @@ void UserSlave_UpdateSlaveRec(void)
             SetCh_Activity = tmep[0] | (tmep[1] << 8);
             printf("\r\n SetCh_Activity=0x%X ", SetCh_Activity);
 
-            for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 判断哪个通道被激活 通道工步数据
+            for (ch = 0; ch < BOARD_CHANNEL_NUM;ch++) // 判断哪个通道被激活 通道工步数据
             {
                 if ((SetCh_Activity >> ch) & 0x0001)
                 {
@@ -354,21 +357,23 @@ void UserSlave_UpdateSlaveRec(void)
 
             ch = 0;
             // 设置工作启动电流
-            printf("\r\nch=%d 启动电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
+            printf("\r\n ch=%d 启动电流=%f A ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
 
             g_Channelinfo[ch].RunningWorkSetup.voltLimit = g_Channelinfo[ch].RunningWorkSetup.voltLimit * 0.001f; // 1500mV=1.5V
-            printf("\r\nch=%d 截止电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
+            printf("\r\n ch=%d 截止电流=%f  A ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
 
             // 设置工作截止电流
-            printf("\r\nch=%d currentLimit=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentLimit);
+            printf("\r\n ch=%d currentLimit=%f A ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentLimit);
             // 设置工作截止时间
 
-            printf("\r\nch=%d timeLimit=%d ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
+            printf("\r\n ch=%d timeLimit=%d  ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
 
-            printf("\r\n 启动工步=%d  运行循环号 =%d ", g_SetChanneWorke.runWorke_setup, g_SetChanneWorke.Run_Cyc_indx);
+            printf("\r\n 启动工步=%d  运行循环号 =%d  ", g_SetChanneWorke.runWorke_setup, g_SetChanneWorke.Run_Cyc_indx);
 
             break;
         case EMTOSCMD_StopWorkStep: // 停止工步
+
+           printf("\r\n 收到托盘停止命令=0x%X ", SetCh_Activity);
             printf("\r\n EMTOSCMD_StopWorkStep=%d ", pFrame->dataLen);
             memcpy(&(g_SetChanneWorke), pFrame->data, pFrame->dataLen);
 
@@ -377,24 +382,31 @@ void UserSlave_UpdateSlaveRec(void)
             tmep[0] = pFrame->data[(devid - 1) * 2];
             tmep[1] = pFrame->data[(devid - 1) * 2 + 1];
             SetCh_Activity = tmep[0] | (tmep[1] << 8);
-            printf("\r\n SetCh_Activity=0x%X ", SetCh_Activity);
+            printf("\r\n 收到托盘停止命令=0x%X ", SetCh_Activity);
 
             for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 判断哪个通道被激活 通道工步数据
             {
                 if ((SetCh_Activity >> ch) & 0x0001)
                 {
                     g_Channelinfo[ch].status =0x53;  //无操作时=0x53
-                    g_Channelinfo[ch].error =4;  // 错误0x04: 用户强制停止
+                    g_Channelinfo[ch].error =0;  // 错误0x04: 用户强制停止
                     // printf("\r\n ch=%d ", ch);
-                    g_Channelinfo[ch].WorkeStartup = 0; // 启动工步
+                    g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
+                        g_Channelinfo[ch].loopSn = 0xFF; // 启动工步
                     g_Channelinfo[ch].fault.all = 1;    // 停止工步
                     ch++;
                 }
             }
             break;
 
-        case EMTOSCMD_StartSomeChannelWorkStep:
+        case EMTOSCMD_StartSomeChannelWorkStep://// 部分通道启动工步
+
+           printf("\r\n 部分通道启动工步 =%d ", pFrame->dataLen);
+      
+             break;
         case EMTOSCMD_ContinueWorkStep: // 继续工步
+
+          printf("\r\n 继续工步 =%d ", pFrame->dataLen);
 
             //            uint16_t channelBitSelect;
             //            uint8_t indexWorkStep; // 续接的工步号
