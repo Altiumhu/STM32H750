@@ -157,4 +157,7 @@ void UserSlave_Update(void);
 
 extern uint8_t GetTotal_steps(void); // 获取总工步数
 
+
+extern void Init_RunningWorkSetup(void);
+
 #endif

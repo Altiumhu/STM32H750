@@ -31,7 +31,7 @@ void InitBorad_Device(void)
     g_Borad_Device.byte.currMax=6;
     g_Borad_Device.byte.voltMax=0x05;
 
-    g_Borad_Device.byte.softVersion=0x85;
+    g_Borad_Device.byte.softVersion=0x90;
     g_Borad_Device.byte.Channel=0x10;
 }
 uint8_t * GetBorad_Device(void)

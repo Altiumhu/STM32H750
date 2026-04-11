@@ -45,6 +45,8 @@ void System_CloseLoop_Status(void)
             g_epwmHandle[ch].High_MOS_STA = 0;
             g_epwmHandle[ch].High_MOS_OpenFlag  =1;
             g_Channelinfo[ch].workMode = POWER_FAULT;
+
+            // Init_RunningWorkSetup();
             // pwm_stop(ch); /// 出现故障就关闭pwm
         }
 
