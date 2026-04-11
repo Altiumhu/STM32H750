@@ -1270,7 +1270,7 @@ ARM Macro Assembler    Page 20
               00000000 
               00000000 
               00000000 
-Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M7.fp.dp --apcs=
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M7.fp.sp --apcs=
 interwork --depend=stm32f750timer\startup_stm32h750xx.d -ostm32f750timer\startu
 p_stm32h750xx.o -I.\RTE\_STM32F750Timer -IC:\Users\27989\AppData\Local\Arm\Pack
 s\ARM\CMSIS\6.1.0\CMSIS\Core\Include --predefine="__MICROLIB SETA 1" --predefin
