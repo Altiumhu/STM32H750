@@ -3615,9 +3615,9 @@
       </Doc>
       <Doc>
         <Name>..\CAN\UserSlave.c</Name>
-        <ColumnNumber>21</ColumnNumber>
+        <ColumnNumber>2</ColumnNumber>
         <TopLine>303</TopLine>
-        <CurrentLine>322</CurrentLine>
+        <CurrentLine>323</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
@@ -3661,8 +3661,8 @@
       <Doc>
         <Name>..\App_API_user\AppUser_protection.c</Name>
         <ColumnNumber>15</ColumnNumber>
-        <TopLine>35</TopLine>
-        <CurrentLine>58</CurrentLine>
+        <TopLine>44</TopLine>
+        <CurrentLine>68</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>

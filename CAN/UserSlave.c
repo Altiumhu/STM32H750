@@ -254,33 +254,31 @@ void UserSlave_UpdateSlaveRec(void)
                         tempdata = U8TOU32(g_WorkStepInfoStream[ch][setindex].currentStart);
                         g_Channelinfo[ch].RunningWorkSetup[setindex].currentStart = (float)tempdata;
                         g_Channelinfo[ch].RunningWorkSetup[setindex].currentStart = g_Channelinfo[ch].RunningWorkSetup[setindex].currentStart * 0.0001f; // 10000mA=10.0A
-                                                                                                                                     //  printf("\r\nch=%d 启动电流=%f A ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart );
+                                                                                                                                                         //  printf("\r\nch=%d 启动电流=%f A ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart );
 
                         // 设置截止电压
                         tempdata = U8TOU16(g_WorkStepInfoStream[ch][setindex].voltLimit);
                         g_Channelinfo[ch].RunningWorkSetup[setindex].voltLimit = (float)tempdata;
                         g_Channelinfo[ch].RunningWorkSetup[setindex].voltLimit = g_Channelinfo[ch].RunningWorkSetup[setindex].voltLimit * 0.0001f; // 1500mV=1.5V
-                                                                                                                               // printf("\r\nch=%d 截止电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
-                                                                                                                               //  printf("\r\n ch=%d 设置截止电压 =%fV ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit );
+                                                                                                                                                   // printf("\r\nch=%d 截止电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
+                                                                                                                                                   //  printf("\r\n ch=%d 设置截止电压 =%fV ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit );
                         // 设置工作截止电流
                         tempdata = U8TOU32(g_WorkStepInfoStream[ch][setindex].currentLimit);
                         g_Channelinfo[ch].RunningWorkSetup[setindex].currentLimit = (float)tempdata;
                         g_Channelinfo[ch].RunningWorkSetup[setindex].currentLimit = g_Channelinfo[ch].RunningWorkSetup[setindex].currentLimit * 0.0001f; // 10000mA=10.0A
-                                                                                                                                     // printf("\r\nch=%d 设置工作截止电流 =%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentLimit);
+                                                                                                                                                         // printf("\r\nch=%d 设置工作截止电流 =%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentLimit);
                         // 设置工作截止时间
                         tempdata = U8TOU32(g_WorkStepInfoStream[ch][setindex].timeLimit);
                         g_Channelinfo[ch].RunningWorkSetup[setindex].timeLimit = tempdata;
                         // printf("\r\n ch=%d 设置工作截止时间=%d ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
-                    }
-                    printf("\r\n setindex=%d 启动电流=%fA ", setindex, g_Channelinfo[0].RunningWorkSetup[setindex].currentStart);
-                    printf("\r\n setindex=%d 截止电压=%fV ", setindex, g_Channelinfo[0].RunningWorkSetup[setindex].voltLimit);
-                    printf("\r\n setindex=%d 设置工作截止电流 =%fA ", setindex, g_Channelinfo[0].RunningWorkSetup[setindex].currentLimit);
-                    printf("\r\n setindex=%d 设置工作截止时间=%d ", setindex, g_Channelinfo[0].RunningWorkSetup[setindex].timeLimit);
 
+                        printf("\r\n setindex=%d 启动电流=%fA ", setindex, g_Channelinfo[0].RunningWorkSetup[setindex].currentStart);
+                        printf("\r\n setindex=%d 截止电压=%fV ", setindex, g_Channelinfo[0].RunningWorkSetup[setindex].voltLimit);
+                        printf("\r\n setindex=%d 设置工作截止电流 =%fA ", setindex, g_Channelinfo[0].RunningWorkSetup[setindex].currentLimit);
+                        printf("\r\n setindex=%d 设置工作截止时间=%d \r\n", setindex, g_Channelinfo[0].RunningWorkSetup[setindex].timeLimit);
+                    }
                 }
             }
-
-
 
             break;
 
@@ -290,6 +288,7 @@ void UserSlave_UpdateSlaveRec(void)
 
             devid = BoardInfo_GetID();
 
+            g_SetChanneWorke.runWorke_setup = pFrame->data[32]; // 运行工步号
             printf("\r\n 运行工步号 =%d ", g_SetChanneWorke.runWorke_setup);
             if (g_SetChanneWorke.runWorke_setup > MAX_SETUP_WORKE)
             {
@@ -314,12 +313,50 @@ void UserSlave_UpdateSlaveRec(void)
             SetCh_Activity = tmep[0] | (tmep[1] << 8);
             printf("\r\n SetCh_Activity=0x%X ", SetCh_Activity);
 
+    
+
+            for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
+            {
+                for (setindex = 0; setindex < GetTotal_steps(); setindex++) // 判断哪个通道被激活 通道工步数据// 每个通道工步数量
+                {
+                    if (SetCh_Activity >> ch & 0x0001)
+                    {
+                        // 设置工作启动电流
+                        printf("\r\n ch=%d  setindex =%d 启动电流=%f A ", ch + 1, setindex, g_Channelinfo[ch].RunningWorkSetup[setindex].currentStart);
+
+                        printf("\r\n ch=%d setindex =%d  截止电流=%f  A ", ch + 1, setindex, g_Channelinfo[ch].RunningWorkSetup[setindex].voltLimit);
+
+                        // 设置工作截止电流
+                        printf("\r\n ch=%d setindex =%d  currentLimit=%f A ", ch + 1, setindex, g_Channelinfo[ch].RunningWorkSetup[setindex].currentLimit);
+                        // 设置工作截止时间
+
+                        printf("\r\n ch=%d setindex =%d  timeLimit=%d  ", ch + 1, setindex, g_Channelinfo[ch].RunningWorkSetup[setindex].timeLimit);
+
+                        printf("\r\n 启动工步=%d  运行循环号 =%d  \r\n", g_SetChanneWorke.runWorke_setup, g_SetChanneWorke.Run_Cyc_indx);
+                    }
+                }
+            }
+
+            // ch = 0;
+            // // 设置工作启动电流
+            // printf("\r\n ch=%d 启动电流=%f A ", ch + 1, g_Channelinfo[ch].RunningWorkSetup[0].currentStart);
+
+            // printf("\r\n ch=%d 截止电流=%f  A ", ch + 1, g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit);
+
+            // // 设置工作截止电流
+            // printf("\r\n ch=%d currentLimit=%f A ", ch + 1, g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentLimit);
+            // // 设置工作截止时间
+
+            // printf("\r\n ch=%d timeLimit=%d  ", ch + 1, g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].timeLimit);
+
+            // printf("\r\n 启动工步=%d  运行循环号 =%d  ", g_SetChanneWorke.runWorke_setup, g_SetChanneWorke.Run_Cyc_indx);
+
             for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++) // 判断哪个通道被激活 通道工步数据
             {
                 if ((SetCh_Activity >> ch) & 0x0001)
                 {
-
-                   // g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].index = g_SetChanneWorke.runWorke_setup; // 运行工步号
+                    g_Channelinfo[ch].WorkeStartup = g_SetChanneWorke.runWorke_setup;
+                    // g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].index = g_SetChanneWorke.runWorke_setup; // 运行工步号
                     // printf("\r\n ch=%d ", ch);
                     g_Channelinfo[ch].WorkeStartup = 1; // 启动工步
                     g_Channelinfo[ch].fault.all = 0;    // 清除故障
@@ -331,43 +368,6 @@ void UserSlave_UpdateSlaveRec(void)
                     g_Channelinfo[ch].fault.all = 1;
                 }
             }
-
-            // for (setindex = 0; setindex < 0; setindex++) // 判断哪个通道被激活 通道工步数据// 每个通道工步数量
-            // {
-
-            //     for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
-            //     {
-            //         if (SetCh_Activity >> ch & 0x0001)
-            //         {
-
-            //             // 设置工作启动电流
-            //             // printf("\r\nch=%d 启动电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart);
-
-            //             g_Channelinfo[ch].RunningWorkSetup.voltLimit = g_Channelinfo[ch].RunningWorkSetup.voltLimit * 0.001f; // 1500mV=1.5V
-            //             // printf("\r\nch=%d 截止电流=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.voltLimit);
-
-            //             // // 设置工作截止电流
-            //             // printf("\r\nch=%d currentLimit=%fA ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentLimit);
-            //             // // 设置工作截止时间
-
-            //             // printf("\r\nch=%d timeLimit=%d ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.timeLimit);
-            //         }
-            //     }
-            // }
-
-            ch = 0;
-            // 设置工作启动电流
-            printf("\r\n ch=%d 启动电流=%f A ", ch + 1, g_Channelinfo[ch].RunningWorkSetup[0].currentStart);
-
-            printf("\r\n ch=%d 截止电流=%f  A ", ch + 1, g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit);
-
-            // 设置工作截止电流
-            printf("\r\n ch=%d currentLimit=%f A ", ch + 1, g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentLimit);
-            // 设置工作截止时间
-
-            printf("\r\n ch=%d timeLimit=%d  ", ch + 1, g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].timeLimit);
-
-            printf("\r\n 启动工步=%d  运行循环号 =%d  ", g_SetChanneWorke.runWorke_setup, g_SetChanneWorke.Run_Cyc_indx);
 
             break;
         case EMTOSCMD_StopWorkStep: // 停止工步
