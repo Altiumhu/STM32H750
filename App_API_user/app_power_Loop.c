@@ -78,10 +78,10 @@ void System_CloseLoop_Status(void)
 
         case POWER_SET_PARAM: // 设置工步参数
 
-            // if (g_Channelinfo[ch].RunningWorkSetup.index >= GetTotal_steps()) // 运行工步号大于总工步数
-            // {
-            //     g_Channelinfo[ch].RunningWorkSetup.index = g_Channelinfo[ch].RunningWorkSetup.index + 1; // 当前运行工步循环号，表示当前工步需要循环工作几次
-            // }
+            if (g_Channelinfo[ch].WorkeStartup >= GetTotal_steps()) // 运行工步号大于总工步数
+            {
+               g_Channelinfo[ch].WorkeStartup= g_Channelinfo[ch].WorkeStartup+ 1; // 当前运行工步循环号，表示当前工步需要循环工作几次
+            }
             // 后续在完善功能
             if (g_Channelinfo[ch].loopSn > g_SetChanneWorke.Run_Cyc_indx) // 运行工步号大于总工步数
             {
@@ -131,7 +131,7 @@ void System_CloseLoop_Status(void)
             if (g_Channelinfo[ch].WorkeRunTimer >= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].timeLimit) // 工步时间到
             {
                 g_Channelinfo[ch].workMode = POWER_SET_PARAM;
-                //  g_Channelinfo[ch].RunningWorkSetup.index = g_Channelinfo[ch].RunningWorkSetup.index + 1;
+                  g_Channelinfo[ch].WorkeStartup= g_Channelinfo[ch].WorkeStartup + 1;
             }
 
             break;
@@ -318,7 +318,7 @@ void System_CloseLoop_Status(void)
             if (g_Channelinfo[ch].WorkeRunTimer >= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].timeLimit) // 工步时间到
             {
 
-                //  g_Channelinfo[ch].RunningWorkSetup.index = g_Channelinfo[ch].RunningWorkSetup.index + 1;
+                  g_Channelinfo[ch].WorkeStartup = g_Channelinfo[ch].WorkeStartup+ 1;
                 g_Channelinfo[ch].fault.bit.TIMER_OUT = 1; // 工步时间到
             }
 #if 1
@@ -330,7 +330,7 @@ void System_CloseLoop_Status(void)
                     if (g_Channelinfo[ch].SS_Timer >= 50) // 一瞬间误动作
                     {
                         g_Channelinfo[ch].SS_Timer = 0;
-                        //   g_Channelinfo[ch].RunningWorkSetup.index = g_Channelinfo[ch].RunningWorkSetup.index + 1;
+                         g_Channelinfo[ch].WorkeStartup = g_Channelinfo[ch].WorkeStartup+ 1;
                         g_Channelinfo[ch].fault.bit.CC_Limit_OUT = 1; // 工步到达恒流设置值
                     }
                 }
@@ -341,7 +341,7 @@ void System_CloseLoop_Status(void)
                 if (g_Channelinfo[ch].voltage >= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit)
                 {
 
-                    //  g_Channelinfo[ch].RunningWorkSetup.index = g_Channelinfo[ch].RunningWorkSetup.index + 1;
+                     g_Channelinfo[ch].WorkeStartup = g_Channelinfo[ch].WorkeStartup+ 1;
                     g_Channelinfo[ch].fault.bit.CV_Limit_OUT = 1; // 工步到达恒压值
                 }
             }
@@ -421,7 +421,7 @@ void System_CloseLoop_Status(void)
             if (g_Channelinfo[ch].WorkeRunTimer >= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].timeLimit) // 工步时间到
             {
                 // g_Channelinfo[ch].workMode = POWER_SET_PARAM;
-                ///   g_Channelinfo[ch].RunningWorkSetup.index = g_Channelinfo[ch].RunningWorkSetup.index + 1;
+                g_Channelinfo[ch].WorkeStartup = g_Channelinfo[ch].WorkeStartup+ 1;
                 g_Channelinfo[ch].fault.bit.TIMER_OUT = 1; // 工步时间到
             }
 
@@ -432,7 +432,7 @@ void System_CloseLoop_Status(void)
                 if (g_Channelinfo[ch].SS_Timer >= 500) // 一瞬间误动作
                 {
                     g_Channelinfo[ch].SS_Timer = 0;
-                    //  g_Channelinfo[ch].RunningWorkSetup.index = g_Channelinfo[ch].RunningWorkSetup.index + 1;
+                    g_Channelinfo[ch].WorkeStartup = g_Channelinfo[ch].WorkeStartup+ 1;
                     g_Channelinfo[ch].fault.bit.CC_Limit_OUT = 1; // 工步到达恒流设置值
                 }
             }
@@ -448,7 +448,7 @@ void System_CloseLoop_Status(void)
                 if (g_Channelinfo[ch].Limit_Timer >= 5000) // 一瞬间误动作
                 {
                     g_Channelinfo[ch].Limit_Timer = 0;
-                    // g_Channelinfo[ch].RunningWorkSetup.index = g_Channelinfo[ch].RunningWorkSetup.index + 1;
+                     g_Channelinfo[ch].WorkeStartup = g_Channelinfo[ch].WorkeStartup+ 1;
                     g_Channelinfo[ch].fault.bit.CV_Limit_OUT = 1; // 工步到达恒压值
                 }
             }
