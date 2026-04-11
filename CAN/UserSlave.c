@@ -187,34 +187,61 @@ void UserSlave_UpdateSlaveRec(void)
             index = 0;
             for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++) // 获取通道数据
             {
+
+                 if (g_Channelinfo[ch].fault.all) // 判断故障
+                 {
+
                 // 电流
-               // tempdata = (uint32_t)(g_Channelinfo[ch].current * 10000.0f);
-                tempdata = (uint32_t)( g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * 10000.0f);
-               
-             //  tempdata = 10000;
-                index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
-                // 电压
-             //   g_Channelinfo[ch].voltage = 3.5164f;
-                index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage * 10000.0f), &canFrameData[index]);
-                // 温度
-                index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
-                // 工步索引号 运行的工步号step
-                // canFrameData[index++] = 0xFF; // 工步索引号
-                // // // 通道状态
+                     tempdata = (uint32_t)(g_Channelinfo[ch].current * 10000.0f);
+                    index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
+                    // 电压
+                //   g_Channelinfo[ch].voltage = 3.5164f;
+                    index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage * 10000.0f), &canFrameData[index]);
+                    // 温度
+                    index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
 
-                // canFrameData[index++] = 0x53; // 通道的工作在哪个工步中  g_Channelinfo[ch].status
-                // // // 错误状态
-                //  canFrameData[index++] = 0;//
-                // // // 当前运行工步循环号
-                //  canFrameData[index++] = 0;//g_Channelinfo[ch].WorkeStartup
+                   g_Channelinfo[ch].status = WORKE_SETUP_IDLE;
+                    canFrameData[index++] =  g_Channelinfo[ch].WorkeStartup; // 工步索引号
+                    // 通道状态
+                    canFrameData[index++] = g_Channelinfo[ch].status; // 通道的工作在哪个工步中类型
+                    // 错误状态
+                    canFrameData[index++] = g_Channelinfo[ch].error; //
+                    // 当前运行工步循环号
+                    canFrameData[index++] = g_Channelinfo[ch].loopSn; //
+                 }
+                 else
+                 {
+                // 电流
+                // tempdata = (uint32_t)(g_Channelinfo[ch].current * 10000.0f);
+                    tempdata = (uint32_t)( g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * 10000.0f);
+                
+                //  tempdata = 10000;
+                    index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
+                    // 电压
+                //   g_Channelinfo[ch].voltage = 3.5164f;
+                    index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage * 10000.0f), &canFrameData[index]);
+                    // 温度
+                    index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
+                    // 工步索引号 运行的工步号step
+                    // canFrameData[index++] = 0xFF; // 工步索引号
+                    // // // 通道状态
 
-                canFrameData[index++] =  g_Channelinfo[ch].WorkeStartup; // 工步索引号
-                // 通道状态
-                canFrameData[index++] = g_Channelinfo[ch].status; // 通道的工作在哪个工步中类型
-                // 错误状态
-                canFrameData[index++] = g_Channelinfo[ch].error; //
-                // 当前运行工步循环号
-                canFrameData[index++] = g_Channelinfo[ch].loopSn; //
+                    // canFrameData[index++] = 0x53; // 通道的工作在哪个工步中  g_Channelinfo[ch].status
+                    // // // 错误状态
+                    //  canFrameData[index++] = 0;//
+                    // // // 当前运行工步循环号
+                    //  canFrameData[index++] = 0;//g_Channelinfo[ch].WorkeStartup
+                
+                    canFrameData[index++] =  g_Channelinfo[ch].WorkeStartup; // 工步索引号
+                    // 通道状态
+                    canFrameData[index++] = g_Channelinfo[ch].status; // 通道的工作在哪个工步中类型
+                    // 错误状态
+                    canFrameData[index++] = g_Channelinfo[ch].error; //
+                    // 当前运行工步循环号
+                    canFrameData[index++] = g_Channelinfo[ch].loopSn; //
+
+                 }
+    
             }
 
             CanFr_SendData(BoardInfo_GetID(), EMTOSCMD_SampleQuest, canFrameData, index);
@@ -301,10 +328,7 @@ void UserSlave_UpdateSlaveRec(void)
                 printf("\r\n Run_Cyc_indxx=%d ", g_SetChanneWorke.Run_Cyc_indx);
                 return;
             }
-            for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++) //
-            {
-                g_Channelinfo[ch].loopSn = 0; //  初始化工步循环号 循环号，表示工艺流程，重复执行几次
-            }
+  
 
             tmep[0] = pFrame->data[(devid - 1) * 2];
             tmep[1] = pFrame->data[(devid - 1) * 2 + 1];
@@ -319,6 +343,7 @@ void UserSlave_UpdateSlaveRec(void)
                 {
                     if (SetCh_Activity >> ch & 0x0001)
                     {
+                         g_Channelinfo[ch].loopSn = 0; //  初始化工步循环号 循环号，表示工艺流程，重复执行几次
                         // 设置工作启动电流
                         printf("\r\n ch=%d  setindex =%d 启动电流=%f A ", ch + 1, setindex, g_Channelinfo[ch].RunningWorkSetup[setindex].currentStart);
 
@@ -360,11 +385,13 @@ void UserSlave_UpdateSlaveRec(void)
                     g_Channelinfo[ch].fault.all = 0;    // 清除故障
                     ch++;
                 }
-                else
-                {
-                    g_Channelinfo[ch].WorkeStartup = 0; // 停止工步
-                    g_Channelinfo[ch].fault.all = 1;
-                }
+                // else
+                // {
+                //     g_Channelinfo[ch].status = 0x53; // 无操作时=0x53
+                //     g_Channelinfo[ch].error = 0;     // 错误0x04: 用户强制停止
+                //     g_Channelinfo[ch].WorkeStartup = 0xFF; // 停止工步 无操作时= 0xff。工艺序号-1
+                //     g_Channelinfo[ch].fault.all = 1;
+                // }
             }
 
             break;
@@ -385,10 +412,10 @@ void UserSlave_UpdateSlaveRec(void)
             {
                 if ((SetCh_Activity >> ch) & 0x0001)
                 {
+                    g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
                     g_Channelinfo[ch].status = 0x53; // 无操作时=0x53
                     g_Channelinfo[ch].error = 0;     // 错误0x04: 用户强制停止
-                    // printf("\r\n ch=%d ", ch);
-                    g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
+   
                     g_Channelinfo[ch].loopSn = 0xFF;       // 启动工步
                     g_Channelinfo[ch].fault.all = 1;       // 停止工步
                   
