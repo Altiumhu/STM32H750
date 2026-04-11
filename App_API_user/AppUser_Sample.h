@@ -65,13 +65,18 @@ typedef struct
 
      uint16_t GetPortTimer; // ADC跟新中断
 
+      uint16_t CH_StartFlag;   // 启动工步标记
 
      uint32_t WorkeRunStartTimer;        // 开始工步运行时间
      uint32_t WorkeRunTimer;             // 工步运行时间
      RuningWorkSetup_t RunningWorkSetup[32]; // 运行设置
 
+     uint16_t workeDelayTimer; // 工作延时
+
      uint8_t SendWorkStepIndx; // 设发送工步信息
      uint16_t run;             // 通道状态
+
+     
 
      uint16_t WorkeStartup;   // 运行启动工步
      uint8_t status; // 通道状态

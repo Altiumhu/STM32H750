@@ -44,6 +44,7 @@ typedef union power_fault_define
 
         uint32_t Worke_Setup_OVER : 1; // 运行工步号大于总工步数
         uint32_t FAN_ERR : 1;   // 风机故障
+        uint32_t Worke_fish : 1; // 运行工步号大于总工步数
                                 //        uint16_t rsvd2:4;  // 保留位
     } bit;
 } power_fault_define;
