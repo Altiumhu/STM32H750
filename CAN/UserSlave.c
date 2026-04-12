@@ -147,7 +147,7 @@ uint8_t GetTotal_steps(void)
 void UserSlave_UpdateSlaveRec(void)
 {
 #if 1
-    uint32_t tempdata;
+    int32_t tempdata;
     uint16_t tmep[2];
     uint16_t SetCh_Activity = 0; // 设置有效的通道工步参数
 
@@ -211,9 +211,19 @@ void UserSlave_UpdateSlaveRec(void)
                 }
                 else
                 {
+                    if(g_Channelinfo[ch].workMode==POWER_RUN_DISCHARGE)
+                    {
+                    // 电流
+                    // tempdata = (uint32_t)(g_Channelinfo[ch].current * 10000.0f);
+                    tempdata =(g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart*(-1.0f) * 10000.0f);
+                    }
+                    else 
+                    {
                     // 电流
                     // tempdata = (uint32_t)(g_Channelinfo[ch].current * 10000.0f);
                     tempdata = (uint32_t)(g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * 10000.0f);
+                    }
+
 
                     //  tempdata = 10000;
                     index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
@@ -277,14 +287,14 @@ void UserSlave_UpdateSlaveRec(void)
                        // 设置工作类型
                         g_Channelinfo[ch].RunningWorkSetup[setindex].type = g_WorkStepInfoStream[ch][setindex].type;
 
-                        //  printf("\r\n ch=%d 设置工作类型=0x%X ", ch + 1, g_WorkStepInfoStream[ch][setindex].type);
+                          printf("\r\n ch=%d 设置工作类型=0x%X ", ch + 1, g_WorkStepInfoStream[ch][setindex].type);
 
                         // 设置工作启动电流
                         tempdata = U8TOU32(g_WorkStepInfoStream[ch][setindex].currentStart);
                         g_Channelinfo[ch].RunningWorkSetup[setindex].currentStart = (float)tempdata;
                         g_Channelinfo[ch].RunningWorkSetup[setindex].currentStart = g_Channelinfo[ch].RunningWorkSetup[setindex].currentStart * 0.0001f; // 10000mA=10.0A
                                                                                                                                                          //  printf("\r\nch=%d 启动电流=%f A ", ch + 1, g_Channelinfo[ch].RunningWorkSetup.currentStart );
-                        // printf("\r\n setindex=%d tempdata= %d  启动电流=%fA ", setindex,tempdata, g_Channelinfo[ch].RunningWorkSetup[setindex].currentStart);
+                         printf("\r\n setindex=%d tempdata= %d  启动电流=%fA ", setindex,tempdata, g_Channelinfo[ch].RunningWorkSetup[setindex].currentStart);
                         // 设置截止电压
                         tempdata = U8TOU16(g_WorkStepInfoStream[ch][setindex].voltLimit);
                         g_Channelinfo[ch].RunningWorkSetup[setindex].voltLimit = (float)tempdata;
