@@ -227,8 +227,8 @@ void pid_I_Loop_calc(power_pid_define *I)
 {
     I->i_err = I->i_ref - I->i_fdb;
 
-    I->i_err = __fmin(I->i_err, 1.0f);  // 误差限幅
-    I->i_err = __fmax(I->i_err, -1.0f); // 误差限幅
+    I->i_err = __fmin(I->i_err, 10.0f);  // 误差限幅
+    I->i_err = __fmax(I->i_err, -10.0f); // 误差限幅
 
     I->i_err_sum = I->i_err_sum + I->i_ki * I->i_err; // 正常情况下积分计算
 

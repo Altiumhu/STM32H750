@@ -453,7 +453,7 @@ void UserSlave_UpdateSlaveRec(void)
             printf("\r\n 续接的工步号 =%d ", indexWorkStep);
             printf("\r\n 续接的循环号=%d ", snLoop);
             printf("\r\n 运行的通道剩余时间 =%d ms", timeLeft);
-            for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 判断哪个通道被续接
+            for (ch = 0; ch < BOARD_CHANNEL_NUM;ch++) // 判断哪个通道被续接
             {
                 if ((channelBitSelect >> ch) & 0x0001)
                 {
@@ -461,7 +461,6 @@ void UserSlave_UpdateSlaveRec(void)
                                                                     //  g_SetChanneWorke.runWorke_setup =loopSn;; // 续接的工步号
                     g_Channelinfo[ch].loopSn = snLoop;              // 续接的循环号
                     g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup ].timeLimit = timeLeft;
-                    // printf("\r\n ch=%d ", ch);
                     g_Channelinfo[ch].CH_StartFlag = 1; // 启动工步
                     g_Channelinfo[ch].fault.all = 0;    // 清除故障
                 }
@@ -490,7 +489,6 @@ void UserSlave_UpdateSlaveRec(void)
                 {
                     g_Channelinfo[ch].status = 0x53; // 无操作时=0x53
                     g_Channelinfo[ch].error = 0;     // 错误0x04: 用户强制停止
-                    // printf("\r\n ch=%d ", ch);
                     g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
                     g_Channelinfo[ch].loopSn = 0xFF;       // 启动工步
                     g_Channelinfo[ch].fault.all = 1;       // 停止工步
