@@ -208,20 +208,41 @@ void UserSlave_UpdateSlaveRec(void)
                     canFrameData[index++] = g_Channelinfo[ch].error; //
                     // 当前运行工步循环号
                     canFrameData[index++] = g_Channelinfo[ch].loopSn; //
+                    g_Channelinfo[ch].SampDelayTimer = 0;
                 }
                 else
                 {
                     if (g_Channelinfo[ch].workMode == POWER_RUN_DISCHARGE)
                     {
+                        g_Channelinfo[ch].SampDelayTimer++;
                         // 电流
-                        // tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
-                        tempdata = (g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * (-1.0f) * 10000.0f);
+                        if(g_Channelinfo[ch].SampDelayTimer>=5000)
+                        {
+                            g_Channelinfo[ch].SampDelayTimer =5000;
+                           tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
+                        }
+                        else
+                        {
+                         tempdata = (g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * (-1.0f) * 10000.0f);
+                        }
+                        
+                       
                     }
                     else
                     {
+                        g_Channelinfo[ch].SampDelayTimer++;
                         // 电流
-                        // tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f)+500;
-                        tempdata = (uint32_t)(g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * 10000.0f);
+                        if(g_Channelinfo[ch].SampDelayTimer>=5000)
+                        {
+                            g_Channelinfo[ch].SampDelayTimer =5000;
+                           tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
+                        }
+                        else
+                        {
+                         tempdata = (g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * 10000.0f);
+                        }
+
+                        //tempdata = (uint32_t)(g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * 10000.0f);
                     }
 
                     //  tempdata = 10000;

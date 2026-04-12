@@ -67,6 +67,9 @@ typedef struct
 
       uint16_t CH_StartFlag;   // 启动工步标记
 
+
+     uint32_t SampDelayTimer;        // 上传数据
+
      uint32_t WorkeRunStartTimer;        // 开始工步运行时间
      uint32_t WorkeRunTimer;             // 工步运行时间
      RuningWorkSetup_t RunningWorkSetup[32]; // 运行设置
