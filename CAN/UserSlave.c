@@ -200,7 +200,8 @@ void UserSlave_UpdateSlaveRec(void)
                     // 温度
                     index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
 
-                    g_Channelinfo[ch].status = WORKE_SETUP_IDLE;
+                     g_Channelinfo[ch].status = 0x53;
+                    //
                     canFrameData[index++] = g_Channelinfo[ch].WorkeStartup; // 工步索引号
                     // 通道状态
                     canFrameData[index++] = g_Channelinfo[ch].status; // 通道的工作在哪个工步中类型
@@ -208,7 +209,7 @@ void UserSlave_UpdateSlaveRec(void)
                     canFrameData[index++] = g_Channelinfo[ch].error; //
                     // 当前运行工步循环号
                     canFrameData[index++] = g_Channelinfo[ch].loopSn; //
-                    g_Channelinfo[ch].SampDelayTimer = 0;
+                  //  g_Channelinfo[ch].SampDelayTimer = 0;
                 }
                 else
                 {
@@ -216,9 +217,9 @@ void UserSlave_UpdateSlaveRec(void)
                     {
                         g_Channelinfo[ch].SampDelayTimer++;
                         // 电流
-                        if(g_Channelinfo[ch].SampDelayTimer>=5000)
+                        if(g_Channelinfo[ch].SampDelayTimer>=500)
                         {
-                            g_Channelinfo[ch].SampDelayTimer =5000;
+                            g_Channelinfo[ch].SampDelayTimer =500;
                            tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
                         }
                         else
@@ -232,9 +233,9 @@ void UserSlave_UpdateSlaveRec(void)
                     {
                         g_Channelinfo[ch].SampDelayTimer++;
                         // 电流
-                        if(g_Channelinfo[ch].SampDelayTimer>=5000)
+                        if(g_Channelinfo[ch].SampDelayTimer>=500)
                         {
-                            g_Channelinfo[ch].SampDelayTimer =5000;
+                            g_Channelinfo[ch].SampDelayTimer =500;
                            tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
                         }
                         else
@@ -244,7 +245,7 @@ void UserSlave_UpdateSlaveRec(void)
 
                         //tempdata = (uint32_t)(g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * 10000.0f);
                     }
-
+                   tempdata = (int32_t)(gHandle_PID[ch].i_fdb * 10000.0f);
                     //  tempdata = 10000;
                     index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
                     // 电压

@@ -173,9 +173,6 @@ void System_CloseLoop_Status(void)
 
             // 获得软启动电压目标值
             g_Channelinfo[ch].Set_SS_PreCV = g_Channelinfo[ch].voltage;
-
-
-
             break;
 
         case POWER_INIT: //
@@ -207,8 +204,6 @@ void System_CloseLoop_Status(void)
             // 电压环
             //  gHandle_PID[ch].v_ref = 2.5f;
              gHandle_PID[ch].v_ref = g_Channelinfo[ch].Set_SS_PreCV ;
-         //   gHandle_PID[ch].v_ref = g_Channelinfo[ch].voltage_port;
-
             gHandle_PID[ch].v_fdb = g_Channelinfo[ch].Cap_voltage; // 设置反馈值
             pid_V_Loop_calc(&gHandle_PID[ch]);
 
@@ -223,9 +218,7 @@ void System_CloseLoop_Status(void)
                 g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
             }
 
-          
-   
-
+        
           if (g_Channelinfo[ch].Cap_voltage >= ( g_Channelinfo[ch].Set_SS_PreCV -0.01f ))
             {
                
@@ -251,7 +244,7 @@ void System_CloseLoop_Status(void)
                             g_Channelinfo[ch].workMode = POWER_RUN_CHARGE;
                             g_Channelinfo[ch].status = WORKE_SETUP_CC;
 
-                           gHandle_PID[ch].i_err_sum =   gHandle_PID[ch].v_err_sum ;
+                         
                          
                         break;
                         case WORKE_SETUP_CC_CV: // 恒流恒压充电（A）
@@ -265,21 +258,21 @@ void System_CloseLoop_Status(void)
            
                             break;
                         case WORKE_SETUP_DC: // 恒流放电(C) 工步名称
-                                             // g_Channelinfo[ch].Set_PreCV = g_Channelinfo[ch].RunningWorkSetup.voltLimit;
-                             g_Channelinfo[ch].Set_PreCV = 0.5f;
+                          //   g_Channelinfo[ch].Set_PreCV = g_Channelinfo[ch].RunningWorkSetup.voltLimit;
+                            // g_Channelinfo[ch].Set_PreCV = 0.5f;
                             // g_Channelinfo[ch].Set_CC = 0.5f;
-                            g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit = 0.5f;
+                          //  g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit = 0.5f;
                             g_Channelinfo[ch].Set_PreDC = g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart;
                             g_Channelinfo[ch].workMode = POWER_RUN_DISCHARGE;
                             g_Channelinfo[ch].WorkeRunStartTimer = Timer_GetClock(); //  记录开始启动时间
                             g_Channelinfo[ch].status = WORKE_SETUP_DC;
 
-                           g_Channelinfo[ch].Set_CC= 0.5f;
+                            g_Channelinfo[ch].Set_CC= 0.5f;
              
                             if(  gHandle_PID[ch].loop == V_LOOP)
                             {
-                              /// gHandle_PID[ch].i_err_sum =   gHandle_PID[ch].v_err_sum ;
-                            //  gHandle_PID[ch].i_err_sum = TIMER_DUTY_MAX;
+                              gHandle_PID[ch].i_err_sum =   gHandle_PID[ch].v_err_sum ;
+                            
                             }
                     
                            
@@ -300,7 +293,7 @@ void System_CloseLoop_Status(void)
                  
                 }
                  g_epwmHandle[ch].High_MOS_STA = 1;
-                //		 ex_595_write(2, EX_595_PIN_0|EX_595_PIN_1, 1);
+            
             }
             break;
         }
@@ -445,10 +438,10 @@ void System_CloseLoop_Status(void)
             gHandle_PID[ch].loop = I_LOOP; // 电流环
             g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
 
-            if (g_Channelinfo[ch].current >=  g_Channelinfo[ch].Set_CC )
-            {
-                gHandle_PID[ch].i_err_sum = g_epwmHandle[ch].High_MOS_DUTY;
-            }
+            // if (g_Channelinfo[ch].current >=  g_Channelinfo[ch].Set_CC )
+            // {
+            //     gHandle_PID[ch].i_err_sum = g_epwmHandle[ch].High_MOS_DUTY;
+            // }
 
             // 1. 工步时间到
             g_Channelinfo[ch].WorkeRunTimer = Timer_GetClock() - g_Channelinfo[ch].WorkeRunStartTimer;
