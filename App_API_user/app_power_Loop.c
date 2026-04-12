@@ -42,7 +42,19 @@ void System_CloseLoop_Status(void)
 
         if (g_Channelinfo[ch].fault.all) // 判断故障
         {
-         g_Channelinfo[ch].status = 0x53; // 无操作时=0x53
+            if( g_Channelinfo[ch].fault.bit.Worke_fish ==1||g_Channelinfo[ch].fault.bit.Worke_Setup_OVER ==1)
+            {
+                    g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
+                    g_Channelinfo[ch].status = 0x53;       // 无操作时=0x53
+                    g_Channelinfo[ch].error = 0;           // 错误0x04: 用户强制停止
+            }
+            else
+            {
+               g_Channelinfo[ch].status = 0x53; // 无操作时=0x53
+
+            }
+
+   
             g_epwmHandle[ch].High_MOS_STA = 0;
             g_epwmHandle[ch].High_MOS_OpenFlag = 1;
             g_Channelinfo[ch].workMode = POWER_FAULT;
@@ -236,8 +248,8 @@ void System_CloseLoop_Status(void)
                             break;
                         case WORKE_SETUP_DC: // 恒流放电(C) 工步名称
                                              // g_Channelinfo[ch].Set_PreCV = g_Channelinfo[ch].RunningWorkSetup.voltLimit;
-                            g_Channelinfo[ch].Set_PreCV = 0.5f;
-                            g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit = 0.5f;
+                            // g_Channelinfo[ch].Set_PreCV = 0.5f;
+                            // g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit = 0.5f;
                             g_Channelinfo[ch].Set_PreDC = g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart;
                             g_Channelinfo[ch].workMode = POWER_RUN_DISCHARGE;
                             g_Channelinfo[ch].WorkeRunStartTimer = Timer_GetClock(); //  记录开始启动时间
@@ -395,11 +407,11 @@ void System_CloseLoop_Status(void)
             gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
             pid_V_Loop_calc(&gHandle_PID[ch]);
 
-            // 电流环
-            g_Channelinfo[ch].Set_CC += 0.01f;
-            if (g_Channelinfo[ch].Set_CC >= g_Channelinfo[ch].Set_PreCC)
+            // 电流环g_Channelinfo[ch].Set_PreDC
+            g_Channelinfo[ch].Set_CC += 0.1f;
+            if (g_Channelinfo[ch].Set_CC >= g_Channelinfo[ch].Set_PreDC)
             {
-                g_Channelinfo[ch].Set_CC = g_Channelinfo[ch].Set_PreCC;
+                g_Channelinfo[ch].Set_CC = g_Channelinfo[ch].Set_PreDC;
             }
 
             gHandle_PID[ch].i_ref = g_Channelinfo[ch].Set_CC * (-1.0f);
