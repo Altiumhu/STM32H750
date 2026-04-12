@@ -548,13 +548,14 @@ void AppUser_ChannelInfo_Debug(void)
         printf("CH[%d] I_Set=%fmA I_FB=%fmA i_pid_out=%f \r\n", ch + 1, gHandle_PID[ch].i_ref, gHandle_PID[ch].i_fdb, gHandle_PID[ch].i_pid_out);
         printf("CH[%d]Set=%fV FB=%fV pid_out=%f \r\n", ch + 1, gHandle_PID[ch].v_ref, gHandle_PID[ch].v_fdb, gHandle_PID[ch].v_pid_out);
      //   printf(" HOMSduty=%d low=%d \r\n", g_epwmHandle[ch].High_MOS_DUTY, g_epwmHandle[ch].Low_MOS_DUTY);
-        printf(" WorkeRunTimer =%d \r\n", g_Channelinfo[ch].WorkeRunTimer );
+        printf(" WorkeRunTimer =%d  截止时间=%d\r\n", g_Channelinfo[ch].WorkeRunTimer , g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].timeLimit);
 
         printf("\r\n ch=[%d] 工步类型=0x%X \r\n", ch + 1, g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].type);
        
          printf("\r\n ch=[%d] 工步号=0x%X  CH_StartFlag=%d\r\n", ch + 1,    g_Channelinfo[ch].WorkeStartup,g_Channelinfo[ch].CH_StartFlag );
        
     
+
 
     }
 }

@@ -56,7 +56,10 @@ void App_GPIO_Init(void)
 
 void Set_ULock_GPIO(void)
 {
+
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1 | GPIO_PIN_0, GPIO_PIN_RESET); // PB12 和PB15
   HAL_Delay(5);
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1 | GPIO_PIN_0, GPIO_PIN_SET); // PB12 和PB15
+  HAL_Delay(5);
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1 | GPIO_PIN_0, GPIO_PIN_RESET); // PB12 和PB15
 }
