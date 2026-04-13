@@ -200,7 +200,7 @@ void UserSlave_UpdateSlaveRec(void)
                     // 温度
                     index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
 
-                     g_Channelinfo[ch].status = 0x53;
+                    //  g_Channelinfo[ch].status = 0x53;
                     //
                     canFrameData[index++] = g_Channelinfo[ch].WorkeStartup; // 工步索引号
                     // 通道状态
