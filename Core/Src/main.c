@@ -21,7 +21,6 @@
 #include "adc.h"
 #include "dma.h"
 #include "fdcan.h"
-#include "i2c.h"
 #include "memorymap.h"
 #include "quadspi.h"
 #include "tim.h"
@@ -140,7 +139,6 @@ int main(void)
   MX_QUADSPI_Init();
   MX_TIM4_Init();
   MX_UART7_Init();
-  MX_I2C4_Init();
   MX_TIM5_Init();
   MX_TIM6_Init();
   MX_TIM12_Init();
@@ -164,15 +162,15 @@ int main(void)
 
   App_Drive_InitTimer_7(); // 100ms
   Debug_PWM();
-
+//  STM32H750_UID();
   while (1)
   {
 
     UserSlave_Update();
     AppUser_PortocolRecv(); // MCU通讯协议包
     AppDebug_vTask();
-    //        AppUser_temp_sample();
-    // Read_GPIO_vTask();
+  //AppUser_temp_sample();
+  //Read_GPIO_vTask();
 
     Power_Stop_PWM();
   }

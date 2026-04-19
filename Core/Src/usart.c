@@ -333,8 +333,8 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 /* USER CODE BEGIN 1 */
 /*******************************************************************************
 * Function Name  : USART1_Send
-* Description    : ����1����
-* Input          : buff  ����������   Size  ���ʹ�С
+* Description    : 
+* Input          : buff  
 * Output         : None
 * Return         : None
 * Note			 : None
@@ -345,10 +345,10 @@ void USART1_Send(uint8_t *buff, uint16_t Size)
 	HAL_UART_Transmit(&huart1, (uint8_t*)buff, Size, 1000); 
 }
 
-//�ض���fputc����,�ض�����ʹ��printf����
+
 int fputc(int ch, FILE *f)
 {    	
-	while((USART1_SR&UART_LSR_THRE)==0);	//�ȴ��������  
+	while((USART1_SR&UART_LSR_THRE)==0);	//
 	SEND_BUF1 = (uint8_t) ch;
 	
 	return ch;
