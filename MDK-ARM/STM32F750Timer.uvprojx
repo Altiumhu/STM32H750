@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_PWR_LDO_SUPPLY,USE_HAL_DRIVER,STM32H750xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../CAN_large_data;../Aapp_Diver;../Aapp_Diver/EXIO;../SYSTEM/sys;../SYSTEM/delay;../App_API_user;../CommandLineInterface;../Modbus;../Shell;../CAN</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../CAN_large_data;../Aapp_Diver;../Aapp_Diver/EXIO;../SYSTEM/sys;../SYSTEM/delay;../App_API_user;../CommandLineInterface;../Modbus;../Shell;../CAN;..\SMEC88\Header</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1531,6 +1531,51 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>SMEC88</GroupName>
+          <Files>
+            <File>
+              <FileName>des.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SMEC88\Source\des.c</FilePath>
+            </File>
+            <File>
+              <FileName>iic_smec88.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SMEC88\Source\iic_smec88.c</FilePath>
+            </File>
+            <File>
+              <FileName>sha1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SMEC88\Source\sha1.c</FilePath>
+            </File>
+            <File>
+              <FileName>smec88.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SMEC88\Source\smec88.c</FilePath>
+            </File>
+            <File>
+              <FileName>des.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\SMEC88\Header\des.h</FilePath>
+            </File>
+            <File>
+              <FileName>iic_smec88.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\SMEC88\Header\iic_smec88.h</FilePath>
+            </File>
+            <File>
+              <FileName>sha1.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\SMEC88\Header\sha1.h</FilePath>
+            </File>
+            <File>
+              <FileName>smec88.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\SMEC88\Header\smec88.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
@@ -1549,5 +1594,14 @@
     </components>
     <files/>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>STM32F750Timer</LayName>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>

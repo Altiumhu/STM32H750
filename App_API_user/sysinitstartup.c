@@ -137,6 +137,8 @@ void AppUser_prvSetupHardware(void)
   ADC3_StartConversion();
 
   Set_ULock_GPIO(); // 解除硬件保护
+	
+	SMEC_I2cInit();
 
   for (uint16_t i = 0; i < 16; i++)
   {
