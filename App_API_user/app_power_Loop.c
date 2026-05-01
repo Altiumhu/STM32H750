@@ -250,7 +250,7 @@ void System_CloseLoop_Status(void)
                             break;
                         case WORKE_SETUP_DC: // 恒流放电(C) 工步名称
                                              //   g_Channelinfo[ch].Set_PreCV = g_Channelinfo[ch].RunningWorkSetup.voltLimit;
-                            // g_Channelinfo[ch].Set_PreCV = 0.5f;
+                             g_Channelinfo[ch].Set_PreCV = 0.5f;
                             // g_Channelinfo[ch].Set_CC = 0.5f;
                             //  g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit = 0.5f;
                             g_Channelinfo[ch].Set_PreDC = g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart;
