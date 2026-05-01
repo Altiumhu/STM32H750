@@ -174,7 +174,7 @@ void System_CloseLoop_Status(void)
         {
 
           //  Set_PWM_Channel_CH595_EN(0, ch, EX_595_RESET); // 关闭
-                Set_PWM_Channel_CH595_EN(0, ch, EX_595_SET); // 打开PRT
+         //       Set_PWM_Channel_CH595_EN(0, ch, EX_595_SET); // 打开PRT
             PIDInit(ch);
             HAL_EPWM_Config(ch);
             // Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
