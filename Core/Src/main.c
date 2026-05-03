@@ -153,7 +153,7 @@ int main(void)
   AppUser_Device_InitData();
 	
 #if 1
- //  TEST_W25Q128();
+//   TEST_W25Q128();
 //	SysTick_Init(systick_isr);   //SysTick定时器初始化
 //   发送初始消息 (设备上线通知)   ad failed with erro
   uint8_t init_msg[4] = {0xAA, 0x55, 0x01, 0x23};

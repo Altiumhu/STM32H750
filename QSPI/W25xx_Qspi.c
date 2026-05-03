@@ -880,7 +880,7 @@ void TEST_W25Q128(void)
 
 	for(j=0; j<sizeof(writeBuffer1); j++)
 	{
-		writeBuffer1[j]=j+1;
+		writeBuffer1[j]=66;
 	}
 	
  uint8_t qspi_status = QSPI_Init();  // 获取返回值
@@ -897,19 +897,21 @@ void TEST_W25Q128(void)
 	
 		
 		
-//	QSPI_Erase_Block(SECTOR_4K_ERASE_CMD,0);       //4K扇区擦除
-//		HAL_Delay(1000);
-//	QSPI_Write(writeBuffer1,0,sizeof(writeBuffer1));
+	QSPI_Erase_Block(SECTOR_4K_ERASE_CMD,0);       //4K扇区擦除
+		HAL_Delay(1000);
+	SPI_Flash_Write(writeBuffer1,0xFF,sizeof(writeBuffer1));
 	HAL_Delay(1000);
-	QSPI_Read(readBuffer1,0,sizeof(readBuffer1),QUAD_READ_DUMMY_CYCLES);
-//	if(strncmp((char *)writeBuffer1, (char *)readBuffer1, 512) == 0)    //页编程正确
-//	{
-//		printf("QSPI First ReadWrite OK!!!   ==%d\r\n",readBuffer1[1]);
-//	}
+	QSPI_Read(readBuffer1,0xFF,sizeof(readBuffer1),QUAD_READ_DUMMY_CYCLES);
+	if(strncmp((char *)writeBuffer1, (char *)readBuffer1, 512) == 0)    //页编程正确
+	{
+		printf("QSPI First ReadWrite OK!!!   ==%d\r\n",readBuffer1[1]);
+	}
 	
 		for(j=0; j<sizeof(writeBuffer1); j++)
 	{
 		printf("readBuffer1[%d] =%d\r\n",j,readBuffer1[j]);
 	}
+	
+
 
 }
