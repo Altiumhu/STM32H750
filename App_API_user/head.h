@@ -158,7 +158,7 @@ typedef signed char  int8_t;                    /* Unsigned  8 bit quantity     
 #include "smec88.h"
 #include "iic_smec88.h"
 
-
+#include "W25xx_Qspi.h"
 
 #include "shell_cmd_list.h"
 

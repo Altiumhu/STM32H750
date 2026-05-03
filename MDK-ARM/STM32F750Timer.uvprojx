@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_PWR_LDO_SUPPLY,USE_HAL_DRIVER,STM32H750xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../CAN_large_data;../Aapp_Diver;../Aapp_Diver/EXIO;../SYSTEM/sys;../SYSTEM/delay;../App_API_user;../CommandLineInterface;../Modbus;../Shell;../CAN;..\SMEC88\Header</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../CAN_large_data;../Aapp_Diver;../Aapp_Diver/EXIO;../SYSTEM/sys;../SYSTEM/delay;../App_API_user;../CommandLineInterface;../Modbus;../Shell;../CAN;..\SMEC88\Header;..\QSPI</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1572,6 +1572,41 @@
               <FileName>smec88.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\SMEC88\Header\smec88.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>QSPI</GroupName>
+          <Files>
+            <File>
+              <FileName>W25Q128.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\QSPI\W25Q128.h</FilePath>
+            </File>
+            <File>
+              <FileName>W25xx_Qspi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\QSPI\W25xx_Qspi.c</FilePath>
+            </File>
+            <File>
+              <FileName>W25xx_Qspi.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\QSPI\W25xx_Qspi.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SYSTEM</GroupName>
+          <Files>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SYSTEM\delay\delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\SYSTEM\delay\delay.h</FilePath>
             </File>
           </Files>
         </Group>

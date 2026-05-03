@@ -175,6 +175,8 @@ void System_CloseLoop_Status(void)
         case POWER_INIT: //
         {
           
+           
+
             Set_PWM_Channel_CH595_EN(0, ch, EX_595_RESET); // 关闭
             PIDInit(ch);
             HAL_EPWM_Config(ch);
@@ -188,6 +190,7 @@ void System_CloseLoop_Status(void)
             Set_PWM_Channel_CH595_EN(2, ch, EX_595_SET); // 打开MOS驱动使能
             g_Channelinfo[ch].Cap_voltage = 0.0f;
             g_Channelinfo[ch].SampDelayTimer = 0;
+            //  Set_ULock_GPIO(); // 解除硬件保护
         }
         break;
         case POWER_PRECHARGE: // 预充电
