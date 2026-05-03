@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_PWR_LDO_SUPPLY,USE_HAL_DRIVER,STM32H750xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../CAN_large_data;../Aapp_Diver;../Aapp_Diver/EXIO;../SYSTEM/sys;../SYSTEM/delay;../App_API_user;../CommandLineInterface;../Modbus;../Shell;../CAN;..\SMEC88\Header;..\QSPI</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../CAN_large_data;../Aapp_Diver;../Aapp_Diver/EXIO;../SYSTEM/sys;../SYSTEM/delay;../App_API_user;../CommandLineInterface;../Modbus;../Shell;../CAN;../SMEC88/Header;../QSPI</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

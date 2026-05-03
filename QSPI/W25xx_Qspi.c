@@ -15,6 +15,9 @@
 #include "head.h"
 QSPI_HandleTypeDef QSPIHandle;
 
+
+extern QSPI_HandleTypeDef hqspi;
+
 //端口初始化
 void QSPI_MspInit(void)
 {
@@ -99,11 +102,13 @@ uint8_t QSPI_Init(void)
 
 	if(HAL_QSPI_Init(&QSPIHandle) != HAL_OK)
 	{
-		//printf("QSPI Init ERR!!!\r\n");
+		printf("QSPI Init ERR!!!\r\n");
 		return QSPI_ERROR;
 	}
 	
-	#if FLASH_OP_METHOD == FLASH_QPI
+	
+#if (FLASH_OP_METHOD == FLASH_QPI)
+	
 	uint8_t stareg2=0;
 	
 	//退出QPI模式
@@ -119,13 +124,13 @@ uint8_t QSPI_Init(void)
 		//写状态寄存器的QE位为1
 		if(QSPI_WriteQE(&QSPIHandle) != QSPI_OK)
 		{
-			//printf("QSPI WR QE ERR!!!\r\n");
+			printf("QSPI WR QE ERR!!!\r\n");
 			return QSPI_ERROR;
 		}
 	}
 	//适当延时,等待FLASH稳定
 //	delay_ms(1000);
-//	HAL_Delay(1000);
+	HAL_Delay(1000);
 	//配置FLASH进入QSPI模式,此后所有操作均为QSPI方式
 	if(QSPI_ModeEnter(&QSPIHandle) != QSPI_OK)   
 	{
@@ -133,13 +138,13 @@ uint8_t QSPI_Init(void)
 		return QSPI_NOT_SUPPORTED;
 	}
 	
-	#else
+#else
 	//退出QSPI模式
 	if (QSPI_ModeExit(&QSPIHandle) != QSPI_OK)
 	{
 		return QSPI_ERROR;
 	}
-	#endif
+#endif
   
 	return QSPI_OK;
 }
@@ -667,7 +672,47 @@ uint8_t QSPI_AutoPollingMemReady(QSPI_HandleTypeDef *hqspi, uint32_t Timeout)
 
 	return QSPI_OK;
 }
+/* QSPI读取ID函数 */
+uint32_t norflash_ex_read_id(void)
+{
+		u8 UID[4] = {0,0,0,0};
+    uint32_t temp = 0; // 存储读取到的ID
+    uint8_t cmd = 0x9F; // 读取JEDEC ID的命令
+    
+    /* 1. 初始化一个QSPI_CommandTypeDef结构体，用于配置本次命令的帧格式 */
+    QSPI_CommandTypeDef sCommand;
+    memset(&sCommand, 0, sizeof(sCommand));
 
+    /* 2. 配置指令阶段：指令为0x9F，使用1线(SIO)模式发送 */
+    sCommand.InstructionMode = QSPI_INSTRUCTION_1_LINE;
+    sCommand.Instruction = cmd; 
+
+    /* 3. 配置地址阶段：0x9F命令不需要地址，所以地址模式为无 */
+    sCommand.AddressMode = QSPI_ADDRESS_NONE;
+    sCommand.AddressSize = QSPI_ADDRESS_24_BITS; // 虽然不需要，但需指定一个值
+
+    /* 4. 配置替代字节阶段：0x9F命令无替代字节 */
+    sCommand.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+
+    /* 5. 配置数据阶段：接收3字节，使用1线(SIO)模式 */
+    sCommand.DataMode = QSPI_DATA_1_LINE;
+    sCommand.NbData = 3; 
+
+    /* 6. 配置虚拟周期：0x9F命令不需要，设为0 */
+    sCommand.DummyCycles = 0; 
+
+    /* 7. 配置双闪存模式：禁用 */
+    sCommand.DdrMode = QSPI_DDR_MODE_DISABLE; 
+    sCommand.DdrHoldHalfCycle = QSPI_DDR_HHC_ANALOG_DELAY; 
+    sCommand.SIOOMode = QSPI_SIOO_INST_EVERY_CMD; 
+
+    /* 8. 使用HAL_QSPI_Receive()函数执行接收操作 */
+    if (HAL_QSPI_Receive(&QSPIHandle, UID, HAL_QPSI_TIMEOUT_DEFAULT_VALUE)  != HAL_OK) {
+        Error_Handler(); // 如果接收失败，进入错误处理
+    }
+
+    return temp; // 返回读取到的ID
+}
 /*******************************************************************************
 * Function Name  : QSPI_Flash_ReadID
 * Description    : 读取芯片ID  
@@ -708,12 +753,14 @@ u16 QSPI_Flash_ReadID(void)
 	//发送读命令
 	if (HAL_QSPI_Command(&QSPIHandle, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
+			printf(" SEnd 123");
 		return QSPI_ERROR;
 	}
 
 	//接收读取的数据
 	if (HAL_QSPI_Receive(&QSPIHandle, UID, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
+		printf("RX 123");
 		return QSPI_ERROR;
 	}
 	
@@ -819,4 +866,50 @@ void SPI_Flash_Write(u8* pBuffer, u32 WriteAddr, u16 NumByteToWrite)
 			else secremain=NumByteToWrite;			//下一个扇区可以写完了
 		}	 
 	}	 
+}
+
+
+u8 writeBuffer1[512];
+u8 readBuffer1[512];
+u16 flash_id,j;
+
+void TEST_W25Q128(void)
+	
+{
+
+
+	for(j=0; j<sizeof(writeBuffer1); j++)
+	{
+		writeBuffer1[j]=j+1;
+	}
+	
+ uint8_t qspi_status = QSPI_Init();  // 获取返回值
+    printf("QSPI_Init status: %d\r\n", qspi_status);
+    
+    if (qspi_status != QSPI_OK) {
+        printf("QSPI Init FAILED!\r\n");
+        // 可以添加错误处理
+    }
+    
+//    // 回读ID
+    flash_id = QSPI_Flash_ReadID();
+    printf("flash_id: 0x%x\r\n", flash_id);
+	
+		
+		
+//	QSPI_Erase_Block(SECTOR_4K_ERASE_CMD,0);       //4K扇区擦除
+//		HAL_Delay(1000);
+//	QSPI_Write(writeBuffer1,0,sizeof(writeBuffer1));
+	HAL_Delay(1000);
+	QSPI_Read(readBuffer1,0,sizeof(readBuffer1),QUAD_READ_DUMMY_CYCLES);
+//	if(strncmp((char *)writeBuffer1, (char *)readBuffer1, 512) == 0)    //页编程正确
+//	{
+//		printf("QSPI First ReadWrite OK!!!   ==%d\r\n",readBuffer1[1]);
+//	}
+	
+		for(j=0; j<sizeof(writeBuffer1); j++)
+	{
+		printf("readBuffer1[%d] =%d\r\n",j,readBuffer1[j]);
+	}
+
 }
