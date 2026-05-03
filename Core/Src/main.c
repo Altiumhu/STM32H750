@@ -86,7 +86,9 @@ void OnTransferFailed(uint16_t session_id, TransferStatus reason);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+u8 writeBuffer1[512];
+u8 readBuffer1[512];
+u16 flash_id;
 LargeDataFrame gLargeDataFrame;
 /* USER CODE END 0 */
 
@@ -153,7 +155,18 @@ int main(void)
   AppUser_Device_InitData();
 
 #if 1
-	QSPI_Init();  //QSPI接口初始化
+ uint8_t qspi_status = QSPI_Init();  // 获取返回值
+    printf("QSPI_Init status: %d\r\n", qspi_status);
+    
+    if (qspi_status != QSPI_OK) {
+        printf("QSPI Init FAILED!\r\n");
+        // 可以添加错误处理
+    }
+    
+    // 回读ID
+    flash_id = QSPI_Flash_ReadID();
+    printf("flash_id: 0x%x\r\n", flash_id);
+	
 //	SysTick_Init(systick_isr);   //SysTick定时器初始化
 //   发送初始消息 (设备上线通知)   ad failed with erro
   uint8_t init_msg[4] = {0xAA, 0x55, 0x01, 0x23};

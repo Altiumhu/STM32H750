@@ -1,13 +1,13 @@
 /***************************** (C) COPYRIGHT ************************************
 * File Name          : W25xx_Qspi.h
-* Author             : Ä£×éĞÇÇòÇ¶ÈëÊ½
+* Author             : æ¨¡ç»„æ˜ŸçƒåµŒå…¥å¼
 * Version            : V1.0
 * Date               : 30/11/2019
-* Description        : STM32h7µÄQUAD SPIÇı¶¯³ÌĞòÍ·ÎÄ¼ş
-* Note               : °æÈ¨ËùÓĞ  ÑÏ½ûµÁ°æ
+* Description        : STM32h7çš„QUAD SPIé©±åŠ¨ç¨‹åºå¤´æ–‡ä»¶
+* Note               : ç‰ˆæƒæ‰€æœ‰  ä¸¥ç¦ç›—ç‰ˆ
 ********************************************************************************
-* ÊµÑéÆ½Ì¨:Ä£×éĞÇÇòSTM32H743VIT6¿ª·¢°å   
-* ÌÔ±¦µêÆÌ:https://shop71600107.taobao.com/
+* å®éªŒå¹³å°:æ¨¡ç»„æ˜ŸçƒSTM32H743VIT6å¼€å‘æ¿   
+* æ·˜å®åº—é“º:https://shop71600107.taobao.com/
 
 ********************************************************************************/
 #ifndef __W25_QPI_H_
@@ -19,9 +19,9 @@
 
 #include "W25Q128.h"
 
-#define FLASH_SPI   0    //SPIÄ£Ê½
-#define FLASH_QPI   1    //QPIÄ£Ê½
-#define FLASH_OP_METHOD  FLASH_QPI   //FLASH²Ù×÷½Ó¿ÚÎªQPI,ËÙ¶È½Ï¿ì
+#define FLASH_SPI   0    //SPIæ¨¡å¼
+#define FLASH_QPI   1    //QPIæ¨¡å¼
+#define FLASH_OP_METHOD  FLASH_QPI   //FLASHæ“ä½œæ¥å£ä¸ºQPI,é€Ÿåº¦è¾ƒå¿«
 
 #define W25Q80 	0XEF13 	
 #define W25Q16 	0XEF14
@@ -30,7 +30,7 @@
 #define W25Q128	0XEF17
 #define W25Q256 0XEF18
 
-//QSPI´íÎóÂë
+//QSPIé”™è¯¯ç 
 #define QSPI_OK            ((uint8_t)0x00)
 #define QSPI_ERROR         ((uint8_t)0x01)
 #define QSPI_BUSY          ((uint8_t)0x02)
@@ -66,7 +66,7 @@
 
 /*******************************************************************************
 * Function Name  : QSPI_Init
-* Description    : QSPI³õÊ¼»¯
+* Description    : QSPIåˆå§‹åŒ–
 * Input          : None
 * Output         : None
 * Return         : None
@@ -76,88 +76,88 @@ uint8_t QSPI_Init(void);
 
 /*******************************************************************************
 * Function Name  : QSPI_Read_SR
-* Description    : ´ÓSPI FLASH¶ÁÈ¡×´Ì¬¼Ä´æÆ÷
+* Description    : ä»SPI FLASHè¯»å–çŠ¶æ€å¯„å­˜å™¨
 * Input          : 
-* Output         : pData: ¶ÁÈ¡µÄÊı¾İ»º´æ
-* Return         : ¶Á²Ù×÷½á¹û
+* Output         : pData: è¯»å–çš„æ•°æ®ç¼“å­˜
+* Return         : è¯»æ“ä½œç»“æœ
 * Note			 : None
 *******************************************************************************/
 uint8_t QSPI_Read_SR(uint8_t cmd, uint8_t* pData);
 
 /*******************************************************************************
 * Function Name  : QSPI_Read
-* Description    : ´ÓSPI FLASH¶ÁÈ¡Êı¾İ
-* Input          : ReadAddr: ¶ÁÆğÊ¼µØÖ·
-				   Size: ¶ÁÈ¡Êı¾İ³¤¶È
-				   dummy:¿ÕÏĞÖÜÆÚ
-* Output         : pData: ¶ÁÈ¡µÄÊı¾İ»º´æ
-* Return         : ¶Á²Ù×÷½á¹û
+* Description    : ä»SPI FLASHè¯»å–æ•°æ®
+* Input          : ReadAddr: è¯»èµ·å§‹åœ°å€
+				   Size: è¯»å–æ•°æ®é•¿åº¦
+				   dummy:ç©ºé—²å‘¨æœŸ
+* Output         : pData: è¯»å–çš„æ•°æ®ç¼“å­˜
+* Return         : è¯»æ“ä½œç»“æœ
 * Note			 : None
 *******************************************************************************/
 uint8_t QSPI_Read(uint8_t* pData, uint32_t ReadAddr, uint32_t Size, uint8_t dummy);
 
 /*******************************************************************************
 * Function Name  : QSPI_Write
-* Description    : ÏòSPI FLASHĞ´ÈëÊı¾İ
-* Input          : pData: ´ı±à³ÌµÄÊı¾İ»º´æ
-				   WriteAddr: ±à³ÌÆğÊ¼µØÖ·
-				   Size: ±à³ÌÊı¾İ³¤¶È
+* Description    : å‘SPI FLASHå†™å…¥æ•°æ®
+* Input          : pData: å¾…ç¼–ç¨‹çš„æ•°æ®ç¼“å­˜
+				   WriteAddr: ç¼–ç¨‹èµ·å§‹åœ°å€
+				   Size: ç¼–ç¨‹æ•°æ®é•¿åº¦
 * Output         : None
-* Return         : ±à³Ì½á¹û
+* Return         : ç¼–ç¨‹ç»“æœ
 * Note			 : None
 *******************************************************************************/
 uint8_t QSPI_Write(uint8_t* pData, uint32_t WriteAddr, uint32_t Size);
 
 /*******************************************************************************
 * Function Name  : QSPI_Erase_Block
-* Description    : FLASHµÄ¿é²Á³ı²Ù×÷
+* Description    : FLASHçš„å—æ“¦é™¤æ“ä½œ
 * Input          : erase_cmd: SECTOR_4K_ERASE_CMD/SECTOR_32K_ERASE_CMD/
 				   SECTOR_64K_ERASE_CMD
-				   BlockAddress: ²Á³ı¿éµØÖ·
+				   BlockAddress: æ“¦é™¤å—åœ°å€
 * Output         : None
-* Return         : 0 ²Á³ı³É¹¦  1 ²Á³ıÊ§°Ü
-* Note			 : ÓÃÓÚ4K¡¢32K¡¢64K²Á³ı
+* Return         : 0 æ“¦é™¤æˆåŠŸ  1 æ“¦é™¤å¤±è´¥
+* Note			 : ç”¨äº4Kã€32Kã€64Kæ“¦é™¤
 *******************************************************************************/
 uint8_t QSPI_Erase_Block(uint8_t erase_cmd, uint32_t BlockAddress);
 
 /*******************************************************************************
 * Function Name  : QSPI_Erase_Chip
-* Description    : Æ¬²Á³ı
+* Description    : ç‰‡æ“¦é™¤
 * Input          : None
 * Output         : None
-* Return         : 0 ²Á³ı³É¹¦  1 ²Á³ıÊ§°Ü
+* Return         : 0 æ“¦é™¤æˆåŠŸ  1 æ“¦é™¤å¤±è´¥
 * Note			 : None
 *******************************************************************************/
 uint8_t QSPI_Erase_Chip(void);
 
 /*******************************************************************************
 * Function Name  : W25_Flash_Write
-* Description    : Ğ´SPI FLASH,ÔÚÖ¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨³¤¶ÈµÄÊı¾İ
-* Input          : WriteAddr:¿ªÊ¼Ğ´ÈëµÄµØÖ·(24bit)
-				   pBuffer:Êı¾İ´æ´¢Çø
-				   NumByteToWrite:ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó65535)
+* Description    : å†™SPI FLASH,åœ¨æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ®
+* Input          : WriteAddr:å¼€å§‹å†™å…¥çš„åœ°å€(24bit)
+				   pBuffer:æ•°æ®å­˜å‚¨åŒº
+				   NumByteToWrite:è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§65535)
 * Output         : None
 * Return         : None
-* Note			 : ±ØĞëÈ·±£ËùĞ´µÄµØÖ··¶Î§ÄÚµÄÊı¾İÈ«²¿Îª0XFF,·ñÔòÔÚ·Ç0XFF´¦Ğ´ÈëµÄÊı¾İ½«Ê§°Ü!
-				   ¾ßÓĞ×Ô¶¯»»Ò³¹¦ÄÜ,¸Ãº¯Êı´ø²Á³ı²Ù×÷!
+* Note			 : å¿…é¡»ç¡®ä¿æ‰€å†™çš„åœ°å€èŒƒå›´å†…çš„æ•°æ®å…¨éƒ¨ä¸º0XFF,å¦åˆ™åœ¨é0XFFå¤„å†™å…¥çš„æ•°æ®å°†å¤±è´¥!
+				   å…·æœ‰è‡ªåŠ¨æ¢é¡µåŠŸèƒ½,è¯¥å‡½æ•°å¸¦æ“¦é™¤æ“ä½œ!
 *******************************************************************************/ 		 
 void SPI_Flash_Write(u8* pBuffer, u32 WriteAddr, u16 NumByteToWrite);
 
 /*******************************************************************************
 * Function Name  : QSPI_Flash_ReadID
-* Description    : ¶ÁÈ¡Ğ¾Æ¬ID  
+* Description    : è¯»å–èŠ¯ç‰‡ID  
 * Input          : None
 * Output         : None
-* Return         : 2¸ö×Ö½Ú£¬µÚÒ»¸öÎªÖÆÔìÉÌID: 0xEF, µÚ¶ş¸öÎªÆ÷¼şID
-                   W25Q128  0XEF17		//16M×Ö½Ú
-* Note			 : Ö§³ÖQPI
+* Return         : 2ä¸ªå­—èŠ‚ï¼Œç¬¬ä¸€ä¸ªä¸ºåˆ¶é€ å•†ID: 0xEF, ç¬¬äºŒä¸ªä¸ºå™¨ä»¶ID
+                   W25Q128  0XEF17		//16Må­—èŠ‚
+* Note			 : æ”¯æŒQPI
 *******************************************************************************/  
 u16 QSPI_Flash_ReadID(void);
 
 /*******************************************************************************
 * Function Name  : QSPI_ResetMemory
-* Description    : ¸´Î»QSPI Memory
-* Input          : hqspi   ¾ä±ú
+* Description    : å¤ä½QSPI Memory
+* Input          : hqspi   å¥æŸ„
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -166,8 +166,8 @@ uint8_t QSPI_ResetMemory(QSPI_HandleTypeDef *hqspi);
 
 /*******************************************************************************
 * Function Name  : QSPI_WriteEnableSPI
-* Description    : Ğ´Ê¹ÄÜ,SPIÄ£Ê½,ÓÃÓÚ³õÊ¼»¯Ê±Ğ´×´Ì¬¼Ä´æÆ÷
-* Input          : hqspi   ¾ä±ú
+* Description    : å†™ä½¿èƒ½,SPIæ¨¡å¼,ç”¨äºåˆå§‹åŒ–æ—¶å†™çŠ¶æ€å¯„å­˜å™¨
+* Input          : hqspi   å¥æŸ„
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -176,8 +176,8 @@ uint8_t QSPI_WriteEnableSPI(QSPI_HandleTypeDef *hqspi);
 
 /*******************************************************************************
 * Function Name  : QSPI_WriteQE
-* Description    : Ğ´×´Ì¬¼Ä´æÆ÷µÄQEÎ»,×¼±¸½øÈëQPIÄ£Ê½
-* Input          : hqspi   ¾ä±ú
+* Description    : å†™çŠ¶æ€å¯„å­˜å™¨çš„QEä½,å‡†å¤‡è¿›å…¥QPIæ¨¡å¼
+* Input          : hqspi   å¥æŸ„
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -186,9 +186,9 @@ uint8_t QSPI_WriteQE(QSPI_HandleTypeDef *hqspi);
 
 /*******************************************************************************
 * Function Name  : QSPI_ModeEnter
-* Description    : ÅäÖÃ½øÈëQSPIÄ£Ê½,ÅäÖÃÊ±²ÉÓÃµ¥Ïß,W25Q128ÔÚµ÷ÓÃ´Ëº¯ÊıÇ°ĞèÒª½«¼Ä
-                   ´æÆ÷ÖĞµÄQEÎ»ÖÃ1·ñÔòºöÂÔ½øÈëQPIÃüÁî
-* Input          : hqspi   ¾ä±ú
+* Description    : é…ç½®è¿›å…¥QSPIæ¨¡å¼,é…ç½®æ—¶é‡‡ç”¨å•çº¿,W25Q128åœ¨è°ƒç”¨æ­¤å‡½æ•°å‰éœ€è¦å°†å¯„
+                   å­˜å™¨ä¸­çš„QEä½ç½®1å¦åˆ™å¿½ç•¥è¿›å…¥QPIå‘½ä»¤
+* Input          : hqspi   å¥æŸ„
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -197,8 +197,8 @@ uint8_t QSPI_ModeEnter(QSPI_HandleTypeDef *hqspi);
 
 /*******************************************************************************
 * Function Name  : QSPI_ModeExit
-* Description    : ÅäÖÃÍË³öQSPIÄ£Ê½,ÅäÖÃÊ±²ÉÓÃ4Ïß?
-* Input          : hqspi   ¾ä±ú
+* Description    : é…ç½®é€€å‡ºQSPIæ¨¡å¼,é…ç½®æ—¶é‡‡ç”¨4çº¿?
+* Input          : hqspi   å¥æŸ„
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -207,8 +207,8 @@ uint8_t QSPI_ModeExit(QSPI_HandleTypeDef *hqspi);
 
 /*******************************************************************************
 * Function Name  : QSPI_WriteEnable
-* Description    : Ğ´Ê¹ÄÜ,QPI
-* Input          : hqspi   ¾ä±ú
+* Description    : å†™ä½¿èƒ½,QPI
+* Input          : hqspi   å¥æŸ„
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -217,8 +217,8 @@ uint8_t QSPI_WriteEnable(QSPI_HandleTypeDef *hqspi);
 
 /*******************************************************************************
 * Function Name  : QSPI_AutoPollingMemReady
-* Description    : ÅäÖÃQSPIÎª×Ô¶¯ÂÖÑ°Ä£Ê½
-* Input          : hqspi   ¾ä±ú   Timeout  ³¬Ê±
+* Description    : é…ç½®QSPIä¸ºè‡ªåŠ¨è½®å¯»æ¨¡å¼
+* Input          : hqspi   å¥æŸ„   Timeout  è¶…æ—¶
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None

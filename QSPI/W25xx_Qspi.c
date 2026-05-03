@@ -1,36 +1,36 @@
 /***************************** (C) COPYRIGHT ************************************
 * File Name          : W25xx_Qspi.c
-* Author             : Ä£×éĞÇÇòÇ¶ÈëÊ½
+* Author             : æ¨¡ç»„æ˜ŸçƒåµŒå…¥å¼
 * Version            : V1.0
 * Date               : 30/11/2019
-* Description        : STM32h7µÄQUAD SPIÇı¶¯³ÌĞòÔ´ÎÄ¼ş
-* Note               : °æÈ¨ËùÓĞ  ÑÏ½ûµÁ°æ
+* Description        : STM32h7çš„QUAD SPIé©±åŠ¨ç¨‹åºæºæ–‡ä»¶
+* Note               : ç‰ˆæƒæ‰€æœ‰  ä¸¥ç¦ç›—ç‰ˆ
 ********************************************************************************
-* ÊµÑéÆ½Ì¨:Ä£×éĞÇÇòSTM32H743VIT6¿ª·¢°å  
-* ÌÔ±¦µêÆÌ:https://shop71600107.taobao.com/
+* å®éªŒå¹³å°:æ¨¡ç»„æ˜ŸçƒSTM32H743VIT6å¼€å‘æ¿  
+* æ·˜å®åº—é“º:https://shop71600107.taobao.com/
 
 ********************************************************************************/
 #include "W25xx_Qspi.h"
 #include "delay.h"
-
+#include "head.h"
 QSPI_HandleTypeDef QSPIHandle;
 
-//¶Ë¿Ú³õÊ¼»¯
+//ç«¯å£åˆå§‹åŒ–
 void QSPI_MspInit(void)
 {
 	GPIO_InitTypeDef   GPIO_InitStruct;
 
-	//Ê¹ÄÜQSPIÊ±ÖÓ
+	//ä½¿èƒ½QSPIæ—¶é’Ÿ
 	QSPI_CLK_ENABLE();
-	//¸´Î»QSPI½Ó¿Ú
+	//å¤ä½QSPIæ¥å£
 	QSPI_FORCE_RESET();
 	QSPI_RELEASE_RESET();
-	//Ê¹ÄÜQSPI¶Ë¿ÚËùÔÚGPIOÊ±ÖÓ
+	//ä½¿èƒ½QSPIç«¯å£æ‰€åœ¨GPIOæ—¶é’Ÿ
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOD_CLK_ENABLE();
 	__HAL_RCC_GPIOE_CLK_ENABLE();
 
-	//ÅäÖÃCS¹Ü½Å
+	//é…ç½®CSç®¡è„š
 	GPIO_InitStruct.Pin       = QSPI_CS_PIN;
 	GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
 	GPIO_InitStruct.Pull      = GPIO_NOPULL;
@@ -38,7 +38,7 @@ void QSPI_MspInit(void)
 	GPIO_InitStruct.Alternate = GPIO_AF10_QUADSPI;
 	HAL_GPIO_Init(QSPI_CS_GPIO_PORT, &GPIO_InitStruct);
 
-	//ÅäÖÃCLK¹Ü½Å
+	//é…ç½®CLKç®¡è„š
 	GPIO_InitStruct.Pin       = QSPI_CLK_PIN;
 	GPIO_InitStruct.Pull      = GPIO_NOPULL;
 	GPIO_InitStruct.Alternate = GPIO_AF9_QUADSPI;
@@ -64,14 +64,14 @@ void QSPI_MspInit(void)
 	GPIO_InitStruct.Alternate = GPIO_AF9_QUADSPI;
 	HAL_GPIO_Init(QSPI_D3_GPIO_PORT, &GPIO_InitStruct);
 
-	//ÅäÖÃNVICÖĞ¶Ï
+	//é…ç½®NVICä¸­æ–­
 	HAL_NVIC_SetPriority(QUADSPI_IRQn, 0x0F, 0);
 	HAL_NVIC_EnableIRQ(QUADSPI_IRQn);
 }
 
 /*******************************************************************************
 * Function Name  : QSPI_Init
-* Description    : QSPI³õÊ¼»¯
+* Description    : QSPIåˆå§‹åŒ–
 * Input          : None
 * Output         : None
 * Return         : None
@@ -86,16 +86,16 @@ uint8_t QSPI_Init(void)
 		return QSPI_ERROR;
 	}
 	
-	QSPI_MspInit();   //³õÊ¼»¯¶Ë¿Ú
+	QSPI_MspInit();   //åˆå§‹åŒ–ç«¯å£
 
-	QSPIHandle.Init.ClockPrescaler     = 2; //Ê±ÖÓÔ¤·ÖÆµ,À´×ÔAHB,FAHB/(Prescaler+1)
-	QSPIHandle.Init.FifoThreshold      = 4; //FIFOãĞÖµ¼¶±ğ
-	QSPIHandle.Init.SampleShifting     = QSPI_SAMPLE_SHIFTING_HALFCYCLE; //²ÉÑùÒÆÎ»,°ë¸öÖÜÆÚ
-	QSPIHandle.Init.FlashSize          = POSITION_VAL(QSPI_FLASH_SIZE) - 1; //FLASH´óĞ¡
-	QSPIHandle.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_5_CYCLE; //Æ¬Ñ¡¸ßµçÆ½Ê±¼ä
-	QSPIHandle.Init.ClockMode          = QSPI_CLOCK_MODE_0;      //Ñ¡ÔñÄ£Ê½0»¹ÊÇÄ£Ê½3,ÕâÀïÄ£Ê½0
-	QSPIHandle.Init.FlashID            = QSPI_FLASH_ID_1;        //Ñ¡ÔñFLASH1»¹ÊÇFLASH2
-	QSPIHandle.Init.DualFlash          = QSPI_DUALFLASH_DISABLE; //½ûÖ¹Ë«»º´æ
+	QSPIHandle.Init.ClockPrescaler     = 5; //æ—¶é’Ÿé¢„åˆ†é¢‘,æ¥è‡ªAHB,FAHB/(Prescaler+1)
+	QSPIHandle.Init.FifoThreshold      = 4; //FIFOé˜ˆå€¼çº§åˆ«
+	QSPIHandle.Init.SampleShifting     = QSPI_SAMPLE_SHIFTING_HALFCYCLE; //é‡‡æ ·ç§»ä½,åŠä¸ªå‘¨æœŸ
+	QSPIHandle.Init.FlashSize          = POSITION_VAL(QSPI_FLASH_SIZE) - 1; //FLASHå¤§å°
+	QSPIHandle.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_5_CYCLE; //ç‰‡é€‰é«˜ç”µå¹³æ—¶é—´
+	QSPIHandle.Init.ClockMode          = QSPI_CLOCK_MODE_0;      //é€‰æ‹©æ¨¡å¼0è¿˜æ˜¯æ¨¡å¼3,è¿™é‡Œæ¨¡å¼0
+	QSPIHandle.Init.FlashID            = QSPI_FLASH_ID_1;        //é€‰æ‹©FLASH1è¿˜æ˜¯FLASH2
+	QSPIHandle.Init.DualFlash          = QSPI_DUALFLASH_DISABLE; //ç¦æ­¢åŒç¼“å­˜
 
 	if(HAL_QSPI_Init(&QSPIHandle) != HAL_OK)
 	{
@@ -106,34 +106,35 @@ uint8_t QSPI_Init(void)
 	#if FLASH_OP_METHOD == FLASH_QPI
 	uint8_t stareg2=0;
 	
-	//ÍË³öQPIÄ£Ê½
+	//é€€å‡ºQPIæ¨¡å¼
 	if (QSPI_ModeExit(&QSPIHandle) != QSPI_OK)
 	{
 	//	return QSPI_ERROR;
 	}
 	
-	//¶Á×´Ì¬¼Ä´æÆ÷(status2),ÅĞ¶ÏQEÎ»
+	//è¯»çŠ¶æ€å¯„å­˜å™¨(status2),åˆ¤æ–­QEä½
 	QSPI_Read_SR(READ_STATUS_REG2_CMD,&stareg2);
 	if((stareg2&0x02) == 0)
 	{
-		//Ğ´×´Ì¬¼Ä´æÆ÷µÄQEÎ»Îª1
+		//å†™çŠ¶æ€å¯„å­˜å™¨çš„QEä½ä¸º1
 		if(QSPI_WriteQE(&QSPIHandle) != QSPI_OK)
 		{
 			//printf("QSPI WR QE ERR!!!\r\n");
 			return QSPI_ERROR;
 		}
 	}
-	//ÊÊµ±ÑÓÊ±,µÈ´ıFLASHÎÈ¶¨
-	delay_ms(1000);
-	//ÅäÖÃFLASH½øÈëQSPIÄ£Ê½,´ËºóËùÓĞ²Ù×÷¾ùÎªQSPI·½Ê½
+	//é€‚å½“å»¶æ—¶,ç­‰å¾…FLASHç¨³å®š
+//	delay_ms(1000);
+//	HAL_Delay(1000);
+	//é…ç½®FLASHè¿›å…¥QSPIæ¨¡å¼,æ­¤åæ‰€æœ‰æ“ä½œå‡ä¸ºQSPIæ–¹å¼
 	if(QSPI_ModeEnter(&QSPIHandle) != QSPI_OK)   
 	{
-		//printf("QSPI Enter ERR!!!\r\n");
+		printf("QSPI Enter ERR!!!\r\n");
 		return QSPI_NOT_SUPPORTED;
 	}
 	
 	#else
-	//ÍË³öQSPIÄ£Ê½
+	//é€€å‡ºQSPIæ¨¡å¼
 	if (QSPI_ModeExit(&QSPIHandle) != QSPI_OK)
 	{
 		return QSPI_ERROR;
@@ -145,8 +146,8 @@ uint8_t QSPI_Init(void)
 
 /*******************************************************************************
 * Function Name  : QSPI_WriteEnableSPI
-* Description    : Ğ´Ê¹ÄÜ,SPIÄ£Ê½,ÓÃÓÚ³õÊ¼»¯Ê±Ğ´×´Ì¬¼Ä´æÆ÷
-* Input          : hqspi   ¾ä±ú
+* Description    : å†™ä½¿èƒ½,SPIæ¨¡å¼,ç”¨äºåˆå§‹åŒ–æ—¶å†™çŠ¶æ€å¯„å­˜å™¨
+* Input          : hqspi   å¥æŸ„
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -155,7 +156,7 @@ uint8_t QSPI_WriteEnableSPI(QSPI_HandleTypeDef *hqspi)
 {
 	QSPI_CommandTypeDef     s_command;
 
-	//Ê¹ÄÜĞ´²Ù×÷
+	//ä½¿èƒ½å†™æ“ä½œ
 	s_command.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
 	s_command.Instruction       = WRITE_ENABLE_CMD;
 	s_command.AddressMode       = QSPI_ADDRESS_NONE;
@@ -176,8 +177,8 @@ uint8_t QSPI_WriteEnableSPI(QSPI_HandleTypeDef *hqspi)
 
 /*******************************************************************************
 * Function Name  : QSPI_WriteEnable
-* Description    : Ğ´Ê¹ÄÜ,QPI
-* Input          : hqspi   ¾ä±ú
+* Description    : å†™ä½¿èƒ½,QPI
+* Input          : hqspi   å¥æŸ„
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -186,7 +187,7 @@ uint8_t QSPI_WriteEnable(QSPI_HandleTypeDef *hqspi)
 {
 	QSPI_CommandTypeDef     s_command;
 
-	//Ê¹ÄÜĞ´²Ù×÷
+	//ä½¿èƒ½å†™æ“ä½œ
 	#if FLASH_OP_METHOD == FLASH_QPI
 	s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
 	#else
@@ -211,44 +212,44 @@ uint8_t QSPI_WriteEnable(QSPI_HandleTypeDef *hqspi)
 
 /*******************************************************************************
 * Function Name  : QSPI_Read_SR
-* Description    : ´ÓSPI FLASH¶ÁÈ¡×´Ì¬¼Ä´æÆ÷
+* Description    : ä»SPI FLASHè¯»å–çŠ¶æ€å¯„å­˜å™¨
 * Input          : None
-* Output         : pData: ¶ÁÈ¡µÄÊı¾İ»º´æ
-* Return         : ¶Á²Ù×÷½á¹û
+* Output         : pData: è¯»å–çš„æ•°æ®ç¼“å­˜
+* Return         : è¯»æ“ä½œç»“æœ
 * Note			 : None
 *******************************************************************************/
 uint8_t QSPI_Read_SR(uint8_t cmd, uint8_t* pData)
 {
 	QSPI_CommandTypeDef s_command;
 
-	//³õÊ¼»¯¶ÁÃüÁî
+	//åˆå§‹åŒ–è¯»å‘½ä»¤
 	#if FLASH_OP_METHOD == FLASH_QPI
 	s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
 	s_command.AddressMode       = QSPI_ADDRESS_NONE;
 	s_command.DataMode          = QSPI_DATA_4_LINES;
-	s_command.DummyCycles       = 0;  //¿ÕÏĞÖÜÆÚÊı
+	s_command.DummyCycles       = 0;  //ç©ºé—²å‘¨æœŸæ•°
 	#else
 	s_command.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
 	s_command.AddressMode       = QSPI_ADDRESS_NONE;
 	s_command.DataMode          = QSPI_DATA_1_LINE;
-	s_command.DummyCycles       = 0;  //¿ÕÏĞÖÜÆÚÊı
+	s_command.DummyCycles       = 0;  //ç©ºé—²å‘¨æœŸæ•°
 	#endif
-	s_command.Instruction       = cmd;   //¶Á×´Ì¬¼Ä´æÆ÷ÃüÁî
+	s_command.Instruction       = cmd;   //è¯»çŠ¶æ€å¯„å­˜å™¨å‘½ä»¤
 	s_command.AddressSize       = QSPI_ADDRESS_8_BITS;
-	s_command.Address           = 0;                   //¶ÁµØÖ·
+	s_command.Address           = 0;                   //è¯»åœ°å€
 	s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
-	s_command.NbData            = 1;                        //¶ÁÈ¡Êı¾İ´óĞ¡
+	s_command.NbData            = 1;                        //è¯»å–æ•°æ®å¤§å°
 	s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
 	s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
 	s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-	//·¢ËÍ¶ÁÃüÁî
+	//å‘é€è¯»å‘½ä»¤
 	if (HAL_QSPI_Command(&QSPIHandle, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
 		return QSPI_ERROR;
 	}
 
-	//½ÓÊÕ¶ÁÈ¡µÄÊı¾İ
+	//æ¥æ”¶è¯»å–çš„æ•°æ®
 	if (HAL_QSPI_Receive(&QSPIHandle, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
 		return QSPI_ERROR;
@@ -259,8 +260,8 @@ uint8_t QSPI_Read_SR(uint8_t cmd, uint8_t* pData)
 
 /*******************************************************************************
 * Function Name  : QSPI_WriteQE
-* Description    : Ğ´×´Ì¬¼Ä´æÆ÷µÄQEÎ»,×¼±¸½øÈëQPIÄ£Ê½
-* Input          : hqspi   ¾ä±ú
+* Description    : å†™çŠ¶æ€å¯„å­˜å™¨çš„QEä½,å‡†å¤‡è¿›å…¥QPIæ¨¡å¼
+* Input          : hqspi   å¥æŸ„
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -270,11 +271,11 @@ uint8_t QSPI_WriteQE(QSPI_HandleTypeDef *hqspi)
 	QSPI_CommandTypeDef     s_command;
 	uint8_t cmd = 0x02;
 	
-	//Ê¹ÄÜĞ´
+	//ä½¿èƒ½å†™
 	QSPI_WriteEnableSPI(hqspi);
 	//QSPI_WriteEnable(hqspi);
 
-	//Ê¹ÄÜĞ´²Ù×÷
+	//ä½¿èƒ½å†™æ“ä½œ
 	s_command.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
 	s_command.Instruction       = WRITE_STATUS_REG2_CMD;
 	s_command.AddressMode       = QSPI_ADDRESS_NONE;
@@ -286,13 +287,13 @@ uint8_t QSPI_WriteQE(QSPI_HandleTypeDef *hqspi)
 	s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
 	s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-	//·¢ËÍĞ´×´Ì¬¼Ä´æÆ÷ÃüÁî
+	//å‘é€å†™çŠ¶æ€å¯„å­˜å™¨å‘½ä»¤
 	if (HAL_QSPI_Command(hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
 		return QSPI_ERROR;
 	}
 
-	//Ğ´Èë×´Ì¬¼Ä´æÆ÷
+	//å†™å…¥çŠ¶æ€å¯„å­˜å™¨
 	if (HAL_QSPI_Transmit(&QSPIHandle, &cmd, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
 		return QSPI_ERROR;
@@ -303,9 +304,9 @@ uint8_t QSPI_WriteQE(QSPI_HandleTypeDef *hqspi)
 
 /*******************************************************************************
 * Function Name  : QSPI_ModeEnter
-* Description    : ÅäÖÃ½øÈëQSPIÄ£Ê½,ÅäÖÃÊ±²ÉÓÃµ¥Ïß,W25Q128ÔÚµ÷ÓÃ´Ëº¯ÊıÇ°ĞèÒª½«¼Ä
-                   ´æÆ÷ÖĞµÄQEÎ»ÖÃ1·ñÔòºöÂÔ½øÈëQPIÃüÁî
-* Input          : hqspi   ¾ä±ú
+* Description    : é…ç½®è¿›å…¥QSPIæ¨¡å¼,é…ç½®æ—¶é‡‡ç”¨å•çº¿,W25Q128åœ¨è°ƒç”¨æ­¤å‡½æ•°å‰éœ€è¦å°†å¯„
+                   å­˜å™¨ä¸­çš„QEä½ç½®1å¦åˆ™å¿½ç•¥è¿›å…¥QPIå‘½ä»¤
+* Input          : hqspi   å¥æŸ„
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -315,7 +316,7 @@ uint8_t QSPI_ModeEnter(QSPI_HandleTypeDef *hqspi)
 	QSPI_CommandTypeDef s_command;
 
 	s_command.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
-	s_command.Instruction       = QSPI_MODE_ENTER_CMD;     //½øÈëQSPIÄ£Ê½
+	s_command.Instruction       = QSPI_MODE_ENTER_CMD;     //è¿›å…¥QSPIæ¨¡å¼
 	s_command.AddressMode       = QSPI_ADDRESS_NONE;
 	s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
 	s_command.DataMode          = QSPI_DATA_NONE;
@@ -335,8 +336,8 @@ uint8_t QSPI_ModeEnter(QSPI_HandleTypeDef *hqspi)
 
 /*******************************************************************************
 * Function Name  : QSPI_ModeExit
-* Description    : ÅäÖÃÍË³öQSPIÄ£Ê½,ÅäÖÃÊ±²ÉÓÃ4Ïß?
-* Input          : hqspi   ¾ä±ú
+* Description    : é…ç½®é€€å‡ºQSPIæ¨¡å¼,é…ç½®æ—¶é‡‡ç”¨4çº¿?
+* Input          : hqspi   å¥æŸ„
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -346,7 +347,7 @@ uint8_t QSPI_ModeExit(QSPI_HandleTypeDef *hqspi)
 	QSPI_CommandTypeDef s_command;
 
 	s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
-	s_command.Instruction       = QSPI_MODE_EXIT_CMD;     //ÍË³öQSPIÄ£Ê½
+	s_command.Instruction       = QSPI_MODE_EXIT_CMD;     //é€€å‡ºQSPIæ¨¡å¼
 	s_command.AddressMode       = QSPI_ADDRESS_NONE;
 	s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
 	s_command.DataMode          = QSPI_DATA_NONE;
@@ -366,46 +367,46 @@ uint8_t QSPI_ModeExit(QSPI_HandleTypeDef *hqspi)
 
 /*******************************************************************************
 * Function Name  : QSPI_Read
-* Description    : ´ÓSPI FLASH¶ÁÈ¡Êı¾İ
-* Input          : ReadAddr: ¶ÁÆğÊ¼µØÖ·
-				   Size: ¶ÁÈ¡Êı¾İ³¤¶È
-				   dummy:¿ÕÏĞÖÜÆÚ
-* Output         : pData: ¶ÁÈ¡µÄÊı¾İ»º´æ
-* Return         : ¶Á²Ù×÷½á¹û
+* Description    : ä»SPI FLASHè¯»å–æ•°æ®
+* Input          : ReadAddr: è¯»èµ·å§‹åœ°å€
+				   Size: è¯»å–æ•°æ®é•¿åº¦
+				   dummy:ç©ºé—²å‘¨æœŸ
+* Output         : pData: è¯»å–çš„æ•°æ®ç¼“å­˜
+* Return         : è¯»æ“ä½œç»“æœ
 * Note			 : None
 *******************************************************************************/
 uint8_t QSPI_Read(uint8_t* pData, uint32_t ReadAddr, uint32_t Size, uint8_t dummy)
 {
 	QSPI_CommandTypeDef s_command;
 
-	//³õÊ¼»¯¶ÁÃüÁî
+	//åˆå§‹åŒ–è¯»å‘½ä»¤
 	#if FLASH_OP_METHOD == FLASH_QPI
 	s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
 	s_command.AddressMode       = QSPI_ADDRESS_4_LINES;
 	s_command.DataMode          = QSPI_DATA_4_LINES;
-	s_command.DummyCycles       = dummy;//QUAD_READ_DUMMY_CYCLES;  //¿ÕÏĞÖÜÆÚÊı(2)
+	s_command.DummyCycles       = dummy;//QUAD_READ_DUMMY_CYCLES;  //ç©ºé—²å‘¨æœŸæ•°(2)
 	#else
 	s_command.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
 	s_command.AddressMode       = QSPI_ADDRESS_1_LINE;
 	s_command.DataMode          = QSPI_DATA_1_LINE;
-	s_command.DummyCycles       = SPI_READ_DUMMY_CYCLES;  //¿ÕÏĞÖÜÆÚÊı(8)
+	s_command.DummyCycles       = SPI_READ_DUMMY_CYCLES;  //ç©ºé—²å‘¨æœŸæ•°(8)
 	#endif
-	s_command.Instruction       = FAST_READ_CMD;   //¿ìËÙ¶ÁÃüÁî
+	s_command.Instruction       = FAST_READ_CMD;   //å¿«é€Ÿè¯»å‘½ä»¤
 	s_command.AddressSize       = QSPI_ADDRESS_24_BITS;
-	s_command.Address           = ReadAddr;                   //¶ÁµØÖ·
+	s_command.Address           = ReadAddr;                   //è¯»åœ°å€
 	s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
-	s_command.NbData            = Size;                        //¶ÁÈ¡Êı¾İ´óĞ¡
+	s_command.NbData            = Size;                        //è¯»å–æ•°æ®å¤§å°
 	s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
 	s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
 	s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-	//·¢ËÍ¶ÁÃüÁî
+	//å‘é€è¯»å‘½ä»¤
 	if (HAL_QSPI_Command(&QSPIHandle, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
 		return QSPI_ERROR;
 	}
 
-	//½ÓÊÕ¶ÁÈ¡µÄÊı¾İ
+	//æ¥æ”¶è¯»å–çš„æ•°æ®
 	if (HAL_QSPI_Receive(&QSPIHandle, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
 		return QSPI_ERROR;
@@ -416,12 +417,12 @@ uint8_t QSPI_Read(uint8_t* pData, uint32_t ReadAddr, uint32_t Size, uint8_t dumm
 
 /*******************************************************************************
 * Function Name  : QSPI_Write
-* Description    : ÏòSPI FLASHĞ´ÈëÊı¾İ
-* Input          : pData: ´ı±à³ÌµÄÊı¾İ»º´æ
-				   WriteAddr: ±à³ÌÆğÊ¼µØÖ·
-				   Size: ±à³ÌÊı¾İ³¤¶È
+* Description    : å‘SPI FLASHå†™å…¥æ•°æ®
+* Input          : pData: å¾…ç¼–ç¨‹çš„æ•°æ®ç¼“å­˜
+				   WriteAddr: ç¼–ç¨‹èµ·å§‹åœ°å€
+				   Size: ç¼–ç¨‹æ•°æ®é•¿åº¦
 * Output         : None
-* Return         : ±à³Ì½á¹û
+* Return         : ç¼–ç¨‹ç»“æœ
 * Note			 : None
 *******************************************************************************/
 uint8_t QSPI_Write(uint8_t* pData, uint32_t WriteAddr, uint32_t Size)
@@ -437,16 +438,16 @@ uint8_t QSPI_Write(uint8_t* pData, uint32_t WriteAddr, uint32_t Size)
 	}
 	current_size = current_addr - WriteAddr;
 
-	//Ğ´ÈëµÄÊı¾İĞ¡ÓÚÒ»Ò³Êı¾İ
+	//å†™å…¥çš„æ•°æ®å°äºä¸€é¡µæ•°æ®
 	if (current_size > Size)
 	{
 		current_size = Size;
 	}
 
 	current_addr = WriteAddr;
-	end_addr = WriteAddr + Size;   //½áÊøµØÖ·
+	end_addr = WriteAddr + Size;   //ç»“æŸåœ°å€
 
-	//³õÊ¼»¯±à³ÌÃüÁî
+	//åˆå§‹åŒ–ç¼–ç¨‹å‘½ä»¤
 	#if FLASH_OP_METHOD == FLASH_QPI
 	s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
 	s_command.AddressMode       = QSPI_ADDRESS_4_LINES;
@@ -456,7 +457,7 @@ uint8_t QSPI_Write(uint8_t* pData, uint32_t WriteAddr, uint32_t Size)
 	s_command.AddressMode       = QSPI_ADDRESS_1_LINE;
 	s_command.DataMode          = QSPI_DATA_1_LINE;
 	#endif
-	s_command.Instruction       = PAGE_PROG_CMD;  			//¿ìËÙ±à³ÌÃüÁî
+	s_command.Instruction       = PAGE_PROG_CMD;  			//å¿«é€Ÿç¼–ç¨‹å‘½ä»¤
 	s_command.AddressSize       = QSPI_ADDRESS_24_BITS;
 	s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
 	s_command.DummyCycles       = 0;
@@ -464,37 +465,37 @@ uint8_t QSPI_Write(uint8_t* pData, uint32_t WriteAddr, uint32_t Size)
 	s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
 	s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-	//Ò»Ò³Ò»Ò³µÄÖ´ĞĞ±à³Ì¶¯×÷,Ö±µ½±à³ÌµØÖ·µ½´ï½áÊøµØÖ·´¦
+	//ä¸€é¡µä¸€é¡µçš„æ‰§è¡Œç¼–ç¨‹åŠ¨ä½œ,ç›´åˆ°ç¼–ç¨‹åœ°å€åˆ°è¾¾ç»“æŸåœ°å€å¤„
 	do
 	{
 		s_command.Address = current_addr;
 		s_command.NbData  = current_size;
 
-		//Ê¹ÄÜĞ´
+		//ä½¿èƒ½å†™
 		if (QSPI_WriteEnable(&QSPIHandle) != QSPI_OK)
 		{
 			return QSPI_ERROR;
 		}
 
-		//·¢ËÍ±à³ÌÃüÁî
+		//å‘é€ç¼–ç¨‹å‘½ä»¤
 		if (HAL_QSPI_Command(&QSPIHandle, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 		{
 			return QSPI_ERROR;
 		}
 
-		//Ğ´ÈëÊı¾İ
+		//å†™å…¥æ•°æ®
 		if (HAL_QSPI_Transmit(&QSPIHandle, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 		{
 			return QSPI_ERROR;
 		}
 
-		//µÈ´ı±à³Ì½áÊø  
+		//ç­‰å¾…ç¼–ç¨‹ç»“æŸ  
 		if (QSPI_AutoPollingMemReady(&QSPIHandle, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != QSPI_OK)
 		{
 			return QSPI_ERROR;
 		}
 
-		//¸üĞÂµØÖ·,×¼±¸ÏÂÒ»Ò³±à³Ì
+		//æ›´æ–°åœ°å€,å‡†å¤‡ä¸‹ä¸€é¡µç¼–ç¨‹
 		current_addr += current_size;
 		pData += current_size;
 		current_size = ((current_addr + QSPI_FLASH_PAGE_SIZE) > end_addr) ? (end_addr - current_addr) : QSPI_FLASH_PAGE_SIZE;
@@ -505,19 +506,19 @@ uint8_t QSPI_Write(uint8_t* pData, uint32_t WriteAddr, uint32_t Size)
 
 /*******************************************************************************
 * Function Name  : QSPI_Erase_Block
-* Description    : FLASHµÄ¿é²Á³ı²Ù×÷
+* Description    : FLASHçš„å—æ“¦é™¤æ“ä½œ
 * Input          : erase_cmd: SECTOR_4K_ERASE_CMD/SECTOR_32K_ERASE_CMD/
 				   SECTOR_64K_ERASE_CMD
-				   BlockAddress: ²Á³ı¿éµØÖ·
+				   BlockAddress: æ“¦é™¤å—åœ°å€
 * Output         : None
-* Return         : 0 ²Á³ı³É¹¦  1 ²Á³ıÊ§°Ü
-* Note			 : ÓÃÓÚ4K¡¢32K¡¢64K²Á³ı
+* Return         : 0 æ“¦é™¤æˆåŠŸ  1 æ“¦é™¤å¤±è´¥
+* Note			 : ç”¨äº4Kã€32Kã€64Kæ“¦é™¤
 *******************************************************************************/
 uint8_t QSPI_Erase_Block(uint8_t erase_cmd, uint32_t BlockAddress)
 {
 	QSPI_CommandTypeDef s_command;
 
-	//³õÊ¼»¯²Á³ıÃüÁî
+	//åˆå§‹åŒ–æ“¦é™¤å‘½ä»¤
 	#if FLASH_OP_METHOD == FLASH_QPI
 	s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
 	s_command.AddressMode       = QSPI_ADDRESS_4_LINES;
@@ -525,7 +526,7 @@ uint8_t QSPI_Erase_Block(uint8_t erase_cmd, uint32_t BlockAddress)
 	s_command.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
 	s_command.AddressMode       = QSPI_ADDRESS_1_LINE;
 	#endif
-	s_command.Instruction       = erase_cmd;           //²Á³ıÃüÁî
+	s_command.Instruction       = erase_cmd;           //æ“¦é™¤å‘½ä»¤
 	s_command.AddressSize       = QSPI_ADDRESS_24_BITS;
 	s_command.Address           = BlockAddress;
 	s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
@@ -535,19 +536,19 @@ uint8_t QSPI_Erase_Block(uint8_t erase_cmd, uint32_t BlockAddress)
 	s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
 	s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-	//Ê¹ÄÜĞ´²Ù×÷
+	//ä½¿èƒ½å†™æ“ä½œ
 	if(QSPI_WriteEnable(&QSPIHandle) != QSPI_OK)
 	{
 		return QSPI_ERROR;
 	}
 
-	//·¢ËÍ²Á³ıÃüÁî
+	//å‘é€æ“¦é™¤å‘½ä»¤
 	if(HAL_QSPI_Command(&QSPIHandle, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
 		return QSPI_ERROR;
 	}
 
-	//µÈ´ı²Á³ıÍê³É  
+	//ç­‰å¾…æ“¦é™¤å®Œæˆ  
 	if(QSPI_AutoPollingMemReady(&QSPIHandle, FLASH_SECTOR_ERASE_MAX_TIME) != QSPI_OK)
 	{
 		return QSPI_ERROR;
@@ -558,17 +559,17 @@ uint8_t QSPI_Erase_Block(uint8_t erase_cmd, uint32_t BlockAddress)
 
 /*******************************************************************************
 * Function Name  : QSPI_Erase_Chip
-* Description    : Æ¬²Á³ı
+* Description    : ç‰‡æ“¦é™¤
 * Input          : None
 * Output         : None
-* Return         : 0 ²Á³ı³É¹¦  1 ²Á³ıÊ§°Ü
+* Return         : 0 æ“¦é™¤æˆåŠŸ  1 æ“¦é™¤å¤±è´¥
 * Note			 : None
 *******************************************************************************/
 uint8_t QSPI_Erase_Chip(void)
 {
 	QSPI_CommandTypeDef s_command;
 
-	//³õÊ¼»¯²Á³ıÃüÁî
+	//åˆå§‹åŒ–æ“¦é™¤å‘½ä»¤
 	#if FLASH_OP_METHOD == FLASH_QPI
 	s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
 	#else
@@ -583,19 +584,19 @@ uint8_t QSPI_Erase_Chip(void)
 	s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
 	s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-	//Ê¹ÄÜĞ´²Ù×÷
+	//ä½¿èƒ½å†™æ“ä½œ
 	if (QSPI_WriteEnable(&QSPIHandle) != QSPI_OK)
 	{
 		return QSPI_ERROR;
 	}
 
-	//·¢ËÍ²Á³ıÃüÁî
+	//å‘é€æ“¦é™¤å‘½ä»¤
 	if (HAL_QSPI_Command(&QSPIHandle, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
 		return QSPI_ERROR;
 	}
 
-	//µÈ´ı²Á³ıÍê³É  
+	//ç­‰å¾…æ“¦é™¤å®Œæˆ  
 	if (QSPI_AutoPollingMemReady(&QSPIHandle, FLASH_BULK_ERASE_MAX_TIME) != QSPI_OK)
 	{
 		return QSPI_ERROR;
@@ -606,8 +607,8 @@ uint8_t QSPI_Erase_Chip(void)
 
 /*******************************************************************************
 * Function Name  : QSPI_ResetMemory
-* Description    : ¸´Î»QSPI Memory
-* Input          : hqspi   ¾ä±ú
+* Description    : å¤ä½QSPI Memory
+* Input          : hqspi   å¥æŸ„
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -626,20 +627,20 @@ uint8_t QSPI_ResetMemory(QSPI_HandleTypeDef *hqspi)
 	s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
 	s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-	//·¢ËÍ¸´Î»Ê¹ÄÜÃüÁî
+	//å‘é€å¤ä½ä½¿èƒ½å‘½ä»¤
 	if (HAL_QSPI_Command(hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
 		return QSPI_ERROR;
 	}
 
-	//·¢ËÍ¸´Î»ÃüÁî
+	//å‘é€å¤ä½å‘½ä»¤
 	s_command.Instruction = RESET_MEMORY_CMD;
 	if (HAL_QSPI_Command(hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
 		return QSPI_ERROR;
 	}
 
-	//µÈ´ı²Ù×÷Íê³É
+	//ç­‰å¾…æ“ä½œå®Œæˆ
 	if (QSPI_AutoPollingMemReady(hqspi, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != QSPI_OK)
 	{
 		return QSPI_ERROR;
@@ -650,8 +651,8 @@ uint8_t QSPI_ResetMemory(QSPI_HandleTypeDef *hqspi)
 
 /*******************************************************************************
 * Function Name  : QSPI_AutoPollingMemReady
-* Description    : ÅäÖÃQSPIÎª×Ô¶¯ÂÖÑ°Ä£Ê½
-* Input          : hqspi   ¾ä±ú   Timeout  ³¬Ê±
+* Description    : é…ç½®QSPIä¸ºè‡ªåŠ¨è½®å¯»æ¨¡å¼
+* Input          : hqspi   å¥æŸ„   Timeout  è¶…æ—¶
 * Output         : None
 * Return         : QSPI_OK/QSPI_ERROR
 * Note			 : None
@@ -669,12 +670,12 @@ uint8_t QSPI_AutoPollingMemReady(QSPI_HandleTypeDef *hqspi, uint32_t Timeout)
 
 /*******************************************************************************
 * Function Name  : QSPI_Flash_ReadID
-* Description    : ¶ÁÈ¡Ğ¾Æ¬ID  
+* Description    : è¯»å–èŠ¯ç‰‡ID  
 * Input          : None
 * Output         : None
-* Return         : 2¸ö×Ö½Ú£¬µÚÒ»¸öÎªÖÆÔìÉÌID: 0xEF, µÚ¶ş¸öÎªÆ÷¼şID
-                   W25Q128  0XEF17		//16M×Ö½Ú
-* Note			 : Ö§³ÖQPI
+* Return         : 2ä¸ªå­—èŠ‚ï¼Œç¬¬ä¸€ä¸ªä¸ºåˆ¶é€ å•†ID: 0xEF, ç¬¬äºŒä¸ªä¸ºå™¨ä»¶ID
+                   W25Q128  0XEF17		//16Må­—èŠ‚
+* Note			 : æ”¯æŒQPI
 *******************************************************************************/   	  
 u16 QSPI_Flash_ReadID(void)
 {
@@ -683,7 +684,7 @@ u16 QSPI_Flash_ReadID(void)
 	
 	QSPI_CommandTypeDef s_command;
 
-	//³õÊ¼»¯¶ÁÃüÁî	
+	//åˆå§‹åŒ–è¯»å‘½ä»¤	
 	#if FLASH_OP_METHOD == FLASH_QPI
 	s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
 	s_command.DataMode          = QSPI_DATA_4_LINES;
@@ -695,7 +696,7 @@ u16 QSPI_Flash_ReadID(void)
 	s_command.AddressMode       = QSPI_ADDRESS_1_LINE;
 	s_command.AddressSize       = QSPI_ADDRESS_24_BITS;
 	#endif
-	s_command.Instruction       = QSPI_READ_ID;   					//¶ÁIDÃüÁî
+	s_command.Instruction       = QSPI_READ_ID;   					//è¯»IDå‘½ä»¤
 	
 	s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
 	s_command.DummyCycles       = 0;
@@ -704,13 +705,13 @@ u16 QSPI_Flash_ReadID(void)
 	s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
 	s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-	//·¢ËÍ¶ÁÃüÁî
+	//å‘é€è¯»å‘½ä»¤
 	if (HAL_QSPI_Command(&QSPIHandle, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
 		return QSPI_ERROR;
 	}
 
-	//½ÓÊÕ¶ÁÈ¡µÄÊı¾İ
+	//æ¥æ”¶è¯»å–çš„æ•°æ®
 	if (HAL_QSPI_Receive(&QSPIHandle, UID, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
 	{
 		return QSPI_ERROR;
@@ -723,35 +724,35 @@ u16 QSPI_Flash_ReadID(void)
 
 /*******************************************************************************
 * Function Name  : W25_Flash_Write_NoCheck
-* Description    : ÎŞ¼ìÑéĞ´SPI FLASH,ÔÚÖ¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨³¤¶ÈµÄÊı¾İ,µ«ÊÇÒªÈ·±£µØÖ·²»Ô½½ç!
-* Input          : WriteAddr:¿ªÊ¼Ğ´ÈëµÄµØÖ·(24bit)
-				   pBuffer:Êı¾İ´æ´¢Çø
-				   NumByteToWrite:ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó65535)
+* Description    : æ— æ£€éªŒå†™SPI FLASH,åœ¨æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ®,ä½†æ˜¯è¦ç¡®ä¿åœ°å€ä¸è¶Šç•Œ!
+* Input          : WriteAddr:å¼€å§‹å†™å…¥çš„åœ°å€(24bit)
+				   pBuffer:æ•°æ®å­˜å‚¨åŒº
+				   NumByteToWrite:è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§65535)
 * Output         : None
 * Return         : None
-* Note			 : ±ØĞëÈ·±£ËùĞ´µÄµØÖ··¶Î§ÄÚµÄÊı¾İÈ«²¿Îª0XFF,·ñÔòÔÚ·Ç0XFF´¦Ğ´ÈëµÄÊı¾İ½«Ê§°Ü!
-				   ¾ßÓĞ×Ô¶¯»»Ò³¹¦ÄÜ 
+* Note			 : å¿…é¡»ç¡®ä¿æ‰€å†™çš„åœ°å€èŒƒå›´å†…çš„æ•°æ®å…¨éƒ¨ä¸º0XFF,å¦åˆ™åœ¨é0XFFå¤„å†™å…¥çš„æ•°æ®å°†å¤±è´¥!
+				   å…·æœ‰è‡ªåŠ¨æ¢é¡µåŠŸèƒ½ 
 *******************************************************************************/
 void SPI_Flash_Write_NoCheck(u8* pBuffer, u32 WriteAddr, u16 NumByteToWrite)   
 { 			 		 
 	u16 pageremain;	 
 	  
-	pageremain = 256-WriteAddr%256; //µ¥Ò³Ê£ÓàµÄ×Ö½ÚÊı		 	    
+	pageremain = 256-WriteAddr%256; //å•é¡µå‰©ä½™çš„å­—èŠ‚æ•°		 	    
 	if(NumByteToWrite <= pageremain)
-		pageremain = NumByteToWrite;//²»´óÓÚ256¸ö×Ö½Ú
+		pageremain = NumByteToWrite;//ä¸å¤§äº256ä¸ªå­—èŠ‚
 
 	while(1)
 	{	   
 		QSPI_Write(pBuffer,WriteAddr,pageremain);
-		if(NumByteToWrite==pageremain)break;//Ğ´Èë½áÊøÁË
+		if(NumByteToWrite==pageremain)break;//å†™å…¥ç»“æŸäº†
 	 	else //NumByteToWrite>pageremain
 		{
 			pBuffer+=pageremain;
 			WriteAddr+=pageremain;	
 
-			NumByteToWrite-=pageremain;			  //¼õÈ¥ÒÑ¾­Ğ´ÈëÁËµÄ×Ö½ÚÊı
-			if(NumByteToWrite>256)pageremain=256; //Ò»´Î¿ÉÒÔĞ´Èë256¸ö×Ö½Ú
-			else pageremain=NumByteToWrite; 	  //²»¹»256¸ö×Ö½ÚÁË
+			NumByteToWrite-=pageremain;			  //å‡å»å·²ç»å†™å…¥äº†çš„å­—èŠ‚æ•°
+			if(NumByteToWrite>256)pageremain=256; //ä¸€æ¬¡å¯ä»¥å†™å…¥256ä¸ªå­—èŠ‚
+			else pageremain=NumByteToWrite; 	  //ä¸å¤Ÿ256ä¸ªå­—èŠ‚äº†
 		}
 	};	    
 } 
@@ -759,63 +760,63 @@ void SPI_Flash_Write_NoCheck(u8* pBuffer, u32 WriteAddr, u16 NumByteToWrite)
 u8 SPI_FLASH_BUFFER[4096];
 /*******************************************************************************
 * Function Name  : W25_Flash_Write
-* Description    : Ğ´SPI FLASH,ÔÚÖ¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨³¤¶ÈµÄÊı¾İ
-* Input          : WriteAddr:¿ªÊ¼Ğ´ÈëµÄµØÖ·(24bit)
-				   pBuffer:Êı¾İ´æ´¢Çø
-				   NumByteToWrite:ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó65535)
+* Description    : å†™SPI FLASH,åœ¨æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ®
+* Input          : WriteAddr:å¼€å§‹å†™å…¥çš„åœ°å€(24bit)
+				   pBuffer:æ•°æ®å­˜å‚¨åŒº
+				   NumByteToWrite:è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§65535)
 * Output         : None
 * Return         : None
-* Note			 : ±ØĞëÈ·±£ËùĞ´µÄµØÖ··¶Î§ÄÚµÄÊı¾İÈ«²¿Îª0XFF,·ñÔòÔÚ·Ç0XFF´¦Ğ´ÈëµÄÊı¾İ½«Ê§°Ü!
-				   ¾ßÓĞ×Ô¶¯»»Ò³¹¦ÄÜ,¸Ãº¯Êı´ø²Á³ı²Ù×÷!
+* Note			 : å¿…é¡»ç¡®ä¿æ‰€å†™çš„åœ°å€èŒƒå›´å†…çš„æ•°æ®å…¨éƒ¨ä¸º0XFF,å¦åˆ™åœ¨é0XFFå¤„å†™å…¥çš„æ•°æ®å°†å¤±è´¥!
+				   å…·æœ‰è‡ªåŠ¨æ¢é¡µåŠŸèƒ½,è¯¥å‡½æ•°å¸¦æ“¦é™¤æ“ä½œ!
 *******************************************************************************/ 		 
 void SPI_Flash_Write(u8* pBuffer, u32 WriteAddr, u16 NumByteToWrite)  	
 { 
-	u32 secpos;			//ÉÈÇøµØÖ·
-	u16 secoff;			//ÉÈÇøÄÚÆ«ÒÆ
-	u16 secremain;		//ÉÈÇøÊ£Óà¿Õ¼ä	   
+	u32 secpos;			//æ‰‡åŒºåœ°å€
+	u16 secoff;			//æ‰‡åŒºå†…åç§»
+	u16 secremain;		//æ‰‡åŒºå‰©ä½™ç©ºé—´	   
  	u16 i;    
 	u8 * SPI_FLASH_BUF;	
 	  
-   	SPI_FLASH_BUF = SPI_FLASH_BUFFER;			//¿ÉÒÔÍ¨¹ıÉêÇëÄÚ´æµÄ·½Ê½ÊµÏÖ	     
- 	secpos=WriteAddr/4096;//ÉÈÇøµØÖ·  
-	secoff=WriteAddr%4096;//ÔÚÉÈÇøÄÚµÄÆ«ÒÆ
-	secremain=4096-secoff;//ÉÈÇøÊ£Óà¿Õ¼ä´óĞ¡   
+   	SPI_FLASH_BUF = SPI_FLASH_BUFFER;			//å¯ä»¥é€šè¿‡ç”³è¯·å†…å­˜çš„æ–¹å¼å®ç°	     
+ 	secpos=WriteAddr/4096;//æ‰‡åŒºåœ°å€  
+	secoff=WriteAddr%4096;//åœ¨æ‰‡åŒºå†…çš„åç§»
+	secremain=4096-secoff;//æ‰‡åŒºå‰©ä½™ç©ºé—´å¤§å°   
 
- 	if(NumByteToWrite <= secremain) secremain = NumByteToWrite;//²»´óÓÚ4096¸ö×Ö½Ú
+ 	if(NumByteToWrite <= secremain) secremain = NumByteToWrite;//ä¸å¤§äº4096ä¸ªå­—èŠ‚
 	while(1) 
 	{	
-		QSPI_Read(SPI_FLASH_BUF, secpos*4096, 4096,QUAD_READ_DUMMY_CYCLES);//¶Á³öÕû¸öÉÈÇøµÄÄÚÈİ
-		for(i=0;i<secremain;i++)//Ğ£ÑéÊı¾İ
+		QSPI_Read(SPI_FLASH_BUF, secpos*4096, 4096,QUAD_READ_DUMMY_CYCLES);//è¯»å‡ºæ•´ä¸ªæ‰‡åŒºçš„å†…å®¹
+		for(i=0;i<secremain;i++)//æ ¡éªŒæ•°æ®
 		{
-			if(SPI_FLASH_BUF[secoff+i]!=0XFF)break;//ĞèÒª²Á³ı  	  
+			if(SPI_FLASH_BUF[secoff+i]!=0XFF)break;//éœ€è¦æ“¦é™¤  	  
 		}
-		if(i<secremain)//ĞèÒª²Á³ı
+		if(i<secremain)//éœ€è¦æ“¦é™¤
 		{
-			QSPI_Erase_Block(SECTOR_4K_ERASE_CMD,secpos*4096); //²Á³ıÕâ¸öÉÈÇø
-			for(i=0;i<secremain;i++)	   //¸´ÖÆ
+			QSPI_Erase_Block(SECTOR_4K_ERASE_CMD,secpos*4096); //æ“¦é™¤è¿™ä¸ªæ‰‡åŒº
+			for(i=0;i<secremain;i++)	   //å¤åˆ¶
 			{
 				SPI_FLASH_BUF[i+secoff]=pBuffer[i];	  
 			}
-			SPI_Flash_Write_NoCheck(SPI_FLASH_BUF,secpos*4096,4096);//Ğ´ÈëÕû¸öÉÈÇø  
+			SPI_Flash_Write_NoCheck(SPI_FLASH_BUF,secpos*4096,4096);//å†™å…¥æ•´ä¸ªæ‰‡åŒº  
 		}
 		else 
 		{
-			SPI_Flash_Write_NoCheck(pBuffer,WriteAddr,secremain);//Ğ´ÒÑ¾­²Á³ıÁËµÄ,Ö±½ÓĞ´ÈëÉÈÇøÊ£ÓàÇø¼ä. 
+			SPI_Flash_Write_NoCheck(pBuffer,WriteAddr,secremain);//å†™å·²ç»æ“¦é™¤äº†çš„,ç›´æ¥å†™å…¥æ‰‡åŒºå‰©ä½™åŒºé—´. 
 		}				   
 		if(NumByteToWrite == secremain)
 		{
-			break;//Ğ´Èë½áÊøÁË
+			break;//å†™å…¥ç»“æŸäº†
 		}
-		else//Ğ´ÈëÎ´½áÊø
+		else//å†™å…¥æœªç»“æŸ
 		{
-			secpos++;//ÉÈÇøµØÖ·Ôö1
-			secoff=0;//Æ«ÒÆÎ»ÖÃÎª0 	 
+			secpos++;//æ‰‡åŒºåœ°å€å¢1
+			secoff=0;//åç§»ä½ç½®ä¸º0 	 
 
-		   	pBuffer+=secremain;  //Ö¸ÕëÆ«ÒÆ
-			WriteAddr+=secremain;//Ğ´µØÖ·Æ«ÒÆ	   
-		   	NumByteToWrite-=secremain;				//×Ö½ÚÊıµİ¼õ
-			if(NumByteToWrite>4096)secremain=4096;	//ÏÂÒ»¸öÉÈÇø»¹ÊÇĞ´²»Íê
-			else secremain=NumByteToWrite;			//ÏÂÒ»¸öÉÈÇø¿ÉÒÔĞ´ÍêÁË
+		   	pBuffer+=secremain;  //æŒ‡é’ˆåç§»
+			WriteAddr+=secremain;//å†™åœ°å€åç§»	   
+		   	NumByteToWrite-=secremain;				//å­—èŠ‚æ•°é€’å‡
+			if(NumByteToWrite>4096)secremain=4096;	//ä¸‹ä¸€ä¸ªæ‰‡åŒºè¿˜æ˜¯å†™ä¸å®Œ
+			else secremain=NumByteToWrite;			//ä¸‹ä¸€ä¸ªæ‰‡åŒºå¯ä»¥å†™å®Œäº†
 		}	 
 	}	 
 }
