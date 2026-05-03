@@ -44,16 +44,18 @@ void System_CloseLoop_Status(void)
         {
             if (g_Channelinfo[ch].fault.bit.Worke_fish == 1 || g_Channelinfo[ch].fault.bit.Worke_Setup_OVER == 1)
             {
-                g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
-                g_Channelinfo[ch].status = 0x53;       // 无操作时=0x53
+                    g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
+                    g_Channelinfo[ch].status = 0x53;       // 无操作时=0x53
+                    g_Channelinfo[ch].error = 0;           // 错误0x04: 用户强制停止
             }
             else
             {
                 g_Channelinfo[ch].status = 0x53; // 无操作时=0x53
             }
 
-            g_epwmHandle[ch].High_MOS_STA = 0;
-            g_epwmHandle[ch].High_MOS_OpenFlag = 0;
+   
+             g_epwmHandle[ch].High_MOS_STA = 0;
+            // g_epwmHandle[ch].High_MOS_OpenFlag =1;
             g_Channelinfo[ch].workMode = POWER_FAULT;
 
             // Init_RunningWorkSetup();
@@ -172,9 +174,8 @@ void System_CloseLoop_Status(void)
 
         case POWER_INIT: //
         {
-
-          //  Set_PWM_Channel_CH595_EN(0, ch, EX_595_RESET); // 关闭
-         //       Set_PWM_Channel_CH595_EN(0, ch, EX_595_SET); // 打开PRT
+          
+            Set_PWM_Channel_CH595_EN(0, ch, EX_595_RESET); // 关闭
             PIDInit(ch);
             HAL_EPWM_Config(ch);
             // Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
@@ -249,8 +250,8 @@ void System_CloseLoop_Status(void)
 
                             break;
                         case WORKE_SETUP_DC: // 恒流放电(C) 工步名称
-                                             //   g_Channelinfo[ch].Set_PreCV = g_Channelinfo[ch].RunningWorkSetup.voltLimit;
-                            // g_Channelinfo[ch].Set_PreCV = 0.5f;
+                          //   g_Channelinfo[ch].Set_PreCV = g_Channelinfo[ch].RunningWorkSetup.voltLimit;
+                             g_Channelinfo[ch].Set_PreCV = 0.5f;
                             // g_Channelinfo[ch].Set_CC = 0.5f;
                             //  g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit = 0.5f;
                             g_Channelinfo[ch].Set_PreDC = g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart;
@@ -258,13 +259,15 @@ void System_CloseLoop_Status(void)
                             g_Channelinfo[ch].WorkeRunStartTimer = Timer_GetClock(); //  记录开始启动时间
                             g_Channelinfo[ch].status = WORKE_SETUP_DC;
 
-                            g_Channelinfo[ch].Set_CC = 0.5f;
-
-                            if (gHandle_PID[ch].loop == V_LOOP)
-                            {
-                                gHandle_PID[ch].i_err_sum = gHandle_PID[ch].v_err_sum;
-                            }
-
+                            g_Channelinfo[ch].Set_CC= 0.5f;
+             
+                        //    // if(  gHandle_PID[ch].loop == V_LOOP)
+                        //     {
+                        //       gHandle_PID[ch].i_err_sum =   gHandle_PID[ch].v_err_sum ;
+                            
+                        //     }
+                    
+                           
                             //  gHandle_PID[ch].i_err_sum = 100;
                             break;
                         case 0x52: // 循环(R) 工步名称
@@ -301,11 +304,11 @@ void System_CloseLoop_Status(void)
             gHandle_PID[ch].v_min_out_value = gHandle_PID[ch].v_ui;      /* 最小脉宽*/
 
             gHandle_PID[ch].v_kp = gHandle_PID[ch].v_kp + 0.1;
-            if (gHandle_PID[ch].v_kp >= 10.1f)
-                gHandle_PID[ch].v_kp = 10.1f;
+            if (gHandle_PID[ch].v_kp >= 1.1f)
+                gHandle_PID[ch].v_kp = 1.1f;
             gHandle_PID[ch].v_ki = gHandle_PID[ch].v_ki + 0.1;
-            if (gHandle_PID[ch].v_ki >= 1.5f)
-                gHandle_PID[ch].v_ki = 1.5f;
+            if (gHandle_PID[ch].v_ki >= 0.5f)
+                gHandle_PID[ch].v_ki = 0.5f;
 
             // 电压环
             g_Channelinfo[ch].Set_CV = g_Channelinfo[ch].Set_CV + 0.01f;
@@ -408,7 +411,7 @@ void System_CloseLoop_Status(void)
                 gHandle_PID[ch].v_ki = 1.1f;
 
             // 电流环g_Channelinfo[ch].Set_PreDC
-            g_Channelinfo[ch].Set_CC += 0.1f;
+            g_Channelinfo[ch].Set_CC += 0.01f;
             if (g_Channelinfo[ch].Set_CC >= g_Channelinfo[ch].Set_PreDC)
             {
                 g_Channelinfo[ch].Set_CC = g_Channelinfo[ch].Set_PreDC;

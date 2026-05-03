@@ -209,7 +209,7 @@ void UserSlave_UpdateSlaveRec(void)
                     canFrameData[index++] = g_Channelinfo[ch].error; //
                     // 当前运行工步循环号
                     canFrameData[index++] = g_Channelinfo[ch].loopSn; //
-                  //  g_Channelinfo[ch].SampDelayTimer = 0;
+                    g_Channelinfo[ch].SampDelayTimer = 0;
                 }
                 else
                 {
@@ -217,9 +217,9 @@ void UserSlave_UpdateSlaveRec(void)
                     {
                         g_Channelinfo[ch].SampDelayTimer++;
                         // 电流
-                        if(g_Channelinfo[ch].SampDelayTimer>=500)
+                        if(g_Channelinfo[ch].SampDelayTimer>=50)
                         {
-                            g_Channelinfo[ch].SampDelayTimer =500;
+                            g_Channelinfo[ch].SampDelayTimer =50;
                            tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
                         }
                         else
@@ -233,9 +233,9 @@ void UserSlave_UpdateSlaveRec(void)
                     {
                         g_Channelinfo[ch].SampDelayTimer++;
                         // 电流
-                        if(g_Channelinfo[ch].SampDelayTimer>=500)
+                        if(g_Channelinfo[ch].SampDelayTimer>=50)
                         {
-                            g_Channelinfo[ch].SampDelayTimer =500;
+                            g_Channelinfo[ch].SampDelayTimer =50;
                            tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
                         }
                         else
@@ -245,7 +245,8 @@ void UserSlave_UpdateSlaveRec(void)
 
                         //tempdata = (uint32_t)(g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * 10000.0f);
                     }
-                   tempdata = (int32_t)(gHandle_PID[ch].i_fdb * 10000.0f);
+                    
+                   //tempdata = (int32_t)(gHandle_PID[ch].i_fdb * 10000.0f);
                     //  tempdata = 10000;
                     index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
                     // 电压
@@ -441,6 +442,8 @@ void UserSlave_UpdateSlaveRec(void)
                     g_Channelinfo[ch].fault.all = 1; // 停止工步
                     g_Channelinfo[ch].WorkeRunTimer = 0;
                     g_Channelinfo[ch].CH_StartFlag = 0; // 启动工步
+                    g_epwmHandle[ch].High_MOS_OpenFlag=1;
+                    g_epwmHandle[ch].High_MOS_STA =0;
 
                     ch++;
                 }
@@ -515,6 +518,8 @@ void UserSlave_UpdateSlaveRec(void)
                     g_Channelinfo[ch].loopSn = 0xFF;       // 启动工步
                     g_Channelinfo[ch].fault.all = 1;       // 停止工步
                     g_Channelinfo[ch].CH_StartFlag = 0;    // 启动工步
+                    g_epwmHandle[ch].High_MOS_OpenFlag=1;
+                    g_epwmHandle[ch].High_MOS_STA =0;
                     ch++;
                 }
             }

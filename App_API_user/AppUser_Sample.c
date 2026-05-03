@@ -248,7 +248,7 @@ void GetADC_Driver_Result(void)
         }
         delayTimer++;
 				
-        SetCD4052(CD4052_Chnum);       // 延时够了再切换
+        SetCD4052(2);       // 延时够了再切换
         if (delayTimer >= g_samptimer) // 延时一个开关周期 等待CD4052开关稳定
         {
 
@@ -274,7 +274,7 @@ void GetADC_Driver_Result(void)
             // /* 直流电流采样 */
             g_Channelinfo[2].current_DC_ADC = adc1Result[8];   // 通道3 直流电流
             g_Channelinfo[6].current_DC_ADC = adc1Result[9];   // 通道7 直流电流
-            g_Channelinfo[9].current_DC_ADC = adc1Result[10];  // 通道11 直流电流
+            g_Channelinfo[10].current_DC_ADC = adc1Result[10];  // 通道11 直流电流
             g_Channelinfo[14].current_DC_ADC = adc1Result[11]; // 通道15 直流电流
 
             for (ch = 0; ch < 4; ch++)
@@ -327,7 +327,7 @@ void GetADC_Driver_Result(void)
         }
         delayTimer++;
 			
-        SetCD4052(CD4052_Chnum);       // 延时够了再切换
+        SetCD4052(3);       // 延时够了再切换
         if (delayTimer >= g_samptimer) // 延时一个开关周期 等待CD4052开关稳定
         {
             delayTimer = g_samptimer;
@@ -362,7 +362,7 @@ void GetADC_Driver_Result(void)
 
                 if (g_Channelinfo[3 + ch * 4].workMode == POWER_RUN_DISCHARGE)
                 {
-                    g_Channelinfo[3 + ch * 4].current = g_Channelinfo[3].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
+                    g_Channelinfo[3 + ch * 4].current = g_Channelinfo[3+ch*4].current_DC_ADC * CC_CAL_Ka + CC_CAL_Kb;
                 }
                 else
                 {
@@ -373,11 +373,11 @@ void GetADC_Driver_Result(void)
             if (g_Channelinfo[3 + ch * 4].workMode == POWER_PRECHARGE || g_Channelinfo[3 + ch * 4].workMode == POWER_INIT)
             {
                 Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
-                g_Channelinfo[3].Cap_voltage_ADC = adc1Result[12]; // 通道3 电容电压
-                g_Channelinfo[7].Cap_voltage_ADC = adc1Result[13]; // 通道7 电容电压
+                g_Channelinfo[3].Cap_voltage_ADC = adc1Result[12]; // 通道4电容电压
+                g_Channelinfo[7].Cap_voltage_ADC = adc1Result[13]; // 通道8电容电压
 
-                g_Channelinfo[11].Cap_voltage_ADC = adc1Result[14]; // 通道1 电容电压
-                g_Channelinfo[15].Cap_voltage_ADC = adc1Result[15]; // 通道5 电容电压
+                g_Channelinfo[11].Cap_voltage_ADC = adc1Result[14]; // 通道12 电容电压
+                g_Channelinfo[15].Cap_voltage_ADC = adc1Result[15]; // 通道16电容电压
 
                 g_Channelinfo[3 + ch * 4].Cap_voltage = g_Channelinfo[3 + ch * 4].Cap_voltage_ADC * V_CAL_Ka * 3.0333333f;
             }
@@ -536,9 +536,9 @@ void AppUser_ChannelInfo_Debug(void)
 {
     uint32_t ch;
     /* 电容电压 */
-    printf("Cap_voltage =%f ADC1_A10=%d\r\n", g_Channelinfo[1].Cap_voltage, adc_values[12]);
+    printf("电容端口信息 =%f ADC1_A10=%d\r\n", g_Channelinfo[1].Cap_voltage, adc_values[12]);
 
-    for (ch = 0; ch < 2; ch++)
+    for (ch = 0; ch <5; ch++)
     {
         printf("\r\n ch=[%d] workMode=%d \r\n", ch + 1, g_Channelinfo[ch].workMode);
         printf(" ch=[%d] voltage=%f--ADC=%d current=%f--ADC%d Cap_voltage=%f voltage_port=%f\r\n", ch + 1, g_Channelinfo[ch].voltage, g_Channelinfo[ch].voltage_ADC,
@@ -548,14 +548,14 @@ void AppUser_ChannelInfo_Debug(void)
         printf("CH[%d] I_Set=%fmA I_FB=%fmA i_pid_out=%f \r\n", ch + 1, gHandle_PID[ch].i_ref, gHandle_PID[ch].i_fdb, gHandle_PID[ch].i_pid_out);
         printf("CH[%d]Set=%fV FB=%fV pid_out=%f \r\n", ch + 1, gHandle_PID[ch].v_ref, gHandle_PID[ch].v_fdb, gHandle_PID[ch].v_pid_out);
      //   printf(" HOMSduty=%d low=%d \r\n", g_epwmHandle[ch].High_MOS_DUTY, g_epwmHandle[ch].Low_MOS_DUTY);
-        printf(" WorkeRunTimer =%d  截止时间=%d\r\n", g_Channelinfo[ch].WorkeRunTimer , g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].timeLimit);
+        printf(" WorkeRunTimer =%d \r\n", g_Channelinfo[ch].WorkeRunTimer );
 
         printf("\r\n ch=[%d] 工步类型=0x%X \r\n", ch + 1, g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].type);
        
          printf("\r\n ch=[%d] 工步号=0x%X  CH_StartFlag=%d\r\n", ch + 1,    g_Channelinfo[ch].WorkeStartup,g_Channelinfo[ch].CH_StartFlag );
        
-    
-
+            printf("时间采集数据时间=%d\r\n",   g_Channelinfo[ch].SampDelayTimer);
+  
 
     }
 }
