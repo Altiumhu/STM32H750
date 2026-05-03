@@ -220,7 +220,8 @@ void UserSlave_UpdateSlaveRec(void)
                         if(g_Channelinfo[ch].SampDelayTimer>=50)
                         {
                             g_Channelinfo[ch].SampDelayTimer =50;
-                           tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
+                          // tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
+                           tempdata = (int32_t)(         g_SampleADC.CH_BAT_current_Filter[ch]  * 10000.0f);
                         }
                         else
                         {
@@ -236,7 +237,9 @@ void UserSlave_UpdateSlaveRec(void)
                         if(g_Channelinfo[ch].SampDelayTimer>=50)
                         {
                             g_Channelinfo[ch].SampDelayTimer =50;
-                           tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
+                          // tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
+                           tempdata = (int32_t)(         g_SampleADC.CH_BAT_current_Filter[ch]  * 10000.0f);
+                     
                         }
                         else
                         {
@@ -251,7 +254,9 @@ void UserSlave_UpdateSlaveRec(void)
                     index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
                     // 电压
                     //   g_Channelinfo[ch].voltage = 3.5164f;
-                    index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage * 10000.0f), &canFrameData[index]);
+                    
+                     index += AppUser_uint16_CharTo_Samll((uint16_t)(g_SampleADC.CH_BAT_V_Filter[ch] * 10000.0f), &canFrameData[index]);
+                  //  index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage * 10000.0f), &canFrameData[index]);
                     // 温度
                     index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
                     // 工步索引号 运行的工步号step

@@ -187,6 +187,7 @@ void System_CloseLoop_Status(void)
             pwm_start(ch, 0);
             Set_PWM_Channel_CH595_EN(2, ch, EX_595_SET); // 打开MOS驱动使能
             g_Channelinfo[ch].Cap_voltage = 0.0f;
+            g_Channelinfo[ch].SampDelayTimer = 0;
         }
         break;
         case POWER_PRECHARGE: // 预充电
@@ -409,6 +410,12 @@ void System_CloseLoop_Status(void)
             gHandle_PID[ch].v_ki = gHandle_PID[ch].v_ki + 1.1;
             if (gHandle_PID[ch].v_ki >= 1.1f)
                 gHandle_PID[ch].v_ki = 1.1f;
+
+
+           gHandle_PID[ch].v_ref = g_Channelinfo[ch].Set_CV;
+
+            gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
+            pid_V_Loop_calc(&gHandle_PID[ch]);
 
             // 电流环g_Channelinfo[ch].Set_PreDC
             g_Channelinfo[ch].Set_CC += 0.01f;

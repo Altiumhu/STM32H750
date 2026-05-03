@@ -433,24 +433,35 @@ void GetADC_Driver_Result(void)
  *================================================================================================*/
 void ADC_Filter(void)
 {
-#if 0 // 滤波功能已禁用,如需启用请将0改为1
+#if 1 // 滤波功能已禁用,如需启用请将0改为1
     uint16_t ch;
 
     // ADC1通道滤波
     for (ch = 0; ch < ADC_1_CH_NUM_MAX; ch++)
     {
-        g_SampleADC.ADC_1_CH_Sum[ch] = adc1Result[ch] + g_SampleADC.ADC_1_CH_Sum[ch] - 
-                                       (g_SampleADC.ADC_1_CH_Sum[ch] >> FILTER_NUM);
+        g_SampleADC.ADC_1_CH_Sum[ch] = adc1Result[ch] + g_SampleADC.ADC_1_CH_Sum[ch] - (g_SampleADC.ADC_1_CH_Sum[ch] >> FILTER_NUM);
+                                       
         g_SampleADC.ADC_1_CH_Num_Filter[ch] = g_SampleADC.ADC_1_CH_Sum[ch] >> FILTER_NUM;
     }
 
-    // ADC2通道滤波
-    for (ch = 0; ch < ADC_2_CH_NUM_MAX; ch++)
+    for (ch = 0; ch < ADC_1_CH_NUM_MAX; ch++)
     {
-        g_SampleADC.ADC_2_CH_Sum[ch] = (adc2Result[ch] + g_SampleADC.ADC_2_CH_Sum[ch]) - 
-                                       (g_SampleADC.ADC_2_CH_Sum[ch] >> FILTER_NUM);
-        g_SampleADC.ADC_2_CH_Num_Filter[ch] = g_SampleADC.ADC_2_CH_Sum[ch] >> FILTER_NUM;
+        g_SampleADC.ADC_1_CH_floatSum[ch] = gHandle_PID[ch].v_fdb + g_SampleADC.ADC_1_CH_floatSum[ch] - (g_SampleADC.ADC_1_CH_floatSum[ch] /16.0f);
+                                       
+        g_SampleADC.CH_BAT_V_Filter[ch] = g_SampleADC.ADC_1_CH_floatSum[ch]  /16.0f;
     }
+
+    for (ch = 0; ch < ADC_1_CH_NUM_MAX; ch++)
+    {
+        g_SampleADC.CH_BAT_current_floatSum[ch] = gHandle_PID[ch].i_fdb + g_SampleADC.CH_BAT_current_floatSum[ch] - (g_SampleADC.CH_BAT_current_floatSum[ch] /16.0f);
+                                       
+        g_SampleADC.CH_BAT_current_Filter[ch] = g_SampleADC.CH_BAT_current_floatSum[ch]  /16.0f;
+    }
+
+
+
+
+
 #endif
 }
 
@@ -538,7 +549,7 @@ void AppUser_ChannelInfo_Debug(void)
     /* 电容电压 */
     printf("电容端口信息 =%f ADC1_A10=%d\r\n", g_Channelinfo[1].Cap_voltage, adc_values[12]);
 
-    for (ch = 0; ch <5; ch++)
+    for (ch = 0; ch <16; ch++)
     {
         printf("\r\n ch=[%d] workMode=%d \r\n", ch + 1, g_Channelinfo[ch].workMode);
         printf(" ch=[%d] voltage=%f--ADC=%d current=%f--ADC%d Cap_voltage=%f voltage_port=%f\r\n", ch + 1, g_Channelinfo[ch].voltage, g_Channelinfo[ch].voltage_ADC,
