@@ -277,11 +277,12 @@ void UserSlave_UpdateSlaveRec(void)
                     // 当前运行工步循环号
                     canFrameData[index++] = g_Channelinfo[ch].loopSn; //
                 }
+               
             }
 
             CanFr_SendData(BoardInfo_GetID(), EMTOSCMD_SampleQuest, canFrameData, index);
 
-            printf("\r\n cmd=S 请求采样数据  ");
+           
 
             break;
 

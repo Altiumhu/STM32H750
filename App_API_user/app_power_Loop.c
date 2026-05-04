@@ -90,6 +90,7 @@ void System_CloseLoop_Status(void)
                     Set_PWM_Channel_CH595_EN(2, ch, EX_595_RESET); // 关闭PWM_EN
                 }
             }
+             gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
         }
         break;
 
@@ -147,6 +148,7 @@ void System_CloseLoop_Status(void)
             break;
         case POWER_IDLE: // 待机状态 搁置阶段
 
+            gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
             g_Channelinfo[ch].WorkeRunTimer = Timer_GetClock() - g_Channelinfo[ch].WorkeRunStartTimer;
 
             if (g_Channelinfo[ch].WorkeRunTimer >= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].timeLimit) // 工步时间到
@@ -190,6 +192,7 @@ void System_CloseLoop_Status(void)
             Set_PWM_Channel_CH595_EN(2, ch, EX_595_SET); // 打开MOS驱动使能
             g_Channelinfo[ch].Cap_voltage = 0.0f;
             g_Channelinfo[ch].SampDelayTimer = 0;
+            g_Channelinfo[ch].error = 0x00; // 0x03:  以时间条件结束
             //  Set_ULock_GPIO(); // 解除硬件保护
         }
         break;

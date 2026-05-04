@@ -565,7 +565,9 @@ void AppUser_ChannelInfo_Debug(void)
        
          printf("\r\n ch=[%d] 工步号=0x%X  CH_StartFlag=%d\r\n", ch + 1,    g_Channelinfo[ch].WorkeStartup,g_Channelinfo[ch].CH_StartFlag );
        
-            printf("时间采集数据时间=%d\r\n",   g_Channelinfo[ch].SampDelayTimer);
+         //printf("时间采集数据时间=%d\r\n",   g_Channelinfo[ch].SampDelayTimer);
+
+        printf("\r\n g_Channelinfo[%d].error  %d  g_Channelinfo[ch].status = %d",ch + 1,g_Channelinfo[ch].error,  g_Channelinfo[ch].status);
   
 
     }
