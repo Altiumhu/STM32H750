@@ -257,7 +257,7 @@ void System_CloseLoop_Status(void)
 
                             break;
                         case WORKE_SETUP_DC: // 恒流放电(C) 工步名称
-                          //   g_Channelinfo[ch].Set_PreCV = g_Channelinfo[ch].RunningWorkSetup.voltLimit;
+                            // g_Channelinfo[ch].Set_PreCV = g_Channelinfo[ch].RunningWorkSetup.voltLimit;
                              g_Channelinfo[ch].Set_PreCV = 0.5f;
                             // g_Channelinfo[ch].Set_CC = 0.5f;
                             //  g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit = 0.5f;
@@ -311,14 +311,14 @@ void System_CloseLoop_Status(void)
             gHandle_PID[ch].v_min_out_value = gHandle_PID[ch].v_ui;      /* 最小脉宽*/
 
             gHandle_PID[ch].v_kp = gHandle_PID[ch].v_kp + 0.1;
-            if (gHandle_PID[ch].v_kp >= 1.1f)
-                gHandle_PID[ch].v_kp = 1.1f;
+            if (gHandle_PID[ch].v_kp >= 10.1f)
+                gHandle_PID[ch].v_kp = 10.1f;
             gHandle_PID[ch].v_ki = gHandle_PID[ch].v_ki + 0.1;
             if (gHandle_PID[ch].v_ki >= 0.5f)
                 gHandle_PID[ch].v_ki = 0.5f;
 
             // 电压环
-            g_Channelinfo[ch].Set_CV = g_Channelinfo[ch].Set_CV + 0.01f;
+            g_Channelinfo[ch].Set_CV = g_Channelinfo[ch].Set_CV + 0.1f;
             if (g_Channelinfo[ch].Set_CV >= g_Channelinfo[ch].Set_PreCV)
             {
                 g_Channelinfo[ch].Set_CV = g_Channelinfo[ch].Set_PreCV;

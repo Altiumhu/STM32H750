@@ -192,6 +192,7 @@ void UserSlave_UpdateSlaveRec(void)
                 {
 
                     // 电流
+                    g_Channelinfo[ch].current =0.0f;
                     tempdata = (uint32_t)(g_Channelinfo[ch].current * 10000.0f);
                     index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
                     // 电压
@@ -227,6 +228,11 @@ void UserSlave_UpdateSlaveRec(void)
                         {
                             tempdata = (g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * (-1.0f) * 10000.0f);
                         }
+                     //电流
+                      index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
+                    // 电压
+                      index += AppUser_uint16_CharTo_Samll((uint16_t)(g_SampleADC.CH_BAT_V_Filter[ch] * 10000.0f), &canFrameData[index]);
+
                     }
                     else
                     {
@@ -244,27 +250,17 @@ void UserSlave_UpdateSlaveRec(void)
                         }
 
                         // tempdata = (uint32_t)(g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * 10000.0f);
-                    }
-
-                    // tempdata = (int32_t)(gHandle_PID[ch].i_fdb * 10000.0f);
-                    //   tempdata = 10000;
+                   
                     index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
                     // 电压
-                    //   g_Channelinfo[ch].voltage = 3.5164f;
-
                     index += AppUser_uint16_CharTo_Samll((uint16_t)(g_SampleADC.CH_BAT_V_Filter[ch] * 10000.0f), &canFrameData[index]);
+                    }
+
+
                     //  index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage * 10000.0f), &canFrameData[index]);
                     // 温度
                     index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
-                    // 工步索引号 运行的工步号step
-                    // canFrameData[index++] = 0xFF; // 工步索引号
-                    // // // 通道状态
-
-                    // canFrameData[index++] = 0x53; // 通道的工作在哪个工步中  g_Channelinfo[ch].status
-                    // // // 错误状态
-                    //  canFrameData[index++] = 0;//
-                    // // // 当前运行工步循环号
-                    //  canFrameData[index++] = 0;//g_Channelinfo[ch].WorkeStartup
+      
 
                     canFrameData[index++] = g_Channelinfo[ch].WorkeStartup; // 工步索引号
                     // 通道状态
@@ -277,7 +273,7 @@ void UserSlave_UpdateSlaveRec(void)
             }
 
             CanFr_SendData(BoardInfo_GetID(), EMTOSCMD_SampleQuest, canFrameData, index);
-
+            printf("\r\n 请求采样数据  ");
             break;
 
         case EMTOSCMD_SendWorkStepInfo: // 下发工步信息
@@ -430,7 +426,7 @@ void UserSlave_UpdateSlaveRec(void)
             SetCh_Activity = tmep[0] | (tmep[1] << 8);
             printf("\r\n 收到托盘停止命令=0x%X ", SetCh_Activity);
 
-            for (ch = 0; ch < BOARD_CHANNEL_NUM;) // 判断哪个通道被激活 通道工步数据
+            for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++) // 判断哪个通道被激活 通道工步数据
             {
                 if ((SetCh_Activity >> ch) & 0x0001)
                 {
@@ -445,7 +441,7 @@ void UserSlave_UpdateSlaveRec(void)
                     g_epwmHandle[ch].High_MOS_OpenFlag = 1;
                     g_epwmHandle[ch].High_MOS_STA = 0;
 
-                    ch++;
+                   
                 }
             }
             break;
@@ -520,7 +516,7 @@ void UserSlave_UpdateSlaveRec(void)
                     g_Channelinfo[ch].CH_StartFlag = 0; // 启动工步
                     g_epwmHandle[ch].High_MOS_OpenFlag = 1;
                     g_epwmHandle[ch].High_MOS_STA = 0;
-                    ch++;
+              
                 }
             }
             break;

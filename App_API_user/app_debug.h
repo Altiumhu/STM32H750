@@ -18,7 +18,7 @@ typedef struct
 
 #define DEBUG_STATR   0 //1--表示不打印  0表示打印
 
-#define DEBUG_TIME_GAP  180    //间隔时间ms
+#define DEBUG_TIME_GAP  360    //间隔时间ms
 
 extern void debug_init(void);
 void debug_show_en(int argc, char *argv[]);
