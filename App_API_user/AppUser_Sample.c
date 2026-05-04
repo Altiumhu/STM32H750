@@ -446,16 +446,16 @@ void ADC_Filter(void)
 
     for (ch = 0; ch < ADC_1_CH_NUM_MAX; ch++)
     {
-        g_SampleADC.ADC_1_CH_floatSum[ch] = gHandle_PID[ch].v_fdb + g_SampleADC.ADC_1_CH_floatSum[ch] - (g_SampleADC.ADC_1_CH_floatSum[ch] /16.0f);
+        g_SampleADC.ADC_1_CH_floatSum[ch] = gHandle_PID[ch].v_fdb + g_SampleADC.ADC_1_CH_floatSum[ch] - (g_SampleADC.ADC_1_CH_floatSum[ch] /32.0f);
                                        
-        g_SampleADC.CH_BAT_V_Filter[ch] = g_SampleADC.ADC_1_CH_floatSum[ch]  /16.0f;
+        g_SampleADC.CH_BAT_V_Filter[ch] = g_SampleADC.ADC_1_CH_floatSum[ch]  /32.0f;
     }
 
     for (ch = 0; ch < ADC_1_CH_NUM_MAX; ch++)
     {
-        g_SampleADC.CH_BAT_current_floatSum[ch] = gHandle_PID[ch].i_fdb + g_SampleADC.CH_BAT_current_floatSum[ch] - (g_SampleADC.CH_BAT_current_floatSum[ch] /16.0f);
+        g_SampleADC.CH_BAT_current_floatSum[ch] = gHandle_PID[ch].i_fdb + g_SampleADC.CH_BAT_current_floatSum[ch] - (g_SampleADC.CH_BAT_current_floatSum[ch] /32.0f);
                                        
-        g_SampleADC.CH_BAT_current_Filter[ch] = g_SampleADC.CH_BAT_current_floatSum[ch]  /16.0f;
+        g_SampleADC.CH_BAT_current_Filter[ch] = g_SampleADC.CH_BAT_current_floatSum[ch]  /32.0f;
     }
 
 
