@@ -234,7 +234,7 @@ void UserSlave_UpdateSlaveRec(void)
                       index += AppUser_uint16_CharTo_Samll((uint16_t)(g_SampleADC.CH_BAT_V_Filter[ch] * 10000.0f), &canFrameData[index]);
 
                     }
-                    else 
+                    else    
                     {
                         g_Channelinfo[ch].SampDelayTimer++;
                         // 电流

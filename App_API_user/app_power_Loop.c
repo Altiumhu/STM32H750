@@ -46,7 +46,7 @@ void System_CloseLoop_Status(void)
             {
                     g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
                     g_Channelinfo[ch].status = 0x53;       // 无操作时=0x53
-                    g_Channelinfo[ch].error = 0;           // 错误0x04: 用户强制停止
+                    g_Channelinfo[ch].error = 3;           // 错误0x04: 用户强制停止
             }
             else
             {
@@ -89,7 +89,9 @@ void System_CloseLoop_Status(void)
                    // Set_PWM_Channel_CH595_EN(2, ch, EX_595_RESET); // 关闭PWM_EN
                 }
             }
-             gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
+            gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
+
+            gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
         }
         break;
 
@@ -147,7 +149,10 @@ void System_CloseLoop_Status(void)
             break;
         case POWER_IDLE: // 待机状态 搁置阶段
 
+            g_Channelinfo[ch].SampDelayTimer = 0;
+            
             gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
+            gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
             g_Channelinfo[ch].WorkeRunTimer = Timer_GetClock() - g_Channelinfo[ch].WorkeRunStartTimer;
 
             if (g_Channelinfo[ch].WorkeRunTimer >= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].timeLimit) // 工步时间到
@@ -171,6 +176,9 @@ void System_CloseLoop_Status(void)
 
             // 获得软启动电压目标值
             g_Channelinfo[ch].Set_SS_PreCV = g_Channelinfo[ch].voltage;
+
+            gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
+            gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
             break;
 
         case POWER_INIT: //
@@ -202,6 +210,7 @@ void System_CloseLoop_Status(void)
             gHandle_PID[ch].i_ref = 1.0f; // 设置给定值5A
 
             gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
+
             pid_I_Loop_calc(&gHandle_PID[ch]);                 // 电流换
 
             // 电压环
