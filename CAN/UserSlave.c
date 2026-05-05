@@ -184,92 +184,29 @@ void UserSlave_UpdateSlaveRec(void)
 
             break;
         case EMTOSCMD_SampleQuest: // 请求采样数据
+
             index = 0;
             for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++) // 获取通道数据
             {
+   
+                // 电流
+                tempdata = (int32_t)(g_SampleADC.CH_BAT_current_Filter[ch] * 10000.0f);
+                index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
+               // 电压
+                index += AppUser_uint16_CharTo_Samll((uint16_t)(g_SampleADC.CH_BAT_V_Filter[ch] * 10000.0f), &canFrameData[index]);
 
-                if (g_Channelinfo[ch].fault.all) // 判断故障
-                {
+              
+                //  index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage * 10000.0f), &canFrameData[index]);
+                // 温度
+                index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
 
-                    // 电流
-                    g_Channelinfo[ch].current =0.0f;
-                    tempdata = (uint32_t)(g_Channelinfo[ch].current * 10000.0f);
-                    index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
-                    // 电压
-                    //   g_Channelinfo[ch].voltage = 3.5164f;
-                    index += AppUser_uint16_CharTo_Samll((uint16_t)(g_SampleADC.CH_BAT_V_Filter[ch] * 10000.0f), &canFrameData[index]);
-                    // 温度
-                    index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
-
-                    g_Channelinfo[ch].status = 0x53;
-                    //
-                    canFrameData[index++] = g_Channelinfo[ch].WorkeStartup; // 工步索引号
-                    // 通道状态
-                    canFrameData[index++] = g_Channelinfo[ch].status; // 通道的工作在哪个工步中类型
-                    // 错误状态
-                    canFrameData[index++] = g_Channelinfo[ch].error; //
-                    // 当前运行工步循环号
-                    canFrameData[index++] = g_Channelinfo[ch].loopSn; //
-                    g_Channelinfo[ch].SampDelayTimer = 0;
-                }
-                else
-                {
-                    if (g_Channelinfo[ch].workMode == POWER_RUN_DISCHARGE)
-                    {
-                        g_Channelinfo[ch].SampDelayTimer++;
-                        // 电流
-                        if (g_Channelinfo[ch].SampDelayTimer >= 50)
-                        {
-                            g_Channelinfo[ch].SampDelayTimer = 50;
-                            // tempdata = (int32_t)(  g_Channelinfo[ch].current   * 10000.0f);
-                            tempdata = (int32_t)(g_SampleADC.CH_BAT_current_Filter[ch] * 10000.0f);
-                        }
-                        else
-                        {
-                            tempdata = (g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * (-1.0f) * 10000.0f);
-                        }
-                     //电流
-                      index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
-                    // 电压
-                      index += AppUser_uint16_CharTo_Samll((uint16_t)(g_SampleADC.CH_BAT_V_Filter[ch] * 10000.0f), &canFrameData[index]);
-
-                    }
-                    else    
-                    {
-                        g_Channelinfo[ch].SampDelayTimer++;
-                        // 电流
-                        if (g_Channelinfo[ch].SampDelayTimer >= 50)
-                        {
-                            g_Channelinfo[ch].SampDelayTimer = 50;
-                            // tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
-                            tempdata = (int32_t)(g_SampleADC.CH_BAT_current_Filter[ch] * 10000.0f);
-                        }
-                        else
-                        {
-                            tempdata = (g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * 10000.0f);
-                        }
-
-                        // tempdata = (uint32_t)(g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart * 10000.0f);
-                   
-                    index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
-                    // 电压
-                    index += AppUser_uint16_CharTo_Samll((uint16_t)(g_SampleADC.CH_BAT_V_Filter[ch] * 10000.0f), &canFrameData[index]);
-                    }
-
-
-                    //  index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage * 10000.0f), &canFrameData[index]);
-                    // 温度
-                    index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
-      
-
-                    canFrameData[index++] = g_Channelinfo[ch].WorkeStartup; // 工步索引号
-                    // 通道状态
-                    canFrameData[index++] = g_Channelinfo[ch].status; // 通道的工作在哪个工步中类型
-                    // 错误状态
-                    canFrameData[index++] = g_Channelinfo[ch].error; //
-                    // 当前运行工步循环号
-                    canFrameData[index++] = g_Channelinfo[ch].loopSn; //
-                }
+                canFrameData[index++] = g_Channelinfo[ch].WorkeStartup; // 工步索引号
+                // 通道状态
+                canFrameData[index++] = g_Channelinfo[ch].status; // 通道的工作在哪个工步中类型
+                // 错误状态
+                canFrameData[index++] = g_Channelinfo[ch].error; //
+                // 当前运行工步循环号
+                canFrameData[index++] = g_Channelinfo[ch].loopSn; //
             }
 
             CanFr_SendData(BoardInfo_GetID(), EMTOSCMD_SampleQuest, canFrameData, index);
@@ -408,7 +345,6 @@ void UserSlave_UpdateSlaveRec(void)
 
                     g_Channelinfo[ch].CH_StartFlag = 1; // 启动工步
                     g_Channelinfo[ch].fault.all = 0;    // 清除故障
-                   
                 }
             }
 
@@ -440,8 +376,6 @@ void UserSlave_UpdateSlaveRec(void)
                     g_Channelinfo[ch].CH_StartFlag = 0; // 启动工步
                     g_epwmHandle[ch].High_MOS_OpenFlag = 1;
                     g_epwmHandle[ch].High_MOS_STA = 0;
-
-                   
                 }
             }
             Set_ULock_GPIO(); // 解除硬件保护
@@ -517,7 +451,6 @@ void UserSlave_UpdateSlaveRec(void)
                     g_Channelinfo[ch].CH_StartFlag = 0; // 启动工步
                     g_epwmHandle[ch].High_MOS_OpenFlag = 1;
                     g_epwmHandle[ch].High_MOS_STA = 0;
-              
                 }
             }
             break;

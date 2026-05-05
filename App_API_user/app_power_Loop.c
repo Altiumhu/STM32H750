@@ -46,10 +46,13 @@ void System_CloseLoop_Status(void)
             {
                     g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
                     g_Channelinfo[ch].status = 0x53;       // 无操作时=0x53
-                    g_Channelinfo[ch].error = 3;           // 错误0x04: 用户强制停止
+                    g_Channelinfo[ch].error = 3;           // 错误0x04: 用户强制停止s
+                  //   g_Channelinfo[ch].loopSn =0x0; //
             }
             else
             {
+                //  g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
+                // g_Channelinfo[ch].loopSn =0xFF; //
                 g_Channelinfo[ch].status = 0x53; // 无操作时=0x53
             }
 
@@ -78,7 +81,7 @@ void System_CloseLoop_Status(void)
             else if (g_Channelinfo[ch].fault.bit.CV_Limit_OUT == 1 || g_Channelinfo[ch].fault.bit.CC_Limit_OUT == 1 || g_Channelinfo[ch].fault.bit.TIMER_OUT == 1)
             {
                 g_Channelinfo[ch].workeDelayTimer++;
-                if (g_Channelinfo[ch].workeDelayTimer >= 100)
+                if (g_Channelinfo[ch].workeDelayTimer >= 10)
                 {
                     g_Channelinfo[ch].workMode = POWER_SET_PARAM;
                     g_Channelinfo[ch].workeDelayTimer = 0;
@@ -89,9 +92,10 @@ void System_CloseLoop_Status(void)
                    // Set_PWM_Channel_CH595_EN(2, ch, EX_595_RESET); // 关闭PWM_EN
                 }
             }
-            gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
 
-            gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
+
+
+    
         }
         break;
 
@@ -150,9 +154,9 @@ void System_CloseLoop_Status(void)
         case POWER_IDLE: // 待机状态 搁置阶段
 
             g_Channelinfo[ch].SampDelayTimer = 0;
-            
+
             gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
-            gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
+           
             g_Channelinfo[ch].WorkeRunTimer = Timer_GetClock() - g_Channelinfo[ch].WorkeRunStartTimer;
 
             if (g_Channelinfo[ch].WorkeRunTimer >= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].timeLimit) // 工步时间到
@@ -168,7 +172,7 @@ void System_CloseLoop_Status(void)
 
         case POWER_GET_V_PORT: // 获得端口电压
             g_Channelinfo[ch].GetPortTimer++;
-            if (g_Channelinfo[ch].GetPortTimer >= 12)
+            if (g_Channelinfo[ch].GetPortTimer >= 2)
             {
                 g_Channelinfo[ch].GetPortTimer = 0;
                 g_Channelinfo[ch].workMode = POWER_INIT;
@@ -178,7 +182,7 @@ void System_CloseLoop_Status(void)
             g_Channelinfo[ch].Set_SS_PreCV = g_Channelinfo[ch].voltage;
 
             gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
-            gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
+           
             break;
 
         case POWER_INIT: //
@@ -186,7 +190,7 @@ void System_CloseLoop_Status(void)
           
            
 
-           //Set_PWM_Channel_CH595_EN(0, ch, EX_595_RESET); // 关闭
+           Set_PWM_Channel_CH595_EN(0, ch, EX_595_RESET); // 关闭
             PIDInit(ch);
             HAL_EPWM_Config(ch);
             // Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
@@ -209,7 +213,7 @@ void System_CloseLoop_Status(void)
             // 电流换
             gHandle_PID[ch].i_ref = 1.0f; // 设置给定值5A
 
-            gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
+            // gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
 
             pid_I_Loop_calc(&gHandle_PID[ch]);                 // 电流换
 
@@ -260,6 +264,7 @@ void System_CloseLoop_Status(void)
                             g_Channelinfo[ch].WorkeRunStartTimer = Timer_GetClock(); //  记录开始启动时间
                             g_Channelinfo[ch].workMode = POWER_RUN_CHARGE;
                             g_Channelinfo[ch].status = WORKE_SETUP_CC_CV;
+                            g_Channelinfo[ch].Set_CC= 0.5f;
 
                             break;
                         case WORKE_SETUP_DC: // 恒流放电(C) 工步名称
@@ -530,9 +535,16 @@ void TIMER0CallbackFunction(void *handle)
                           //  OpenLoopDebugPwm();
 #endif
 
+    if(g_SanSampFishFlag==1)
+    {
+
+    sample_irq_handler(); // 采集数据转换
     System_CloseLoop_Status();
 
     Updata_EPWM_Handle();
+    g_SanSampFishFlag =0;
+    }
+
 
     // System_DBUGGPIO_LOW_LEVEL;
     // System_LED1_LOW_LEVEL;

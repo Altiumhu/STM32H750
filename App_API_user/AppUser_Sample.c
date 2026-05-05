@@ -19,6 +19,8 @@
 #include "head.h"
 #include "AppUser_Sample.h"
 
+uint32_t g_SanSampFishFlag= 0;
+
 uint32_t g_SanSampTimer = 45;
 uint32_t g_samptimer = 10; // 增加延时，让CD4052切换后充分稳定
 
@@ -131,6 +133,12 @@ void GetADC_Driver_Result(void)
                     g_Channelinfo[0 + ch * 4].current = g_Channelinfo[0 + ch * 4].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
                 }
                 g_Channelinfo[0 + ch * 4].current = fabsf(g_Channelinfo[0 + ch * 4].current);
+
+                if(g_Channelinfo[0 + ch * 4].current<=0.08f)
+                {
+                 g_Channelinfo[0 + ch * 4].current=0.0f;
+
+                }
                 /* 电容端电压/端口电压采样 */
                 if (g_Channelinfo[ch * 4].workMode == POWER_PRECHARGE || g_Channelinfo[ch * 4].workMode == POWER_INIT)
                 {
@@ -215,7 +223,11 @@ void GetADC_Driver_Result(void)
                     g_Channelinfo[1 + ch * 4].current = g_Channelinfo[1 + ch * 4].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
                     g_Channelinfo[1 + ch * 4].current = fabsf(g_Channelinfo[1 + ch * 4].current);
                 }
+                if(g_Channelinfo[1 + ch * 4].current<=0.08f)
+                {
+                 g_Channelinfo[1 + ch * 4].current=0.0f;
 
+                }
                 /* 电容端电压/端口电压采样 */
                 if (g_Channelinfo[1 + ch * 4].workMode == POWER_PRECHARGE)
                 {
@@ -296,6 +308,11 @@ void GetADC_Driver_Result(void)
                     g_Channelinfo[2 + ch * 4].current = g_Channelinfo[2 + ch * 4].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
                 }
                 g_Channelinfo[2 + ch * 4].current = fabsf(g_Channelinfo[2 + ch * 4].current);
+                if(g_Channelinfo[2 + ch * 4].current<=0.08f)
+                {
+                 g_Channelinfo[2 + ch * 4].current=0.0f;
+
+                }
                 /* 电容端电压/端口电压采样 */
                 if (g_Channelinfo[2 + ch * 4].workMode == POWER_PRECHARGE || g_Channelinfo[2 + ch * 4].workMode == POWER_INIT)
                 {
@@ -375,6 +392,11 @@ void GetADC_Driver_Result(void)
                     g_Channelinfo[3 + ch * 4].current = g_Channelinfo[3 + ch * 4].current_ADC * CC_CAL_Ka + CC_CAL_Kb;
                 }
                 g_Channelinfo[3 + ch * 4].current = fabsf(g_Channelinfo[3 + ch * 4].current);
+                if(g_Channelinfo[3+ ch * 4].current<=0.08f)
+                {
+                 g_Channelinfo[3+ ch * 4].current=0.0f;
+
+                }
                 /* 电容端电压/端口电压采样 */
                 if (g_Channelinfo[3 + ch * 4].workMode == POWER_PRECHARGE || g_Channelinfo[3 + ch * 4].workMode == POWER_INIT)
                 {
@@ -454,15 +476,19 @@ void ADC_Filter(void)
     {
         g_SampleADC.ADC_1_CH_floatSum[ch] = g_Channelinfo[ch].voltage+ g_SampleADC.ADC_1_CH_floatSum[ch] - (g_SampleADC.ADC_1_CH_floatSum[ch] / 16.0f);
 
-        g_SampleADC.CH_BAT_V_Filter[ch] = g_SampleADC.ADC_1_CH_floatSum[ch] / 16.0f;
+      //  g_SampleADC.CH_BAT_V_Filter[ch] = g_SampleADC.ADC_1_CH_floatSum[ch] / 16.0f;
+
+       g_SampleADC.CH_BAT_V_Filter[ch] = g_Channelinfo[ch].voltage;
     }
 
 
      for (ch = 0; ch < ADC_1_CH_NUM_MAX; ch++)
         {
-            g_SampleADC.CH_BAT_current_floatSum[ch] = gHandle_PID[ch].i_fdb  + g_SampleADC.CH_BAT_current_floatSum[ch] - (g_SampleADC.CH_BAT_current_floatSum[ch] / 1.0f);
+            g_SampleADC.CH_BAT_current_floatSum[ch] = gHandle_PID[ch].i_fdb  + g_SampleADC.CH_BAT_current_floatSum[ch] - (g_SampleADC.CH_BAT_current_floatSum[ch] / 3.0f);
 
-            g_SampleADC.CH_BAT_current_Filter[ch] = g_SampleADC.CH_BAT_current_floatSum[ch] / 1.0f;
+          //  g_SampleADC.CH_BAT_current_Filter[ch] = g_SampleADC.CH_BAT_current_floatSum[ch] / 3.0f;
+
+           g_SampleADC.CH_BAT_current_Filter[ch] = gHandle_PID[ch].i_fdb ;
         }
 
     
@@ -555,7 +581,7 @@ void AppUser_ChannelInfo_Debug(void)
     /* 电容电压 */
     printf("电容端口信息 =%f ADC1_A10=%d\r\n", g_Channelinfo[1].Cap_voltage, adc_values[12]);
 
-    for (ch = 0; ch < 5; ch++)
+    for (ch = 0; ch < 2; ch++)
     {
         printf("\r\n ch=[%d] workMode=%d \r\n", ch + 1, g_Channelinfo[ch].workMode);
         printf(" ch=[%d] voltage=%f--ADC=%d current=%f--ADC%d Cap_voltage=%f voltage_port=%f\r\n", ch + 1, g_Channelinfo[ch].voltage, g_Channelinfo[ch].voltage_ADC,
@@ -571,7 +597,7 @@ void AppUser_ChannelInfo_Debug(void)
 
         printf("\r\n ch=[%d] 工步号=0x%X  CH_StartFlag=%d\r\n", ch + 1, g_Channelinfo[ch].WorkeStartup, g_Channelinfo[ch].CH_StartFlag);
 
-        // printf("时间采集数据时间=%d\r\n",   g_Channelinfo[ch].SampDelayTimer);
+         printf("时间采集数据时间=%d\r\n",   g_Channelinfo[ch].SampDelayTimer);
 
         printf("\r\n g_Channelinfo[%d].error  %d  g_Channelinfo[ch].status = %d", ch + 1, g_Channelinfo[ch].error, g_Channelinfo[ch].status);
     }
