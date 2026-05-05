@@ -476,7 +476,7 @@ void ADC_Filter(void)
     {
         g_SampleADC.ADC_1_CH_floatSum[ch] = g_Channelinfo[ch].voltage+ g_SampleADC.ADC_1_CH_floatSum[ch] - (g_SampleADC.ADC_1_CH_floatSum[ch] / 16.0f);
 
-      //  g_SampleADC.CH_BAT_V_Filter[ch] = g_SampleADC.ADC_1_CH_floatSum[ch] / 16.0f;
+       // g_SampleADC.CH_BAT_V_Filter[ch] = g_SampleADC.ADC_1_CH_floatSum[ch] / 16.0f;
 
        g_SampleADC.CH_BAT_V_Filter[ch] = g_Channelinfo[ch].voltage;
     }
@@ -484,9 +484,9 @@ void ADC_Filter(void)
 
      for (ch = 0; ch < ADC_1_CH_NUM_MAX; ch++)
         {
-            g_SampleADC.CH_BAT_current_floatSum[ch] = gHandle_PID[ch].i_fdb  + g_SampleADC.CH_BAT_current_floatSum[ch] - (g_SampleADC.CH_BAT_current_floatSum[ch] / 3.0f);
+            g_SampleADC.CH_BAT_current_floatSum[ch] = gHandle_PID[ch].i_fdb  + g_SampleADC.CH_BAT_current_floatSum[ch] - (g_SampleADC.CH_BAT_current_floatSum[ch] / 16.0f);
 
-          //  g_SampleADC.CH_BAT_current_Filter[ch] = g_SampleADC.CH_BAT_current_floatSum[ch] / 3.0f;
+          //  g_SampleADC.CH_BAT_current_Filter[ch] = g_SampleADC.CH_BAT_current_floatSum[ch] / 16.0f;
 
            g_SampleADC.CH_BAT_current_Filter[ch] = gHandle_PID[ch].i_fdb ;
         }
@@ -593,13 +593,15 @@ void AppUser_ChannelInfo_Debug(void)
         //   printf(" HOMSduty=%d low=%d \r\n", g_epwmHandle[ch].High_MOS_DUTY, g_epwmHandle[ch].Low_MOS_DUTY);
         printf(" WorkeRunTimer =%d \r\n", g_Channelinfo[ch].WorkeRunTimer);
 
-        printf("\r\n ch=[%d] 工步类型=0x%X \r\n", ch + 1, g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].type);
+        printf("\r\n ch=[%d] 工步类型=0x%X    \r\n", ch + 1, g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].type);
 
         printf("\r\n ch=[%d] 工步号=0x%X  CH_StartFlag=%d\r\n", ch + 1, g_Channelinfo[ch].WorkeStartup, g_Channelinfo[ch].CH_StartFlag);
 
+        printf(" ch=[%d]  loopSn=0x%X \r\n", ch + 1,   g_Channelinfo[ch].loopSn);
+        
          printf("时间采集数据时间=%d\r\n",   g_Channelinfo[ch].SampDelayTimer);
 
-        printf("\r\n g_Channelinfo[%d].error  %d  g_Channelinfo[ch].status = %d", ch + 1, g_Channelinfo[ch].error, g_Channelinfo[ch].status);
+        printf("\r\n g_Channelinfo[%d].error=0x  %X  g_Channelinfo[ch].status = 0x%X", ch + 1, g_Channelinfo[ch].error, g_Channelinfo[ch].status);
     }
 }
 

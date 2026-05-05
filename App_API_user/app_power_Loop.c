@@ -44,10 +44,13 @@ void System_CloseLoop_Status(void)
         {
             if (g_Channelinfo[ch].fault.bit.Worke_fish == 1 || g_Channelinfo[ch].fault.bit.Worke_Setup_OVER == 1)
             {
-                    g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
+                    g_Channelinfo[ch].WorkeStartup = 0xFF; // 运行的工步号 无操作时= 0xff。
+
                     g_Channelinfo[ch].status = 0x53;       // 无操作时=0x53
-                    g_Channelinfo[ch].error = 3;           // 错误0x04: 用户强制停止s
-                  //   g_Channelinfo[ch].loopSn =0x0; //
+                    g_Channelinfo[ch].error = 0;           // 错误0x04: 用户强制停止s
+                    // 工步号+循环号同时为0xff时，表示无效数据
+                    g_Channelinfo[ch].loopSn = 0x0; // 运行的循环号 无操作时=0xff,起始循环号为1。
+                    Init_RunningWorkSetup();
             }
             else
             {
@@ -94,7 +97,7 @@ void System_CloseLoop_Status(void)
             }
 
 
-
+           gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current ; // 设置反馈值
     
         }
         break;
@@ -379,7 +382,7 @@ void System_CloseLoop_Status(void)
             if (gHandle_PID[ch].loop == I_LOOP)
             {
                 // 2. 到达设置充电截止电流
-                if (g_Channelinfo[ch].current <= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentLimit)
+                if (g_Channelinfo[ch].current <= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentLimit && g_Channelinfo[ch].current>=0.1f)
                 {
                     if (g_Channelinfo[ch].SS_Timer >= 50) // 一瞬间误动作
                     {
@@ -389,17 +392,20 @@ void System_CloseLoop_Status(void)
                         g_Channelinfo[ch].fault.bit.CC_Limit_OUT = 1; // 工步到达恒流设置值
                     }
                 }
+
             }
             else if (gHandle_PID[ch].loop == V_LOOP)
             {
                 // 3. 到达设置充电电压
-                if (g_Channelinfo[ch].voltage >= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit)
+                if (g_Channelinfo[ch].voltage >= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit && g_Channelinfo[ch].current>=0.1f)
                 {
                     g_Channelinfo[ch].error = 0x01; // 0x01：以电压条件结束
                     g_Channelinfo[ch].WorkeStartup = g_Channelinfo[ch].WorkeStartup + 1;
                     g_Channelinfo[ch].fault.bit.CV_Limit_OUT = 1; // 工步到达恒压值
                 }
             }
+
+
 #endif
         }
         break;

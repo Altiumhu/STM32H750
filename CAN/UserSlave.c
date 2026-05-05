@@ -116,17 +116,17 @@ void Init_RunningWorkSetup(void)
     // 初始化工步信息
     for (uint16_t ch = 0; ch < 16; ch++)
     {
-        g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart = 1.0f;
-        g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit = 4.2f;
+        // g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart = 1.0f;
+        // g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit = 4.2f;
 
-        g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].timeLimit = 160000;
-        g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentLimit = 0.0010f;
+        // g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].timeLimit = 160000;
+        // g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentLimit = 0.0010f;
 
-        g_Channelinfo[ch].WorkeStartup = 0x0; // 运行的工步号 无操作时= 0xff。
+        g_Channelinfo[ch].WorkeStartup = 0xFF; // 运行的工步号 无操作时= 0xff。
         // 工步号+循环号同时为0xff时，表示无效数据
         g_Channelinfo[ch].loopSn = 0x0; // 运行的循环号 无操作时=0xff,起始循环号为1。
 
-        g_Channelinfo[ch].status = 0x0; // 无操作时=0x53
+        g_Channelinfo[ch].status = 0x53; // 无操作时=0x53
         g_Channelinfo[ch].error = 0;    // 错误
 
         // g_Channelinfo[ch].RunningWorkSetup.type = WORKE_SETUP_CC_CV;
@@ -194,9 +194,6 @@ void UserSlave_UpdateSlaveRec(void)
                 index += AppUser_uint32_CharTo_Samll(tempdata, &canFrameData[index]);
                // 电压
                 index += AppUser_uint16_CharTo_Samll((uint16_t)(g_SampleADC.CH_BAT_V_Filter[ch] * 10000.0f), &canFrameData[index]);
-
-              
-                //  index += AppUser_uint16_CharTo_Samll((uint16_t)(g_Channelinfo[ch].voltage * 10000.0f), &canFrameData[index]);
                 // 温度
                 index += AppUser_uint16_CharTo_Samll(250, &canFrameData[index]);
 
