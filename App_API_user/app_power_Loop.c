@@ -79,7 +79,7 @@ void System_CloseLoop_Status(void)
             else if (g_Channelinfo[ch].fault.bit.CV_Limit_OUT == 1 || g_Channelinfo[ch].fault.bit.CC_Limit_OUT == 1 || g_Channelinfo[ch].fault.bit.TIMER_OUT == 1)
             {
                 g_Channelinfo[ch].workeDelayTimer++;
-                if (g_Channelinfo[ch].workeDelayTimer >= 5100)
+                if (g_Channelinfo[ch].workeDelayTimer >= 100)
                 {
                     g_Channelinfo[ch].workMode = POWER_SET_PARAM;
                     g_Channelinfo[ch].workeDelayTimer = 0;
@@ -87,7 +87,7 @@ void System_CloseLoop_Status(void)
                     g_Channelinfo[ch].fault.bit.CV_Limit_OUT = 0;  // 工步到达恒压值
                     g_Channelinfo[ch].fault.bit.CC_Limit_OUT = 0;  // 工步到达恒流设置值
                     g_Channelinfo[ch].fault.bit.TIMER_OUT = 0;     // 工步时间到
-                    Set_PWM_Channel_CH595_EN(2, ch, EX_595_RESET); // 关闭PWM_EN
+                  //  Set_PWM_Channel_CH595_EN(2, ch, EX_595_RESET); // 关闭PWM_EN
                 }
             }
              gHandle_PID[ch].v_fdb = g_Channelinfo[ch].voltage; // 设置反馈值
@@ -179,7 +179,7 @@ void System_CloseLoop_Status(void)
           
            
 
-            Set_PWM_Channel_CH595_EN(0, ch, EX_595_RESET); // 关闭
+           Set_PWM_Channel_CH595_EN(0, ch, EX_595_RESET); // 关闭
             PIDInit(ch);
             HAL_EPWM_Config(ch);
             // Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
@@ -221,11 +221,11 @@ void System_CloseLoop_Status(void)
                 g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
             }
 
-            if (g_Channelinfo[ch].Cap_voltage >= (g_Channelinfo[ch].Set_SS_PreCV - 0.01f))
+            if (g_Channelinfo[ch].Cap_voltage >= (g_Channelinfo[ch].Set_SS_PreCV - 0.11f))
             {
             
                 g_Channelinfo[ch].SS_Timer++;
-                if (g_Channelinfo[ch].SS_Timer >= 10) // 开机一瞬间误动作
+                if (g_Channelinfo[ch].SS_Timer >= 1) // 开机一瞬间误动作
                 {
                     Set_PWM_Channel_CH595_EN(0, ch, EX_595_SET); // 打开PRT
                     g_Channelinfo[ch].SS_Timer = 0;
@@ -516,8 +516,8 @@ void TIMER0CallbackFunction(void *handle)
     // System_LED1_HIGH_LEVEL;
     // System_DBUGGPIO_HIGH_LEVEL;
 
-    GetADC_Driver_Result();
-    sample_irq_handler(); // 采集数据转换
+    // GetADC_Driver_Result();
+    // sample_irq_handler(); // 采集数据转换
 
 #if CLOOS_LOOP_MODE      // 闭环开启保护
     Scan_System_Fault(); // 保护

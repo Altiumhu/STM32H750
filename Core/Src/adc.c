@@ -62,7 +62,7 @@ void MX_ADC1_Init(void)
   hadc1.Init.ContinuousConvMode = ENABLE;
   hadc1.Init.NbrOfConversion = 14;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
-  hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T6_TRGO;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc1.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DMA_CIRCULAR;
   hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
@@ -511,7 +511,14 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 	    if (hadc->Instance == ADC1)
     {
         // ADC1 DMA完成 - 可在这里处理数据
+        GetADC_Driver_Result();
+        sample_irq_handler(); // 采集数据转换
+       //  printf("\r\n 222 HAL_ADC_ConvCpltCallback  ");
     }
+
+    // GetADC_Driver_Result();
+    // sample_irq_handler(); // 采集数据转换
+   ///      printf("\r\n 1111 HAL_ADC_ConvCpltCallback  ");
 }
 
 // ADC错误回调

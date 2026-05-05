@@ -20,7 +20,7 @@
 #include "AppUser_Sample.h"
 
 uint32_t g_SanSampTimer = 45;
-uint32_t g_samptimer = 0; // 增加延时，让CD4052切换后充分稳定
+uint32_t g_samptimer = 10; // 增加延时，让CD4052切换后充分稳定
 
 #define SAMP_TIMER 10
 /*=================================================================================================
@@ -82,7 +82,7 @@ void GetADC_Driver_Result(void)
         Samp_ChnumTimer++;
         if (Samp_ChnumTimer >= g_SanSampTimer)
         {
-            CD4052_Chnum = 0;
+            CD4052_Chnum = 1;
             Samp_ChnumTimer = 0;
             delayTimer = 0;
            
@@ -452,7 +452,7 @@ void ADC_Filter(void)
 
     for (ch = 0; ch < ADC_1_CH_NUM_MAX; ch++)
     {
-        g_SampleADC.ADC_1_CH_floatSum[ch] = gHandle_PID[ch].v_fdb + g_SampleADC.ADC_1_CH_floatSum[ch] - (g_SampleADC.ADC_1_CH_floatSum[ch] / 32.0f);
+        g_SampleADC.ADC_1_CH_floatSum[ch] = g_Channelinfo[ch].voltage+ g_SampleADC.ADC_1_CH_floatSum[ch] - (g_SampleADC.ADC_1_CH_floatSum[ch] / 32.0f);
 
         g_SampleADC.CH_BAT_V_Filter[ch] = g_SampleADC.ADC_1_CH_floatSum[ch] / 32.0f;
     }

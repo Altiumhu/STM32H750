@@ -324,11 +324,13 @@ void Power_Stop_PWM(void)
 		{
 			if (g_epwmHandle[ch].High_MOS_OpenFlag == 1)
 			{
+               	pwm_stop(ch); // 原边主管
+
 				Set_PWM_Channel_CH595_EN(2, ch, EX_595_RESET); // 关闭PWM_EN
 
 				Set_PWM_Channel_CH595_EN(0, ch, EX_595_RESET); // 关闭PRT
 				g_epwmHandle[ch].High_MOS_OpenFlag = 0;
-				pwm_stop(ch); // 原边主管
+			
 			}
 		}
 	}
