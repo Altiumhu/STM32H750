@@ -221,7 +221,7 @@ void UserSlave_UpdateSlaveRec(void)
                         if (g_Channelinfo[ch].SampDelayTimer >= 50)
                         {
                             g_Channelinfo[ch].SampDelayTimer = 50;
-                            // tempdata = (int32_t)(  gHandle_PID[ch].i_fdb  * 10000.0f);
+                            // tempdata = (int32_t)(  g_Channelinfo[ch].current   * 10000.0f);
                             tempdata = (int32_t)(g_SampleADC.CH_BAT_current_Filter[ch] * 10000.0f);
                         }
                         else
@@ -234,7 +234,7 @@ void UserSlave_UpdateSlaveRec(void)
                       index += AppUser_uint16_CharTo_Samll((uint16_t)(g_SampleADC.CH_BAT_V_Filter[ch] * 10000.0f), &canFrameData[index]);
 
                     }
-                    else
+                    else 
                     {
                         g_Channelinfo[ch].SampDelayTimer++;
                         // 电流
@@ -444,6 +444,7 @@ void UserSlave_UpdateSlaveRec(void)
                    
                 }
             }
+            Set_ULock_GPIO(); // 解除硬件保护
             break;
 
         case EMTOSCMD_StartSomeChannelWorkStep: //// 部分通道启动工步
