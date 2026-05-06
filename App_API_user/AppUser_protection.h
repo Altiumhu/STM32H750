@@ -34,7 +34,7 @@ typedef union power_fault_define
 
         uint32_t OTP1 : 1;    // 副边温度过温
         uint32_t OTP2 : 1;    // 谐振电流负载峰值保护/过流标志位
-        uint32_t OTP3 : 1;    // 副边温度过温
+        uint32_t BAT_OUT_ERR : 1;    // 副边温度过温
         uint32_t CAP_BAT : 1; // 容压大于池压
 
         uint32_t CMD_ERR : 1; // 指令错误

@@ -152,7 +152,7 @@ void GetADC_Driver_Result(void)
 
                     g_Channelinfo[0 + ch * 4].Cap_voltage = g_Channelinfo[0 + ch * 4].Cap_voltage_ADC * V_CAL_Ka * 3.0333333f;
                 }
-                else if (g_Channelinfo[ch * 4].workMode == POWER_GET_V_PORT || g_Channelinfo[ch * 4].workMode == POWER_RUN_DISCHARGE || g_Channelinfo[ch * 4].workMode == POWER_RUN_CHARGE)
+                else if (  g_Channelinfo[ch * 4].workMode == POWER_GET_V_PORT || g_Channelinfo[ch * 4].workMode == POWER_RUN_DISCHARGE || g_Channelinfo[ch * 4].workMode == POWER_RUN_CHARGE)
                 {
                     Set_Sample_Channel_VPortGPIO(AD_V_PORT);            // 切换到端口电压采样
                     g_Channelinfo[0].voltage_port_ADC = adc1Result[12]; // 通道1 端口电压
@@ -163,6 +163,7 @@ void GetADC_Driver_Result(void)
 
                     g_Channelinfo[ch * 4].voltage_port = g_Channelinfo[ch * 4].voltage_port_ADC * V_CAL_Ka * 2.2f;
                 }
+ 
             }
         }
 
@@ -324,7 +325,7 @@ void GetADC_Driver_Result(void)
 
                     g_Channelinfo[2 + ch * 4].Cap_voltage = g_Channelinfo[2 + ch * 4].Cap_voltage_ADC * V_CAL_Ka * 3.0333333f;
                 }
-                else if (g_Channelinfo[2 + ch * 4].workMode == POWER_RUN_DISCHARGE || g_Channelinfo[2 + ch * 4].workMode == POWER_GET_V_PORT || g_Channelinfo[2 + ch * 4].workMode == POWER_RUN_CHARGE)
+                else if ( g_Channelinfo[2 + ch * 4].workMode == POWER_RUN_DISCHARGE || g_Channelinfo[2 + ch * 4].workMode == POWER_GET_V_PORT || g_Channelinfo[2 + ch * 4].workMode == POWER_RUN_CHARGE)
                 {
                     Set_Sample_Channel_VPortGPIO(AD_V_PORT);
                     g_Channelinfo[2].voltage_port_ADC = adc1Result[12]; // 通道3 端口电压
@@ -409,7 +410,7 @@ void GetADC_Driver_Result(void)
 
                     g_Channelinfo[3 + ch * 4].Cap_voltage = g_Channelinfo[3 + ch * 4].Cap_voltage_ADC * V_CAL_Ka * 3.0333333f;
                 }
-                else if (g_Channelinfo[3 + ch * 4].workMode == POWER_RUN_DISCHARGE || g_Channelinfo[3 + ch * 4].workMode == POWER_GET_V_PORT || g_Channelinfo[3 + ch * 4].workMode == POWER_RUN_CHARGE)
+                else if ( g_Channelinfo[3 + ch * 4].workMode == POWER_RUN_DISCHARGE || g_Channelinfo[3 + ch * 4].workMode == POWER_GET_V_PORT || g_Channelinfo[3 + ch * 4].workMode == POWER_RUN_CHARGE)
                 {
                     Set_Sample_Channel_VPortGPIO(AD_V_PORT);
                     g_Channelinfo[3].voltage_port_ADC = adc1Result[12];  // 通道3 端口电压
@@ -593,15 +594,18 @@ void AppUser_ChannelInfo_Debug(void)
         //   printf(" HOMSduty=%d low=%d \r\n", g_epwmHandle[ch].High_MOS_DUTY, g_epwmHandle[ch].Low_MOS_DUTY);
         printf(" WorkeRunTimer =%d \r\n", g_Channelinfo[ch].WorkeRunTimer);
 
-        printf("\r\n ch=[%d] 工步类型=0x%X    \r\n", ch + 1, g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].type);
+        printf("\r\n ch=[%d] 工步类型=0x%X\r\n", ch + 1, g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].type);
 
         printf("\r\n ch=[%d] 工步号=0x%X  CH_StartFlag=%d\r\n", ch + 1, g_Channelinfo[ch].WorkeStartup, g_Channelinfo[ch].CH_StartFlag);
 
-        printf(" ch=[%d]  loopSn=0x%X \r\n", ch + 1,   g_Channelinfo[ch].loopSn);
+        printf(" ch=[%d] loopSn=0x%X \r\n", ch + 1,   g_Channelinfo[ch].loopSn);
         
-         printf("时间采集数据时间=%d\r\n",   g_Channelinfo[ch].SampDelayTimer);
+         printf("  ch=[%d]   总工步数=%d \r\n", ch + 1, GetTotal_steps());
 
-        printf("\r\n g_Channelinfo[%d].error=0x  %X  g_Channelinfo[ch].status = 0x%X", ch + 1, g_Channelinfo[ch].error, g_Channelinfo[ch].status);
+         printf("  ch=[%d]   Set_SS_PreCV=%fv \r\n", ch + 1,  g_Channelinfo[ch].Set_SS_PreCV );
+          
+
+        printf("\r\n g_Channelinfo[%d].error=0x%X  g_Channelinfo[ch].status = 0x%X", ch + 1, g_Channelinfo[ch].error, g_Channelinfo[ch].status);
     }
 }
 

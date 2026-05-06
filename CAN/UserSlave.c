@@ -130,7 +130,7 @@ void Init_RunningWorkSetup(void)
         g_Channelinfo[ch].error = 0;    // 错误
 
         // g_Channelinfo[ch].RunningWorkSetup.type = WORKE_SETUP_CC_CV;
-        g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].type = WORKE_SETUP_IDLE;
+      //  g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].type = WORKE_SETUP_IDLE;
     }
 }
 
@@ -207,7 +207,7 @@ void UserSlave_UpdateSlaveRec(void)
             }
 
             CanFr_SendData(BoardInfo_GetID(), EMTOSCMD_SampleQuest, canFrameData, index);
-            printf("\r\n 请求采样数据  ");
+         //   printf("\r\n 请求采样数据  ");
             break;
 
         case EMTOSCMD_SendWorkStepInfo: // 下发工步信息
@@ -436,20 +436,20 @@ void UserSlave_UpdateSlaveRec(void)
             printf("\r\n 单点停止命令小写  w 部分通道停止停止工步 =%d ", pFrame->dataLen);
             printf("\r\n SetCh_Activity=0x%X ", SetCh_Activity);
 
-            for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++) // 判断哪个通道被激活 通道工步数据
-            {
-                if ((SetCh_Activity >> ch) & 0x0001)
-                {
-                    g_Channelinfo[ch].status = 0;       // 无操作时=0x53
-                    g_Channelinfo[ch].error = 0;        // 错误0x04: 用户强制停止
-                    g_Channelinfo[ch].WorkeStartup = 0; // 启动工步
-                    g_Channelinfo[ch].loopSn = 0;       // 启动工步
-                    g_Channelinfo[ch].fault.all = 1;    // 停止工步
-                    g_Channelinfo[ch].CH_StartFlag = 0; // 启动工步
-                    g_epwmHandle[ch].High_MOS_OpenFlag = 1;
-                    g_epwmHandle[ch].High_MOS_STA = 0;
-                }
-            }
+            // for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++) // 判断哪个通道被激活 通道工步数据
+            // {
+            //     if ((SetCh_Activity >> ch) & 0x0001)
+            //     {
+            //         g_Channelinfo[ch].status = 0;       // 无操作时=0x53
+            //         g_Channelinfo[ch].error = 0;        // 错误0x04: 用户强制停止
+            //         g_Channelinfo[ch].WorkeStartup = 0; // 启动工步
+            //         g_Channelinfo[ch].loopSn = 0;       // 启动工步
+            //         g_Channelinfo[ch].fault.all = 1;    // 停止工步
+            //         g_Channelinfo[ch].CH_StartFlag = 0; // 启动工步
+            //         g_epwmHandle[ch].High_MOS_OpenFlag = 1;
+            //         g_epwmHandle[ch].High_MOS_STA = 0;
+            //     }
+            // }
             break;
 
         case EMTOSCMD_SampleQuestAck: // // 发送采样数据确认

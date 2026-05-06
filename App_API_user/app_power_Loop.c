@@ -42,20 +42,14 @@ void System_CloseLoop_Status(void)
 
         if (g_Channelinfo[ch].fault.all) // 判断故障
         {
-            if (g_Channelinfo[ch].fault.bit.Worke_fish == 1 || g_Channelinfo[ch].fault.bit.Worke_Setup_OVER == 1)
+            if ( g_Channelinfo[ch].fault.bit.Worke_Setup_OVER == 1)
             {
-                    g_Channelinfo[ch].WorkeStartup = 0xFF; // 运行的工步号 无操作时= 0xff。
 
-                    g_Channelinfo[ch].status = 0x53;       // 无操作时=0x53
-                    g_Channelinfo[ch].error = 0;           // 错误0x04: 用户强制停止s
-                    // 工步号+循环号同时为0xff时，表示无效数据
-                    g_Channelinfo[ch].loopSn = 0x0; // 运行的循环号 无操作时=0xff,起始循环号为1。
                     Init_RunningWorkSetup();
             }
             else
             {
-                //  g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
-                // g_Channelinfo[ch].loopSn =0xFF; //
+
                 g_Channelinfo[ch].status = 0x53; // 无操作时=0x53
             }
 
@@ -63,8 +57,7 @@ void System_CloseLoop_Status(void)
              g_epwmHandle[ch].High_MOS_STA = 0;
             g_Channelinfo[ch].workMode = POWER_FAULT;
 
-            // Init_RunningWorkSetup();
-            // pwm_stop(ch); /// 出现故障就关闭pwm
+
         }
 
         switch (g_Channelinfo[ch].workMode)
@@ -106,8 +99,9 @@ void System_CloseLoop_Status(void)
 
             if (g_Channelinfo[ch].WorkeStartup >= GetTotal_steps()) // 运行工步号大于总工步数
             {
+               
                 g_Channelinfo[ch].fault.bit.Worke_Setup_OVER = 1; // 工步大于工步数 整个工艺结束跳转故障
-                                                                  // g_Channelinfo[ch].WorkeStartup= g_Channelinfo[ch].WorkeStartup+ 1; // 当前运行工步循环号，表示当前工步需要循环工作几次
+                                                           
             }
             // 后续在完善功能
 
@@ -175,7 +169,7 @@ void System_CloseLoop_Status(void)
 
         case POWER_GET_V_PORT: // 获得端口电压
             g_Channelinfo[ch].GetPortTimer++;
-            if (g_Channelinfo[ch].GetPortTimer >= 2)
+            if (g_Channelinfo[ch].GetPortTimer >= 12)
             {
                 g_Channelinfo[ch].GetPortTimer = 0;
                 g_Channelinfo[ch].workMode = POWER_INIT;
@@ -191,14 +185,10 @@ void System_CloseLoop_Status(void)
         case POWER_INIT: //
         {
           
-           
-
            Set_PWM_Channel_CH595_EN(0, ch, EX_595_RESET); // 关闭
             PIDInit(ch);
             HAL_EPWM_Config(ch);
-            // Set_Sample_Channel_VPortGPIO(AD_V_CAP_EN);
             g_Channelinfo[ch].workMode = POWER_PRECHARGE;
-
             g_Channelinfo[ch].run = 0x0;
             g_Channelinfo[ch].SS_Timer = 0;
             g_Channelinfo[ch].Limit_Timer = 0;
@@ -216,7 +206,16 @@ void System_CloseLoop_Status(void)
             // 电流换
             gHandle_PID[ch].i_ref = 1.0f; // 设置给定值5A
 
-            // gHandle_PID[ch].i_fdb = g_Channelinfo[ch].current; // 设置反馈值
+          if(  g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].type==WORKE_SETUP_DC)
+          {
+             gHandle_PID[ch].i_fdb = g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart*(-1.0f); // 设置反馈值
+          }
+          else
+          {
+             gHandle_PID[ch].i_fdb = g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentStart; // 设置反馈值
+          }
+
+            //  
 
             pid_I_Loop_calc(&gHandle_PID[ch]);                 // 电流换
 
@@ -237,13 +236,15 @@ void System_CloseLoop_Status(void)
                 g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
             }
 
+             g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].v_pid_out;
+
             if (g_Channelinfo[ch].Cap_voltage >= (g_Channelinfo[ch].Set_SS_PreCV - 0.01f))
             {
             
                 g_Channelinfo[ch].SS_Timer++;
                 if (g_Channelinfo[ch].SS_Timer >= 10) // 开机一瞬间误动作
                 {
-                    Set_PWM_Channel_CH595_EN(0, ch, EX_595_SET); // 打开PRT
+                  Set_PWM_Channel_CH595_EN(0, ch, EX_595_SET); // 打开PRT
                     g_Channelinfo[ch].SS_Timer = 0;
 #if 1
                     //  g_Channelinfo[ch].Set_PreCV =4.2f;
@@ -258,6 +259,8 @@ void System_CloseLoop_Status(void)
                             g_Channelinfo[ch].WorkeRunStartTimer = Timer_GetClock(); //  记录开始启动时间
                             g_Channelinfo[ch].workMode = POWER_RUN_CHARGE;
                             g_Channelinfo[ch].status = WORKE_SETUP_CC;
+                            gHandle_PID[ch].i_fdb  =0.5f;
+                            gHandle_PID[ch].i_err_sum =    g_epwmHandle[ch].High_MOS_DUTY ;
 
                             break;
                         case WORKE_SETUP_CC_CV: // 恒流恒压充电（A）
@@ -268,6 +271,8 @@ void System_CloseLoop_Status(void)
                             g_Channelinfo[ch].workMode = POWER_RUN_CHARGE;
                             g_Channelinfo[ch].status = WORKE_SETUP_CC_CV;
                             g_Channelinfo[ch].Set_CC= 0.5f;
+                             gHandle_PID[ch].i_fdb  =0.5f;
+                             gHandle_PID[ch].i_err_sum =    g_epwmHandle[ch].High_MOS_DUTY ;
 
                             break;
                         case WORKE_SETUP_DC: // 恒流放电(C) 工步名称
@@ -280,13 +285,15 @@ void System_CloseLoop_Status(void)
                             g_Channelinfo[ch].WorkeRunStartTimer = Timer_GetClock(); //  记录开始启动时间
                             g_Channelinfo[ch].status = WORKE_SETUP_DC;
 
-                            g_Channelinfo[ch].Set_CC= 0.5f;
+                            g_Channelinfo[ch].Set_CC= g_Channelinfo[ch].Set_PreDC;
+
+                             gHandle_PID[ch].i_err_sum =    g_epwmHandle[ch].High_MOS_DUTY ;
              
-                            if(  gHandle_PID[ch].loop == V_LOOP)
-                            {
-                           //   gHandle_PID[ch].i_err_sum =   gHandle_PID[ch].v_err_sum ;
+                            // if(  gHandle_PID[ch].loop == V_LOOP)
+                            // {
+                            //   gHandle_PID[ch].i_err_sum =    g_epwmHandle[ch].High_MOS_DUTY ;
                             
-                            }
+                            // }
                          //   gHandle_PID[ch].i_err_sum = 1500;
 
                             break;
@@ -311,7 +318,7 @@ void System_CloseLoop_Status(void)
         case POWER_RUN_CHARGE: // 06
         {
             // 充电切换占空比设置
-            g_epwmHandle[ch].High_MOS_DUTY_MAX = TIMER_DUTY_MAX;         // 36.40% 97750
+            g_epwmHandle[ch].High_MOS_DUTY_MAX = 1500;         // 36.40% 97750
             g_epwmHandle[ch].High_MOS_DUTY_MIN = 100;                    // 5200
             gHandle_PID[ch].i_up = (g_epwmHandle[ch].High_MOS_DUTY_MAX); //
             gHandle_PID[ch].i_ui = (g_epwmHandle[ch].High_MOS_DUTY_MIN); //
@@ -454,11 +461,6 @@ void System_CloseLoop_Status(void)
             gHandle_PID[ch].loop = I_LOOP; // 电流环
             g_epwmHandle[ch].High_MOS_DUTY = gHandle_PID[ch].i_pid_out;
 
-            // if (g_Channelinfo[ch].current >=  g_Channelinfo[ch].Set_CC )
-            // {
-            //     gHandle_PID[ch].i_err_sum = g_epwmHandle[ch].High_MOS_DUTY;
-            // }
-
             // 1. 工步时间到
             g_Channelinfo[ch].WorkeRunTimer = Timer_GetClock() - g_Channelinfo[ch].WorkeRunStartTimer;
 
@@ -473,18 +475,18 @@ void System_CloseLoop_Status(void)
             if (g_Channelinfo[ch].current <= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].currentLimit)
             {
                 g_Channelinfo[ch].SS_Timer++;
-                if (g_Channelinfo[ch].SS_Timer >= 500) // 一瞬间误动作
+                if (g_Channelinfo[ch].SS_Timer >= 1000) // 一瞬间误动作
                 {
                     g_Channelinfo[ch].SS_Timer = 0;
-                    g_Channelinfo[ch].WorkeStartup = g_Channelinfo[ch].WorkeStartup + 1;
-                    g_Channelinfo[ch].fault.bit.CC_Limit_OUT = 1; // 工步到达恒流设置值
+                     g_Channelinfo[ch].WorkeStartup = g_Channelinfo[ch].WorkeStartup + 1;
+                     g_Channelinfo[ch].fault.bit.CC_Limit_OUT = 1; // 工步到达恒流设置值
                 }
             }
             else
             {
                 g_Channelinfo[ch].SS_Timer = 0;
             }
-#if 1
+#if 0
             // 3. 到达设置充电电压
             if (g_Channelinfo[ch].voltage <= g_Channelinfo[ch].RunningWorkSetup[g_Channelinfo[ch].WorkeStartup].voltLimit)
             {
