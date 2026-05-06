@@ -77,18 +77,18 @@ void AppUser_Voltage_OUT_VP(void)
                
               // }
 
-          //  if (g_Channelinfo[ch].voltage <= 0.5f)
-          //   {
-          //     g_Channelinfo[ch].fault.bit.L_UVP = 1;
-          //     g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; //  // 无电池
-          //   }
+           if (g_Channelinfo[ch].voltage <= 0.5f)
+            {
+              g_Channelinfo[ch].fault.bit.L_UVP = 1;
+              g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; //  // 无电池
+            }
 
-          //  if (g_Channelinfo[ch].voltage >4.2f)
-          //   {
+           if (g_Channelinfo[ch].voltage >4.2f)
+            {
               
-          //    g_Channelinfo[ch].fault.bit.L_OVP = 1;
-          //     g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; //  // 无电池
-          //   }
+             g_Channelinfo[ch].fault.bit.L_OVP = 1;
+              g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; //  // 无电池
+            }
  
 
             break;
