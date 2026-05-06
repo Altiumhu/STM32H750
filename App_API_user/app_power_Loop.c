@@ -318,7 +318,7 @@ void System_CloseLoop_Status(void)
         case POWER_RUN_CHARGE: // 06
         {
             // 充电切换占空比设置
-            g_epwmHandle[ch].High_MOS_DUTY_MAX = 1500;         // 36.40% 97750
+            g_epwmHandle[ch].High_MOS_DUTY_MAX = TIMER_DC_DUTY_MAX;         // 36.40% 97750
             g_epwmHandle[ch].High_MOS_DUTY_MIN = 100;                    // 5200
             gHandle_PID[ch].i_up = (g_epwmHandle[ch].High_MOS_DUTY_MAX); //
             gHandle_PID[ch].i_ui = (g_epwmHandle[ch].High_MOS_DUTY_MIN); //
