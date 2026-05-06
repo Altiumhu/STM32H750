@@ -582,7 +582,7 @@ void AppUser_ChannelInfo_Debug(void)
     /* 电容电压 */
     printf("电容端口信息 =%f ADC1_A10=%d\r\n", g_Channelinfo[1].Cap_voltage, adc_values[12]);
 
-    for (ch = 0; ch < 2; ch++)
+    for (ch = 4; ch < 6; ch++)
     {
         printf("\r\n ch=[%d] workMode=%d \r\n", ch + 1, g_Channelinfo[ch].workMode);
         printf(" ch=[%d] voltage=%f--ADC=%d current=%f--ADC%d Cap_voltage=%f voltage_port=%f\r\n", ch + 1, g_Channelinfo[ch].voltage, g_Channelinfo[ch].voltage_ADC,

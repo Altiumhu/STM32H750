@@ -289,12 +289,7 @@ void System_CloseLoop_Status(void)
 
                              gHandle_PID[ch].i_err_sum =    g_epwmHandle[ch].High_MOS_DUTY ;
              
-                            // if(  gHandle_PID[ch].loop == V_LOOP)
-                            // {
-                            //   gHandle_PID[ch].i_err_sum =    g_epwmHandle[ch].High_MOS_DUTY ;
-                            
-                            // }
-                         //   gHandle_PID[ch].i_err_sum = 1500;
+
 
                             break;
                         case 0x52: // 循环(R) 工步名称
@@ -318,7 +313,7 @@ void System_CloseLoop_Status(void)
         case POWER_RUN_CHARGE: // 06
         {
             // 充电切换占空比设置
-            g_epwmHandle[ch].High_MOS_DUTY_MAX = TIMER_DC_DUTY_MAX;         // 36.40% 97750
+            g_epwmHandle[ch].High_MOS_DUTY_MAX = TIMER_DUTY_MAX;         // 36.40% 97750
             g_epwmHandle[ch].High_MOS_DUTY_MIN = 100;                    // 5200
             gHandle_PID[ch].i_up = (g_epwmHandle[ch].High_MOS_DUTY_MAX); //
             gHandle_PID[ch].i_ui = (g_epwmHandle[ch].High_MOS_DUTY_MIN); //
@@ -549,9 +544,10 @@ void TIMER0CallbackFunction(void *handle)
     sample_irq_handler(); // 采集数据转换
     System_CloseLoop_Status();
 
-    Updata_EPWM_Handle();
+   
     g_SanSampFishFlag =0;
     }
+     Updata_EPWM_Handle();
 
 
     // System_DBUGGPIO_LOW_LEVEL;
