@@ -18,125 +18,109 @@ void AppUser_OUT_OCP(void)
 {
 }
 
-uint16_t OUT_V_ERR_CUNT [16]={0};
-uint16_t OUT_V_CUNT [16]={0};
-  float  Vouterr[16]={0.0f};
+uint16_t OUT_V_ERR_CUNT[16] = {0};
+uint16_t OUT_V_CUNT[16] = {0};
+float Vouterr[16] = {0.0f};
 void AppUser_Voltage_OUT_VP(void)
 {
 
   uint16_t ch = 0;
   uint32_t tempdata;
 
-
-
   for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
   {
 
     switch (g_Channelinfo[ch].workMode)
     {
-          case POWER_OFF:   // 关闭驱动
-          case POWER_FAULT: // 关闭驱动
-            if (g_Channelinfo[ch].voltage <= 0.5f && g_Channelinfo[ch].error==0)
-            {
-              g_Channelinfo[ch].fault.bit.L_UVP = 1;
-              g_Channelinfo[ch].error =  EChannelError_NoBattery; //  //电池接反
-            }
+    case POWER_OFF:   // 关闭驱动
+    case POWER_FAULT: // 关闭驱动
+      if (g_Channelinfo[ch].voltage <= 0.5f && g_Channelinfo[ch].error == 0)
+      {
+        g_Channelinfo[ch].fault.bit.L_UVP = 1;
+        g_Channelinfo[ch].error = EChannelError_NoBattery; //  //电池接反
+      }
 
-            break;
-         
-          case POWER_GET_V_PORT:
-          case POWER_IDLE:  // 
+      break;
 
-            if (g_Channelinfo[ch].voltage <= 0.5f)
-            {
-              g_Channelinfo[ch].fault.bit.L_UVP = 1;
-              g_Channelinfo[ch].error = EChannelError_NoBattery; //  // 无电池
-            }
+    case POWER_GET_V_PORT:
+    case POWER_IDLE: //
 
-            break;
+      if (g_Channelinfo[ch].voltage <= 0.5f)
+      {
+        g_Channelinfo[ch].fault.bit.L_UVP = 1;
+        g_Channelinfo[ch].error = EChannelError_NoBattery; //  // 无电池
+      }
 
+      break;
 
-          case POWER_RUN_CHARGE:  // 
-           
+    case POWER_RUN_CHARGE: //
 
+      // if (g_Channelinfo[ch].voltage_port< g_Channelinfo[ch].voltage )
+      // {
+      //   OUT_V_CUNT[ch]++;
+      //   if( OUT_V_CUNT[ch]>=10)
+      //   {
+      //      OUT_V_CUNT[ch] =10;
+      //     g_Channelinfo[ch].fault.bit.BAT_OUT_ERR = 1;
+      //     g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; // 电压接触不良
+      //   }
 
-              // if (g_Channelinfo[ch].voltage_port< g_Channelinfo[ch].voltage )
-              // {
-              //   OUT_V_CUNT[ch]++;
-              //   if( OUT_V_CUNT[ch]>=10)
-              //   {
-              //      OUT_V_CUNT[ch] =10;
-              //     g_Channelinfo[ch].fault.bit.BAT_OUT_ERR = 1;
-              //     g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; // 电压接触不良
-              //   }
+      // }
+      // else
+      // {
+      //    OUT_V_CUNT[ch] =0;
 
-              // }
-              // else
-              // {
-              //    OUT_V_CUNT[ch] =0;
-               
-              // }
+      // }
 
-           if (g_Channelinfo[ch].voltage <= 0.5f)
-            {
-              g_Channelinfo[ch].fault.bit.L_UVP = 1;
-              g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; //  // 无电池
-            }
+      if (g_Channelinfo[ch].voltage <= 0.5f)
+      {
+        g_Channelinfo[ch].fault.bit.L_UVP = 1;
+        g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; //  // 无电池
+      }
 
-           if (g_Channelinfo[ch].voltage >4.2f)
-            {
-              
-             g_Channelinfo[ch].fault.bit.L_OVP = 1;
-              g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; //  // 无电池
-            }
- 
+      if (g_Channelinfo[ch].voltage > 4.2f)
+      {
 
-            break;
+        g_Channelinfo[ch].fault.bit.L_OVP = 1;
+        g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; //  // 无电池
+      }
 
+      break;
 
+    case POWER_RUN_DISCHARGE: // 放电模式
 
-          case POWER_RUN_DISCHARGE:  // 放电模式
-           
+      // if (g_Channelinfo[ch].voltage_port> g_Channelinfo[ch].voltage )
+      // {
+      //   OUT_V_ERR_CUNT[ch]++;
+      //   if( OUT_V_ERR_CUNT[ch]>=10)
+      //   {
+      //      OUT_V_ERR_CUNT[ch]=10;
+      //     g_Channelinfo[ch].fault.bit.BAT_OUT_ERR = 1;
+      //     g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; // 电压接触不良
+      //   }
 
-              // if (g_Channelinfo[ch].voltage_port> g_Channelinfo[ch].voltage )
-              // {
-              //   OUT_V_ERR_CUNT[ch]++;
-              //   if( OUT_V_ERR_CUNT[ch]>=10)
-              //   {
-              //      OUT_V_ERR_CUNT[ch]=10;
-              //     g_Channelinfo[ch].fault.bit.BAT_OUT_ERR = 1;
-              //     g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; // 电压接触不良
-              //   }
+      // }
+      // else
+      // {
+      //    OUT_V_ERR_CUNT[ch] =0;
 
-              // }
-              // else
-              // {
-              //    OUT_V_ERR_CUNT[ch] =0;
-               
-              // }
+      // }
 
-           if (g_Channelinfo[ch].voltage <= 0.5f)
-            {
-              g_Channelinfo[ch].fault.bit.L_UVP = 1;
-              g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; //  // 无电池
-            }
+      if (g_Channelinfo[ch].voltage <= 0.5f)
+      {
+        g_Channelinfo[ch].fault.bit.L_UVP = 1;
+        g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; //  // 无电池
+      }
 
-           if (g_Channelinfo[ch].voltage >4.2f)
-            {
-              
-              g_Channelinfo[ch].fault.bit.L_OVP = 1;
-              g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; //  // 无电池
-            }
-    
+      if (g_Channelinfo[ch].voltage > 4.2f)
+      {
 
-      
+        g_Channelinfo[ch].fault.bit.L_OVP = 1;
+        g_Channelinfo[ch].error = EChannelError_SLAVE_OUT_ERR_0x89; //  // 无电池
+      }
 
-            break;
-
+      break;
     }
-
-
-
   }
 }
 
