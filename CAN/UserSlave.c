@@ -363,8 +363,8 @@ void UserSlave_UpdateSlaveRec(void)
             {
                 if ((SetCh_Activity >> ch) & 0x0001)
                 {
-                    g_Channelinfo[ch].WorkeStartup = 0; // 启动工步
-                    g_Channelinfo[ch].status = 0;       // 无操作时=0x53
+                    g_Channelinfo[ch].WorkeStartup = 0xFF; // 启动工步
+                    g_Channelinfo[ch].status = 0x53;       // 无操作时=0x53
                     g_Channelinfo[ch].error = 0;        // 错误0x04: 用户强制停止
 
                     g_Channelinfo[ch].loopSn = 0;    // 启动工步
@@ -440,7 +440,7 @@ void UserSlave_UpdateSlaveRec(void)
             {
                 // if ((SetCh_Activity >> ch) & 0x0001)
                 // {
-                //     g_Channelinfo[ch].status = 0;       // 无操作时=0x53
+                //     g_Channelinfo[ch].status = 53;       // 无操作时=0x53
                 //     g_Channelinfo[ch].error = 0;        // 错误0x04: 用户强制停止
                 //     g_Channelinfo[ch].WorkeStartup = 0; // 启动工步
                 //     g_Channelinfo[ch].loopSn = 0;       // 启动工步

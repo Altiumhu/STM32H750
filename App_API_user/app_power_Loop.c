@@ -50,7 +50,7 @@ void System_CloseLoop_Status(void)
             else
             {
 
-                g_Channelinfo[ch].status = 0x53; // 无操作时=0x53
+            //  g_Channelinfo[ch].status = 0x53; // 无操作时=0x53
             }
 
    
