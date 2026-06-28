@@ -44,9 +44,11 @@ typedef enum
 	EChannelError_CCNOCALIBRATE = 0x6A,
 	EChannelError_DCNOCALIBRATE = 0x6B,
 	EChannelError_Can = 0x37,
+	EChannelError_BAT_OUT_ERR = 0x72,//电池接反
 	EChannelError_OVProtect = 0x73, // 下位机板过压保护
 	EChannelError_UVProTect,		// 下位机板欠压保护
 	EChannelError_SLAVESTARTERROR = 0x88,
+	EChannelError_SLAVE_OUT_ERR_0x89 = 0x89,//电压接触不良
 } EChannelError_t;
 
 // 升级状态

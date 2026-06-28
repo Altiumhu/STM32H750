@@ -71,7 +71,7 @@ void MX_UART7_Init(void);
 void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void USART1_Send(uint8_t *buff, uint16_t Size);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

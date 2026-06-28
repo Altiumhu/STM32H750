@@ -88,6 +88,9 @@ typedef struct
 
 } ChannelInfo;
 
+
+extern uint32_t g_SanSampFishFlag;
+
 extern volatile ChannelInfo g_Channelinfo[BOARD_CHANNEL_NUM];
 
 extern void AppUser_Sample_Debug(void);

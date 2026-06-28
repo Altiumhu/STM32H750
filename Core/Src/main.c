@@ -21,7 +21,6 @@
 #include "adc.h"
 #include "dma.h"
 #include "fdcan.h"
-#include "i2c.h"
 #include "memorymap.h"
 #include "quadspi.h"
 #include "tim.h"
@@ -77,6 +76,8 @@ static void MPU_Config(void);
 // 传输完成回调
 void OnTransferComplete(TransferStatus status);
 
+
+extern void TEST_W25Q128(void);
 // 数据接收回调
 void OnDataReceived(uint16_t src_did, uint16_t session_id,
                     uint8_t *data, uint32_t size);
@@ -137,10 +138,9 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM8_Init();
   MX_ADC3_Init();
-  MX_QUADSPI_Init();
+//  MX_QUADSPI_Init();
   MX_TIM4_Init();
   MX_UART7_Init();
-  MX_I2C4_Init();
   MX_TIM5_Init();
   MX_TIM6_Init();
   MX_TIM12_Init();
@@ -148,15 +148,19 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   AppUser_prvSetupHardware();
+	
+
   Display_PeriphCLKFreq();
 
   RS485_ModbusCmdTask("CmdTask"); // RS485通讯解初始化
 
   AppUser_Device_InitData();
-
-
+	
 #if 1
-  // 发送初始消息 (设备上线通知)   ad failed with erro
+
+  	 TEST_W25Q128();
+//	SysTick_Init(systick_isr);   //SysTick定时器初始化
+//   发送初始消息 (设备上线通知)   ad failed with erro
   uint8_t init_msg[4] = {0xAA, 0x55, 0x01, 0x23};
   FDCAN_SendMessage(FC_BROADCAST, BROADCAST_DEVICE_ID, 0x000, init_msg, sizeof(init_msg));
   CAN1_Send_TEST();
@@ -164,14 +168,14 @@ int main(void)
 
   App_Drive_InitTimer_7(); // 100ms
   Debug_PWM();
-
+  STM32H750_UID();
   while (1)
   {
 
     UserSlave_Update();
     AppUser_PortocolRecv(); // MCU通讯协议包
     AppDebug_vTask();
-    //        AppUser_temp_sample();
+    // AppUser_temp_sample();
     // Read_GPIO_vTask();
 
     Power_Stop_PWM();
@@ -222,8 +226,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 5;
-  RCC_OscInitStruct.PLL.PLLN = 192;
+  RCC_OscInitStruct.PLL.PLLM = 4;//5
+  RCC_OscInitStruct.PLL.PLLN = 162;//190
   RCC_OscInitStruct.PLL.PLLP = 2;
   RCC_OscInitStruct.PLL.PLLQ = 8;
   RCC_OscInitStruct.PLL.PLLR = 2;
@@ -283,9 +287,6 @@ void PeriphCommonClock_Config(void)
 /* USER CODE BEGIN 4 */
 // uint8_t rx_data;
 // HAL_UART_Receive_IT(&huart1, &rx_data, 1);
-
-
-
 
 /* USER CODE END 4 */
 

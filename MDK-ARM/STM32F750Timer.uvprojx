@@ -54,7 +54,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath></ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -81,7 +81,7 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
-            <RunUserProg2>1</RunUserProg2>
+            <RunUserProg2>0</RunUserProg2>
             <UserProg1Name>fromelf --bin --output=@L.bin !L</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_PWR_LDO_SUPPLY,USE_HAL_DRIVER,STM32H750xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../CAN_large_data;../Aapp_Diver;../Aapp_Diver/EXIO;../SYSTEM/sys;../SYSTEM/delay;../App_API_user;../CommandLineInterface;../Modbus;../Shell;..\CAN</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../CAN_large_data;../Aapp_Diver;../Aapp_Diver/EXIO;../SYSTEM/sys;../SYSTEM/delay;../App_API_user;../CommandLineInterface;../Modbus;../Shell;../CAN;../SMEC88/Header;../QSPI</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -519,62 +519,6 @@
               <FileName>fdcan.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/fdcan.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>1</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/i2c.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -1246,6 +1190,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>stm32h7xx_hal_ospi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_ospi.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1583,6 +1532,86 @@
               <FileName>UserSlave.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CAN\UserSlave.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SMEC88</GroupName>
+          <Files>
+            <File>
+              <FileName>des.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SMEC88\Source\des.c</FilePath>
+            </File>
+            <File>
+              <FileName>iic_smec88.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SMEC88\Source\iic_smec88.c</FilePath>
+            </File>
+            <File>
+              <FileName>sha1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SMEC88\Source\sha1.c</FilePath>
+            </File>
+            <File>
+              <FileName>smec88.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SMEC88\Source\smec88.c</FilePath>
+            </File>
+            <File>
+              <FileName>des.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\SMEC88\Header\des.h</FilePath>
+            </File>
+            <File>
+              <FileName>iic_smec88.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\SMEC88\Header\iic_smec88.h</FilePath>
+            </File>
+            <File>
+              <FileName>sha1.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\SMEC88\Header\sha1.h</FilePath>
+            </File>
+            <File>
+              <FileName>smec88.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\SMEC88\Header\smec88.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>QSPI</GroupName>
+          <Files>
+            <File>
+              <FileName>W25Q128.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\QSPI\W25Q128.h</FilePath>
+            </File>
+            <File>
+              <FileName>W25xx_Qspi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\QSPI\W25xx_Qspi.c</FilePath>
+            </File>
+            <File>
+              <FileName>W25xx_Qspi.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\QSPI\W25xx_Qspi.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SYSTEM</GroupName>
+          <Files>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SYSTEM\delay\delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\SYSTEM\delay\delay.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -70,9 +70,17 @@ typedef struct
 {
     long ADC_1_CH_Sum[ADC_1_CH_NUM_MAX];        // ADC_A 通道数量原始数据
     long ADC_1_CH_Num_Filter[ADC_1_CH_NUM_MAX]; // ADC_A 通道数量滤波数据
-
     long ADC_2_CH_Sum[ADC_2_CH_NUM_MAX];        // ADC_C 通道数量原始数据
     long ADC_2_CH_Num_Filter[ADC_2_CH_NUM_MAX]; // ADC_C 通道数量滤波数据
+
+
+    float ADC_1_CH_floatSum[ADC_1_CH_NUM_MAX];        // ADC_A 通道数量原始数据
+    float CH_BAT_V_Filter[ADC_1_CH_NUM_MAX]; // ADC_A 通道数量滤波数据
+
+
+    float CH_BAT_current_floatSum[ADC_1_CH_NUM_MAX];        // ADC_A 通道数量原始数据
+    float CH_BAT_current_Filter[ADC_1_CH_NUM_MAX]; // ADC_A 通道数量滤波数据
+
 
 } SampleADC;
 

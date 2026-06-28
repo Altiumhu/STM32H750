@@ -21,7 +21,7 @@
 
 #define TIMER_DC_DUTY_MAX 4000             // // 49% 周期值7999
 
-#define TIMER_DUTY_MIN 1             //  600Khz
+#define TIMER_DUTY_MIN 100             //  600Khz
 
 
 // PWM控制量信息体

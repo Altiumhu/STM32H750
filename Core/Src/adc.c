@@ -511,7 +511,15 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 	    if (hadc->Instance == ADC1)
     {
         // ADC1 DMA完成 - 可在这里处理数据
+        GetADC_Driver_Result();
+       g_SanSampFishFlag =1;
+
+       //  printf("\r\n 222 HAL_ADC_ConvCpltCallback  ");
     }
+
+    // GetADC_Driver_Result();
+    // sample_irq_handler(); // 采集数据转换
+   ///      printf("\r\n 1111 HAL_ADC_ConvCpltCallback  ");
 }
 
 // ADC错误回调

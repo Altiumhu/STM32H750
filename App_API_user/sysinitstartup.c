@@ -58,8 +58,6 @@ void AppUser_Device_InitData(void)
   AppUuser_InitTempData(); // 温度采集数据初始化
   debug_init();
 
-
-
   for (ch = 0; ch < BOARD_CHANNEL_NUM; ch++)
   {
     memset(&g_Channelinfo[ch], 0, sizeof(ChannelInfo));
@@ -81,7 +79,7 @@ void AppUser_Device_InitData(void)
 
     g_Channelinfo[ch].Set_CC = 1.0;
 
-    g_Channelinfo[ch].loopSn =0;
+    g_Channelinfo[ch].loopSn = 0;
 
     //       g_Channelinfo[ch].Set_DC = g_Channelinfo[ch].Set_CC*(-1.0f);
     //       g_Channelinfo[ch].Set_CV = g_Channelinfo[ch].Set_PreCV;
@@ -94,8 +92,7 @@ void AppUser_Device_InitData(void)
   InitBorad_Device();
   CanFr_Init(); // 配置
 
-
-    UserSlave_Init();
+  UserSlave_Init();
 }
 
 /**********************************************************************
@@ -137,6 +134,8 @@ void AppUser_prvSetupHardware(void)
   ADC3_StartConversion();
 
   Set_ULock_GPIO(); // 解除硬件保护
+
+  SMEC_I2cInit();
 
   for (uint16_t i = 0; i < 16; i++)
   {

@@ -21,13 +21,37 @@
 #include "sys.h"
 
 
-/******************************************************************************************/
 
-void delay_init(uint16_t sysclk);   /* 初始化延迟函数 */
-void delay_ms(uint16_t nms);        /* 延时nms */
-void delay_us(uint32_t nus);        /* 延时nus */
+/*******************************************************************************
+* Function Name  : delay_us
+* Description    : 微秒延时函数，延时nus
+* Input          : nus:微秒延时的个数
+* Output         : None
+* Return         : None
+* Note			 : 400MHz下us延时函数
+*******************************************************************************/
+void delay_us(uint32_t nus);
 
-void HAL_Delay(uint32_t Delay);     /* HAL库的延时函数，SDIO等需要用到 */
+/*******************************************************************************
+* Function Name  : delay_ms
+* Description    : 毫秒延时函数，延时nms
+* Input          : nms:毫秒延时的个数
+* Output         : None
+* Return         : None
+* Note			 : 168MHz下ms延时函数
+*******************************************************************************/
+void delay_ms(uint32_t ms);
+
+/*******************************************************************************
+* Function Name  : delay_ns
+* Description    : ns级延时函数
+* Input          : None
+* Output         : None
+* Return         : None
+* Note			 : 400MHz下ns延时函数
+*******************************************************************************/
+void delay_ns(void);
+
 
 #endif
 
