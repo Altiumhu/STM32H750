@@ -168,7 +168,7 @@ int main(void)
 
   App_Drive_InitTimer_7(); // 100ms
   Debug_PWM();
-  //  STM32H750_UID();
+  STM32H750_UID();
   while (1)
   {
 

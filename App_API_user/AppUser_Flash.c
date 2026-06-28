@@ -38,42 +38,35 @@ void PrintHex(unsigned char *str,unsigned int len)
 //   void
 // 说明: STM32H750的UID位于0x08FFF800地址，共96位(12字节)
 //---------------------------------------------------------
-#define STM32_UID_ADDR_BASE   0x08FFF800  // UID起始地址
-#define VIRTUAL_OFFSET_1     0x5F43454D  // 虚拟偏移量1，请修改成其他值！
-#define VIRTUAL_OFFSET_2    (VIRTUAL_OFFSET_1 + 1) // 虚拟偏移量2
+
+
+
+//#define UID_BASE  0x1FF1E800U
 
 
 
 void STM32H750_GetUID(uint8_t *pUID)
 {
-//    const uint32_t STM32H750_UID_BASE = 0x08FFF800U; // STM32H750 UID基地址
+//  uint32_t uid[3];
+//  uid[0] = *(volatile uint32_t*)(UID_BASE);      // 低 32 位
+//  uid[1] = *(volatile uint32_t*)(UID_BASE + 4);  // 中 32 位
+//  uid[2] = *(volatile uint32_t*)(UID_BASE + 8);  // 高 32 位
 //	
-//    uint8_t *pUID_Reg = (uint8_t *)STM32H750_UID_BASE;
-//	
-//    for (uint8_t i = 0; i < 12; i++) 
-//	    {
-//        pUID[i] = pUID_Reg[i];
-//    }
+//	printf("GetStm32Uid uid[0] 0x%X\r\n",uid[0]);
+//	printf("GetStm32Uid uid[1] 0x%X\r\n",uid[1]);
+//	printf("GetStm32Uid uid[2] 0x%X\r\n",uid[2]);
 	
-   // 用 volatile const 强制从特定内存区域读取
-    volatile const uint32_t *pUID_Reg = (volatile const uint32_t *)(0x08FFF800);
-    
-    // 逐字（32位）对齐读取
-    pUID[0] = (uint8_t)(pUID_Reg[0] >> 0);
-    pUID[1] = (uint8_t)(pUID_Reg[0] >> 8);
-    pUID[2] = (uint8_t)(pUID_Reg[0] >> 16);
-    pUID[3] = (uint8_t)(pUID_Reg[0] >> 24);
-    
-    pUID[4] = (uint8_t)(pUID_Reg[1] >> 0);
-    pUID[5] = (uint8_t)(pUID_Reg[1] >> 8);
-    pUID[6] = (uint8_t)(pUID_Reg[1] >> 16);
-    pUID[7] = (uint8_t)(pUID_Reg[1] >> 24);
-    
-    pUID[8]  = (uint8_t)(pUID_Reg[2] >> 0);
-    pUID[9]  = (uint8_t)(pUID_Reg[2] >> 8);
-    pUID[10] = (uint8_t)(pUID_Reg[2] >> 16);
-    pUID[11] = (uint8_t)(pUID_Reg[2] >> 24);
+uint32_t uid0 = HAL_GetUIDw0();   // UID[31:0]
+uint32_t uid1 = HAL_GetUIDw1();   // UID[63:32]
+uint32_t uid2 = HAL_GetUIDw2();   // UID[95:64]
+	
+	
+		printf("GetStm32Uid uid[0] 0x%X\r\n",uid0);
+	printf("GetStm32Uid uid[1] 0x%X\r\n",uid1);
+	printf("GetStm32Uid uid[2] 0x%X\r\n",uid2);
+
 }
+
 
 
 
@@ -83,9 +76,11 @@ void STM32H750_UID(void)
 
 	/*获取STM32的UID*/
 	STM32H750_GetUID(bStm32Uid);
-	printf("GetStm32Uid: ");
-  PrintHex(bStm32Uid, 12);
-	printf("\r\n");
+//	printf("GetStm32Uid: ");
+//  PrintHex(bStm32Uid, 12);
+//	printf("\r\n");
+	
+
 
 }
 

@@ -682,7 +682,7 @@ uint16_t QSPI_Flash_ReadID(void)
 	QSPI_CommandTypeDef s_command;
 	uint8_t recv_data[2];
 
-	//初始化命令参数
+	//初始化命令参数 - 使用JEDEC ID命令(0x9F)，QPI模式(4线)
 	s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
 	s_command.Instruction       = QSPI_READ_ID;
 	s_command.AddressMode       = QSPI_ADDRESS_NONE;
@@ -707,7 +707,7 @@ uint16_t QSPI_Flash_ReadID(void)
 	{
 		return 0;
 	}
-
+	// recv_data[0]=厂商ID(0xEF), recv_data[1]=器件ID, recv_data[2]=容量ID
 	return (recv_data[0] << 8) | recv_data[1];
 }
 
@@ -723,7 +723,7 @@ void TEST_W25Q128(void)
 		writeBuffer1[j]=66;
 	}
 	
- uint8_t qspi_status = QSPI_Init();  // 获取返回值
+    uint8_t qspi_status = QSPI_Init();  // 获取返回值
     printf("QSPI_Init status: %d\r\n", qspi_status);
     
     if (qspi_status != QSPI_OK) {
@@ -747,11 +747,11 @@ void TEST_W25Q128(void)
 		printf("QSPI First ReadWrite OK!!!   ==%d\r\n",readBuffer1[1]);
 	}
 	
-		for(j=0; j<sizeof(writeBuffer1); j++)
-	{
-		printf("readBuffer1[%d] =%d\r\n",j,readBuffer1[j]);
-	}
-	
+//		for(j=0; j<sizeof(writeBuffer1); j++)
+//	{
+//		printf("readBuffer1[%d] =%d\r\n",j,readBuffer1[j]);
+//	}
+//	
 
 
 }
