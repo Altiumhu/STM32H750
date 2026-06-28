@@ -73,7 +73,7 @@
 #define BULK_ERASE_CMD                       0xC7        //整片擦除命令
 
 //读ID
-#define QSPI_READ_ID						 0x90        //读厂家识别码和ID
+#define QSPI_READ_ID						 0x9F        //读厂家识别码和ID
 
 #define QSPI_SetReadParam		             0xC0 
 

@@ -225,10 +225,4 @@ uint8_t QSPI_WriteEnable(QSPI_HandleTypeDef *hqspi);
 *******************************************************************************/
 uint8_t QSPI_AutoPollingMemReady(QSPI_HandleTypeDef *hqspi, uint32_t Timeout);
 
-
-uint32_t norflash_ex_read_id(void);
-
-
-void TEST_W25Q128(void);
-
 #endif
